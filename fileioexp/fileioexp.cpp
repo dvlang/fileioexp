@@ -20,14 +20,12 @@ string accountLastname;
 string accountname;
 string accountValue;
 
-istringstream tmpstring;
+istringstream tmpstring,tmpstring2;
 
 struct accountStruct
 {
 	int account_Number;
 	string name_Owner;
-	string name_OwnerFirst;
-	string name_OwnerLast;
 	double amount_Avail;
 };
 
@@ -68,20 +66,31 @@ int main()
 	while (!isspace(wholeentry[i])) { i++; }
 	accountValue = wholeentry.substr(j, i - 2);
 	
-	//tmpstring.str(wholeentry);
-	//tmpstring >> Person1.account_Number >> semicolin >> Person1.name_OwnerFirst >> semicolin >> Person1.name_OwnerLast >> semicolin>> Person1.amount_Avail;
+	Person1.name_Owner = accountname;
+	tmpstring.str(accountNumber);
+	tmpstring >> Person1.account_Number;
 
+	tmpstring2.str(accountValue);
 	
+	tmpstring2 >> Person1.amount_Avail;
 
-	
 
-	cout << "Account Number: " << accountNumber << endl;
-	cout << "Account Name: " << accountname << endl;
-	cout << "Account Value: " << accountValue << endl;
-	//cout << "Account Number: "<< Person1.account_Number << endl;
-	//cout << "Account Name: " << Person1.name_OwnerFirst << " " << Person1.name_OwnerLast << endl;
-	//cout << "Account Total: " << Person1.amount_Avail << endl;
+	cout << "Account Number: "<< Person1.account_Number << endl;
+	cout << "Account Name: " << Person1.name_Owner << endl;
+	cout << "Account Total: " << Person1.amount_Avail << endl;
 		in_file.close();
+
+		cout << wholeentry << endl;
+		//working string compare
+		string tmpstring3 = ";";
+		//if (tmpstring3.compare(";")!=0) {
+		if (wholeentry.compare(28,1,";") != 0) {
+			cout << "it is a NOT semicolin"<<endl;
+		}
+		else {
+			cout << "it is a semicolin"<<endl;
+		}
+		//end string compare
 
 	return 0;
 }
