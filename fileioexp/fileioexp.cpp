@@ -103,58 +103,15 @@ int main()
 			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number);
 
 			if (accountExists) {
-				cout << "it exists" << endl;
 				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
 				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
 			}
 			else
 			{
-				cout << "it DONT exists" << endl;
+				cout << "Account Not Found!!!" << endl << endl;
 			}
 			
-			/*
-			io_file.open("input.dat");
-			if (io_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
-			getline(io_file, tmp);	//force a getline to set .eof bit
-
-			if (!io_file.eof()) {
-				io_file.clear();  //clear flags
-				io_file.close(); // close it
-
-
-				io_file.open("input.dat"); //reopen
-				accountExists = false;
-				while (io_file.good() && !accountExists) {
-					GetRecord(AccountRecord, io_file); //pass strcture by reference
-					if (AccountRecord.account_Number != tmpAccount.account_Number) {
-
-						accountExists = false;
-
-					}
-				
-					else {
-						//cout << "account doesnt exist";
-						accountExists = true;
-					}
-				}
-			}
-			else
-			{
-				cout << "ERROR: FILE EMPTY!" << endl;
-			}
-			io_file.clear();
-			io_file.close();
 			
-			if (accountExists) {
-				cout << "it exists" << endl;
-				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
-			}
-			else
-			{
-				cout << "it DONT exists" << endl;
-			}
-			*/
 			break;
 
 		case 'V':  
@@ -265,6 +222,7 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 	bool accountExists;
 	string tmp = "";
+	accountExists = false;
 
 	inputfile.open("input.dat");
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
@@ -273,10 +231,9 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 	if (!inputfile.eof()) {
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
-
-
+		
 		inputfile.open("input.dat"); //reopen
-		accountExists = false;
+		
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
 			if (record.account_Number != tmpAccountNum) {
