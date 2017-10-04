@@ -19,6 +19,7 @@ string firstname;
 string lastname;
 string tmp = "";
 istringstream tmpstring;
+bool accountExists;
 
 /*
 struct accountStruct
@@ -40,8 +41,8 @@ int main()
 
 	ifstream in_file;
 	ofstream out_file;
-	//in_file.open("input.dat");
-	//if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; return 0; }	//check for failure when opening
+	ifstream io_file;
+	
 
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
@@ -97,58 +98,43 @@ int main()
 			tmpstring >> tmpAccount.account_Number;
 			tmpAccount.name_Owner = "";
 			tmpAccount.amount_Avail=00.00;
+
+			accountExists = false;
+			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number);
+
+			if (accountExists) {
+				cout << "it exists" << endl;
+				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+			}
+			else
+			{
+				cout << "it DONT exists" << endl;
+			}
 			
+			/*
+			io_file.open("input.dat");
+			if (io_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
+			getline(io_file, tmp);	//force a getline to set .eof bit
 
-			in_file.open("input.dat");
-			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
-			getline(in_file, tmp);	//force a getline to set .eof bit
+			if (!io_file.eof()) {
+				io_file.clear();  //clear flags
+				io_file.close(); // close it
 
-			if (!in_file.eof()) {
-				in_file.clear();  //clear flags
-				in_file.close(); // close it
-				in_file.open("input.dat"); //reopen
-				while (in_file.good()) {
-					GetRecord(AccountRecord, in_file); //pass strcture by reference
-					if (AccountRecord.account_Number == tmpAccount.account_Number) {
-						cout << "Account Valid!" << endl;
-					//	tmpAccount.name_Owner = AccountRecord.name_Owner;
-					//	tmpAccount.amount_Avail = AccountRecord.amount_Avail;
 
-						cout << "SELECT ACTION" << endl;
-						cout << "Press C to Change Name on account record" << endl;
-						cout << "Press W to perform a widthdrawl" << endl;
-						cout << "Press D to make a deposit" << endl;
-						cout << "Press E to Exit" << endl;
-						getline(cin, tmp);
-						userSubselection = tmp[0];
+				io_file.open("input.dat"); //reopen
+				accountExists = false;
+				while (io_file.good() && !accountExists) {
+					GetRecord(AccountRecord, io_file); //pass strcture by reference
+					if (AccountRecord.account_Number != tmpAccount.account_Number) {
 
-						switch (userSubselection)
-						{
-						case 'C': 
-							cout << "CHANGE NAME: " << endl;
-							cout << "What is new Name: " << endl;
-							getline(cin, tmp);
-							break;
-						case 'W':
-							cout << "WIDTHDRAWL: " << endl;
-							cout << "How Much: " << endl;
-							getline(cin, tmp);
-							break;
-						case 'D':
-							cout << "DEPOSIT: " << endl;
-							cout << "How Much: " << endl;
-							getline(cin, tmp);
-							break;
-						case 'E': userselection = 'H';
-							break;
-						default: cout << "INVALID Selection!" << endl;
-							break;
+						accountExists = false;
 
-						}
-						
 					}
+				
 					else {
-						cout << "account doesnt exist";
+						//cout << "account doesnt exist";
+						accountExists = true;
 					}
 				}
 			}
@@ -156,9 +142,19 @@ int main()
 			{
 				cout << "ERROR: FILE EMPTY!" << endl;
 			}
-			in_file.clear();
-			in_file.close();
+			io_file.clear();
+			io_file.close();
 			
+			if (accountExists) {
+				cout << "it exists" << endl;
+				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+			}
+			else
+			{
+				cout << "it DONT exists" << endl;
+			}
+			*/
 			break;
 
 		case 'V':  
@@ -198,6 +194,7 @@ int main()
 
 //--------------------BEGIN Functions--------------------------------------
 
+//********FUNCTION: GetRecord  BEGIN******************************
 /*
 GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 */
@@ -208,10 +205,7 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 	string accountName;
 	string accountValue;
 	int i, j;
-
-
-	//VIEW ALL FUNCTION
-
+	
 
 		tmpstring.clear();
 
@@ -242,7 +236,9 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 
 	return;
 }
+//********FUNCTION: GetRecord  END******************************
 
+//********FUNCTION: AddRecord  BEGIN******************************
 bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	ostringstream tmpstring;
 
@@ -258,54 +254,93 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 		outputfile.close();
 		return false;
 	}
-
 	
 	outputfile.clear();
 	outputfile.close();
 	return true;
 }
+//********FUNCTION: AddRecord  END******************************
+
+//********FUNCTION: findRecord  BEGIN******************************
+bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
+	bool accountExists;
+	string tmp = "";
+
+	inputfile.open("input.dat");
+	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
 
 
+		inputfile.open("input.dat"); //reopen
+		accountExists = false;
+		while (inputfile.good() && !accountExists) {
+			GetRecord(record, inputfile); //pass strcture by reference
+			if (record.account_Number != tmpAccountNum) {
+
+				accountExists = false;
+				/*		cout << "Account Valid!" << endl;
+				cout << "SELECT ACTION" << endl;
+				cout << "Press C to Change Name on account record" << endl;
+				cout << "Press W to perform a widthdrawl" << endl;
+				cout << "Press D to make a deposit" << endl;
+				cout << "Press E to Exit" << endl;
+				getline(cin, tmp);
+				userSubselection = tmp[0];
+
+				switch (userSubselection)
+				{
+				case 'C':
+				cout << "CHANGE NAME: " << endl;
+				cout << "What is new Name: " << endl;
+				getline(cin, tmp);
+				break;
+				case 'W':
+				cout << "WIDTHDRAWL: " << endl;
+				cout << "How Much: " << endl;
+				getline(cin, tmp);
+				break;
+				case 'D':
+				cout << "DEPOSIT: " << endl;
+				cout << "How Much: " << endl;
+				getline(cin, tmp);
+				break;
+				case 'E': userselection = 'H';
+				break;
+				default: cout << "INVALID Selection!" << endl;
+				break;
+
+				}
+				*/
+			}
+
+			else {
+
+				accountExists = true;
+			}
+		}
+	}
+	else
+	{
+		cout << "ERROR: FILE EMPTY!" << endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+
+	if (accountExists){
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+
+}
+//********FUNCTION: findRecord  END******************************
 
 //--------------------END Functions----------------------------------------
 
 
-/*
-
-//OLD VIEW ALL FUNCTION
-
-while (!in_file.eof()) {
-tmpstring.clear();
-
-getline(in_file, wholeentry);
-
-//BEGIN LINE PARSING
-int i = 0;
-while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-accountNumber = wholeentry.substr(0, i);
-tmpstring.str(accountNumber);
-tmpstring >> Person1.account_Number;
-
-i += 2;	//move i index off ";" and space
-int j = i;	//j is placeholder to beginning of next entry
-while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-accountname = wholeentry.substr(j, i - j);
-Person1.name_Owner = accountname;
-
-i += 2;	//move i index off ";" and space
-j = i;	//j is placeholder to beginning of next entry
-tmpstring.clear();
-while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-accountValue = wholeentry.substr(j, i - j);
-tmpstring.str(accountValue);
-tmpstring >> Person1.amount_Avail;
-// END LINE PARSING
-
-cout << "Account Number: " << Person1.account_Number << endl;
-cout << "Account Name: " << Person1.name_Owner << endl;
-cout << "Account Total: " << Person1.amount_Avail << endl;
-}
-*/
-
-
-//END VIEW ALL FUNCTION
