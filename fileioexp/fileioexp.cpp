@@ -20,6 +20,8 @@ string lastname;
 string tmp = "";
 istringstream tmpstring;
 bool accountExists;
+double tmpTransAmt;
+int tmpTransAccount;
 
 /*
 struct accountStruct
@@ -96,8 +98,9 @@ int main()
 			getline(cin, tmp);
 			tmpstring.str(tmp);
 			tmpstring >> tmpAccount.account_Number;
-			tmpAccount.name_Owner = "";
-			tmpAccount.amount_Avail=00.00;
+			//tmpstring >> tmpTransAccount;
+			//tmpAccount.name_Owner = "";
+			//tmpAccount.amount_Avail=00.00;
 
 			accountExists = false;
 			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number);
@@ -110,6 +113,64 @@ int main()
 			{
 				cout << "Account Not Found!!!" << endl << endl;
 			}
+			if (accountExists) {
+
+				cout << "SELECT ACTION" << endl;
+				cout << "Press C to Change Name on account record" << endl;
+				cout << "Press W to perform a withdrawl" << endl;
+				cout << "Press D to make a deposit" << endl;
+				cout << "Press E to Exit" << endl;
+				getline(cin, tmp);
+				userSubselection = tmp[0];
+
+				switch (userSubselection)
+				{
+				case 'C':
+					cout << "CHANGE NAME: " << endl;
+					cout << "What is new Name: " << endl;
+					getline(cin, tmp);
+					AccountRecord.name_Owner = tmp;
+
+					break;
+				case 'W':
+					cout << "WITHDRAWL: " << endl;
+					cout << "How Much: " << endl;
+					getline(cin, tmp);
+					tmpstring.clear();
+					tmpstring.str(tmp);
+					tmpstring >> tmpTransAmt;
+					cout << "tmpTransAmt = " << tmpTransAmt << endl;
+					if (AccountRecord.amount_Avail >= tmpTransAmt){
+						AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+					}
+					else {
+						cout << "Insufficient funds!" << endl;
+					}
+
+					break;
+				case 'D':
+					cout << "DEPOSIT: " << endl;
+					cout << "How Much: " << endl;
+					getline(cin, tmp);
+					tmpstring.clear();
+					tmpstring.str(tmp);
+					tmpstring >> tmpTransAmt;
+
+					AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+	
+
+					break;
+				case 'E': userselection = 'H';
+					break;
+				default: cout << "INVALID Selection!" << endl;
+					break;
+
+				}
+			}
+			cout << "New values to commit: " << endl;
+			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+			cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+
 			
 			
 			break;
@@ -239,39 +300,6 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 			if (record.account_Number != tmpAccountNum) {
 
 				accountExists = false;
-				/*		cout << "Account Valid!" << endl;
-				cout << "SELECT ACTION" << endl;
-				cout << "Press C to Change Name on account record" << endl;
-				cout << "Press W to perform a widthdrawl" << endl;
-				cout << "Press D to make a deposit" << endl;
-				cout << "Press E to Exit" << endl;
-				getline(cin, tmp);
-				userSubselection = tmp[0];
-
-				switch (userSubselection)
-				{
-				case 'C':
-				cout << "CHANGE NAME: " << endl;
-				cout << "What is new Name: " << endl;
-				getline(cin, tmp);
-				break;
-				case 'W':
-				cout << "WIDTHDRAWL: " << endl;
-				cout << "How Much: " << endl;
-				getline(cin, tmp);
-				break;
-				case 'D':
-				cout << "DEPOSIT: " << endl;
-				cout << "How Much: " << endl;
-				getline(cin, tmp);
-				break;
-				case 'E': userselection = 'H';
-				break;
-				default: cout << "INVALID Selection!" << endl;
-				break;
-
-				}
-				*/
 			}
 
 			else {
