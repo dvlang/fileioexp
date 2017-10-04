@@ -22,6 +22,7 @@ istringstream tmpstring;
 bool accountExists;
 double tmpTransAmt;
 int tmpTransAccount;
+int recordlocator;
 
 /*
 struct accountStruct
@@ -93,21 +94,21 @@ int main()
 		
 		case 'M':  
 			tmpstring.clear();
+			recordlocator = 0;
+			accountExists = false;
+
 			cout << "MODIFY AN ACCOUNT" << endl;
 			cout << "Account Number to Modify" << endl; 
 			getline(cin, tmp);
 			tmpstring.str(tmp);
-			tmpstring >> tmpAccount.account_Number;
-			//tmpstring >> tmpTransAccount;
-			//tmpAccount.name_Owner = "";
-			//tmpAccount.amount_Avail=00.00;
+			tmpstring >> tmpTransAccount;
 
-			accountExists = false;
-			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number);
+			//accountExists = false;
+			accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator);
 
 			if (accountExists) {
-				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << "\t" << "Record Locator: " << endl;
+				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail<<"\t\t" << recordlocator<< endl;
 			}
 			else
 			{
@@ -115,7 +116,7 @@ int main()
 			}
 			if (accountExists) {
 
-				cout << "SELECT ACTION" << endl;
+				cout << endl << "SELECT ACTION" << endl;
 				cout << "Press C to Change Name on account record" << endl;
 				cout << "Press W to perform a withdrawl" << endl;
 				cout << "Press D to make a deposit" << endl;
@@ -140,7 +141,7 @@ int main()
 					tmpstring.str(tmp);
 					tmpstring >> tmpTransAmt;
 					cout << "tmpTransAmt = " << tmpTransAmt << endl;
-					if (AccountRecord.amount_Avail >= tmpTransAmt){
+					if (AccountRecord.amount_Avail >= tmpTransAmt) {
 						AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
 					}
 					else {
@@ -157,19 +158,24 @@ int main()
 					tmpstring >> tmpTransAmt;
 
 					AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
-	
+
 
 					break;
-				case 'E': userselection = 'H';
+				case 'E': cout << "-Exit" << endl; userselection = 'H';
 					break;
 				default: cout << "INVALID Selection!" << endl;
 					break;
 
 				}
+				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' ) {
+				
+				cout << "New values to commit: " << endl;
+				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+				ModifyRecord(AccountRecord, out_file, &recordlocator);
+				}
 			}
-			cout << "New values to commit: " << endl;
-			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-			cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+
 
 			
 			
@@ -280,10 +286,12 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 //********FUNCTION: AddRecord  END******************************
 
 //********FUNCTION: findRecord  BEGIN******************************
-bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
+bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, int *recloc) {
 	bool accountExists;
 	string tmp = "";
 	accountExists = false;
+	int lengthNotFound = 0;
+	int lengthFound = 0;
 
 	inputfile.open("input.dat");
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
@@ -300,10 +308,13 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 			if (record.account_Number != tmpAccountNum) {
 
 				accountExists = false;
+				lengthNotFound = inputfile.tellg();
+				cout << "last location not in file: " << lengthNotFound << endl;
 			}
 
 			else {
-
+				lengthFound = inputfile.tellg();
+				cout << "location in file: " << lengthFound << endl;
 				accountExists = true;
 			}
 		}
@@ -316,7 +327,9 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 	inputfile.close();
 
 	if (accountExists){
+		*recloc = lengthNotFound;
 		return true;
+		
 	}
 	else {
 		return false;
@@ -325,6 +338,36 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum) {
 
 }
 //********FUNCTION: findRecord  END******************************
+
+//********FUNCTION: ModifyRecord  BEGIN******************************
+bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc) {
+	ostringstream tmpstring;
+	string tempstring;
+
+	cout << "record locator: " << *recloc << endl; 
+
+	outputfile.open("input.dat", ios::in | ios::out);	//open file in append mode
+	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
+	if (outputfile.good()) {
+		tmpstring << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
+		cout << "here's what I'm going to write: " << endl;
+		cout << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
+		outputfile.seekp(*recloc-2);
+		outputfile << tmpstring.str();
+		
+	}
+	else
+	{
+		outputfile.clear();
+		outputfile.close();
+		return false;
+	}
+
+	outputfile.clear();
+	outputfile.close();
+	return true;
+}
+//********FUNCTION: ModifyRecord  END******************************
 
 //--------------------END Functions----------------------------------------
 
