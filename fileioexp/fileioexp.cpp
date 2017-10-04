@@ -194,7 +194,7 @@ int main()
 				in_file.open("input.dat"); //reopen
 				while (in_file.good()) {	
 					GetRecord(AccountRecord, in_file); //pass strcture by reference
-					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$"<<AccountRecord.amount_Avail << endl;
 				}
 			}
 			else
@@ -327,7 +327,13 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	inputfile.close();
 
 	if (accountExists){
-		*recloc = lengthNotFound;
+		if (lengthNotFound > 0) {
+			*recloc = lengthNotFound;// -2;
+		}
+		else {
+			*recloc = 0;
+		}
+
 		return true;
 		
 	}
@@ -346,13 +352,12 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 
 	cout << "record locator: " << *recloc << endl; 
 
-	outputfile.open("input.dat", ios::in | ios::out);	//open file in append mode
+	outputfile.open("input.dat", ios::in | ios::out);	//open file in editable mode
 	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
-		tmpstring << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
-		cout << "here's what I'm going to write: " << endl;
-		cout << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
-		outputfile.seekp(*recloc-2);
+		tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
+
+		outputfile.seekp(*recloc);
 		outputfile << tmpstring.str();
 		
 	}
