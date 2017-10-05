@@ -2,9 +2,9 @@
 //--------------------BEGIN Function Prototype-----------------------------
 //void ViewAllRecords(ifstream&);
 void GetRecord(struct accountStruct &record, ifstream&);
-bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc);
+bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc, int *recordend);
 bool AddRecord(struct accountStruct &record, ofstream&);
-bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc);
+bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc, int *recordend);
 //--------------------END Function Prototype-------------------------------
 
 struct accountStruct

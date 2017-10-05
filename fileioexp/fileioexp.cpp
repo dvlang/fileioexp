@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include <sstream>
+
 using namespace std;
 
 
@@ -23,6 +24,7 @@ bool accountExists;
 double tmpTransAmt;
 int tmpTransAccount;
 int recordlocator;
+int recordEnd;
 
 /*
 struct accountStruct
@@ -103,7 +105,7 @@ int main()
 			tmpstring.str(tmp);
 			tmpstring >> tmpTransAccount;
 
-			accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator);
+			accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
 
 			if (accountExists) {
 				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << "\t" << "Record Locator: " << endl;
@@ -170,7 +172,7 @@ int main()
 				cout << "New values to commit: " << endl;
 				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
 				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
-				ModifyRecord(AccountRecord, out_file, &recordlocator);
+				ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
 				}
 			}
 
@@ -223,6 +225,7 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 	string accountNumber;
 	string accountName;
 	string accountValue;
+
 	int i, j;
 	
 
@@ -237,6 +240,8 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 		tmpstring.str(accountNumber);
 		tmpstring >> record.account_Number;
 
+
+
 		i += 2;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
@@ -247,10 +252,21 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 		i += 2;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		tmpstring.clear();
+		tmpstring.precision(10);
+		tmpstring.fixed;
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		accountValue = wholeentry.substr(j, i - j);
+
+	//	cout<< "GetRecord: accountValue " << accountValue<<endl;
+
 		tmpstring.str(accountValue);
 		tmpstring >> record.amount_Avail;
+		//std::string::size_type sz;
+
+		//record.amount_Avail = std::stod(accountValue,&sz);
+		cout.precision(15);
+		//cout << "GetRecord: record.amount_Avail " << record.amount_Avail << endl;
+
 		// END LINE PARSING	
 
 	return;
@@ -281,7 +297,7 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 //********FUNCTION: AddRecord  END******************************
 
 //********FUNCTION: findRecord  BEGIN******************************
-bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, int *recloc) {
+bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend) {
 	bool accountExists;
 	string tmp = "";
 	accountExists = false;
@@ -322,13 +338,16 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	inputfile.close();
 
 	if (accountExists){
-		if (lengthNotFound > 0) {
-			*recloc = lengthNotFound;// -2;
-		}
-		else {
-			*recloc = 0;
-		}
+		//if (lengthNotFound > 0) {
+			*recloc = lengthNotFound-2;
+			*recordend = lengthFound-2;
+		//}
+	//	else {
+	//		*recloc = 0;
+	//		*recordend = 0;
 
+	//	}
+	
 		return true;
 		
 	}
@@ -341,30 +360,58 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 //********FUNCTION: findRecord  END******************************
 
 //********FUNCTION: ModifyRecord  BEGIN******************************
-bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc) {
+bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc, int *recordend) {
 	ostringstream tmpstring;
 	string tempstring, tempstring2;
 	ifstream in_file;
-	int pos, opos = 0;
+	int endpos, opos = 0;
 
 
-	in_file.open("input.dat");
-	outputfile.open("input_new.dat");	//open file in new output mode
+	in_file.open("input.dat");			//open the input file
+	outputfile.open("input_new.dat");	//open temp output file in new output mode
 
-	in_file.seekg(0, in_file.end);
-	pos = in_file.tellg();
-	cout << "length of in file is: " << pos << endl;
-	in_file.seekg(0,in_file.beg);
+	in_file.seekg(0, in_file.end);		//find the end of the old file
+	endpos = in_file.tellg();				//store end of old file
 
-	while (in_file.good()) {
-		getline(in_file, tempstring2);
-		outputfile << tempstring2;
-		opos = outputfile.tellp();
+	in_file.seekg(0,in_file.beg);		//set input file pointer back to beginning
+	opos = outputfile.tellp();
+	cout << "opos at begin: " << opos << endl;
 
-		if ( opos != pos) {
-			outputfile << endl;
+	while (in_file.good()) {			//while ur not at the end of the input file
+
+		if (opos == *recloc)
+		{
+			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
+			outputfile << tmpstring.str();
+			in_file.seekg(*recordend);
+			opos = outputfile.tellp();		//find out where in the output file you are now
+			cout << "endpos: " << endpos << endl;
+			cout << "opos: " << opos << endl;
+			cout << "recloc: " << *recloc << endl;
+			cout << "recend: " << *recordend << endl;
 		}
-		
+
+
+		getline(in_file, tempstring2);	//get a line from input file	
+		outputfile << tempstring2;		//store the line from input file into old 
+		opos = outputfile.tellp();		//find out where in the output file you are now
+
+
+		if(in_file.good()){
+			outputfile << endl;			// and dont add anothe endl
+		}
+
+		cout << "endpos: "<< endpos << endl;
+		cout << "opos: " <<opos << endl;
+		cout << "recloc: " <<*recloc << endl;
+		cout << "recend: " <<*recordend << endl;
+/*
+		if (opos == *recloc) {
+			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
+			outputfile << tmpstring.str();
+		}
+		in_file.seekg(*recordend);
+*/	
 	}
 
 	/*
