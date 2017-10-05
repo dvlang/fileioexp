@@ -103,7 +103,6 @@ int main()
 			tmpstring.str(tmp);
 			tmpstring >> tmpTransAccount;
 
-			//accountExists = false;
 			accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator);
 
 			if (accountExists) {
@@ -159,7 +158,6 @@ int main()
 
 					AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
 
-
 					break;
 				case 'E': cout << "-Exit" << endl; userselection = 'H';
 					break;
@@ -176,9 +174,6 @@ int main()
 				}
 			}
 
-
-			
-			
 			break;
 
 		case 'V':  
@@ -348,18 +343,43 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 //********FUNCTION: ModifyRecord  BEGIN******************************
 bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc) {
 	ostringstream tmpstring;
-	string tempstring;
+	string tempstring, tempstring2;
+	ifstream in_file;
+	int pos, opos = 0;
 
-	cout << "record locator: " << *recloc << endl; 
 
-	outputfile.open("input.dat", ios::in | ios::out);	//open file in editable mode
-	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
+	in_file.open("input.dat");
+	outputfile.open("input_new.dat");	//open file in new output mode
+
+	in_file.seekg(0, in_file.end);
+	pos = in_file.tellg();
+	cout << "length of in file is: " << pos << endl;
+	in_file.seekg(0,in_file.beg);
+
+	while (in_file.good()) {
+		getline(in_file, tempstring2);
+		outputfile << tempstring2;
+		opos = outputfile.tellp();
+
+		if ( opos != pos) {
+			outputfile << endl;
+		}
+		
+	}
+
+	/*
+
+	//outputfile.open("input_new.dat", ios::in | ios::out);	//open file in editable mode
+	outputfile.open("input_new.dat");	//open file in new output mode
+	//if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
+	//	if (true) {
 		tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
 
-		outputfile.seekp(*recloc);
+		//outputfile.seekp(*recloc);
 		outputfile << tmpstring.str();
-		
+		//remove("testfiletodelete.dat");
+	
 	}
 	else
 	{
@@ -368,6 +388,9 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 		return false;
 	}
 
+	*/
+	in_file.clear();
+	in_file.close();
 	outputfile.clear();
 	outputfile.close();
 	return true;
