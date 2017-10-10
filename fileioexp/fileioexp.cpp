@@ -339,12 +339,12 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 	if (accountExists){
 		if (lengthNotFound > 0) {
-		*recloc = lengthNotFound-2; //?
-		*recordend = lengthFound-2;// -2;	//?
+		*recloc = lengthNotFound-2; 
+		*recordend = lengthFound-2;
 		}
 		else {
 			*recloc = 0;
-			*recordend = lengthFound - 2;// -2;	//?
+			*recordend = lengthFound - 2;
 
 	}
 	
@@ -444,6 +444,18 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	in_file.close();
 	outputfile.clear();
 	outputfile.close();
+	int result;
+	remove("input.dat");
+
+	result = rename("input_new.dat", "input.dat");
+	if (result == 0)
+		puts("File successfully renamed");
+	else
+		perror("Error renaming file");
+	return 0;
+
+	remove("input.dat");
+
 	return true;
 }
 //********FUNCTION: ModifyRecord  END******************************
