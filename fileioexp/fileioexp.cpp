@@ -338,15 +338,15 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	inputfile.close();
 
 	if (accountExists){
-		//if (lengthNotFound > 0) {
-			*recloc = lengthNotFound-2;
-			*recordend = lengthFound-2;
-		//}
-	//	else {
-	//		*recloc = 0;
-	//		*recordend = 0;
+		if (lengthNotFound > 0) {
+		*recloc = lengthNotFound-2; //?
+		*recordend = lengthFound-2;// -2;	//?
+		}
+		else {
+			*recloc = 0;
+			*recordend = lengthFound - 2;// -2;	//?
 
-	//	}
+	}
 	
 		return true;
 		
@@ -366,6 +366,8 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	ifstream in_file;
 	int endpos, opos = 0;
 
+	outputfile.precision(10);
+	tmpstring.precision(10);
 
 	in_file.open("input.dat");			//open the input file
 	outputfile.open("input_new.dat");	//open temp output file in new output mode
@@ -381,7 +383,9 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 
 		if (opos == *recloc)
 		{
-			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
+
+			cout << "TEST COUT " << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << endl;
+			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";// << endl;
 			outputfile << tmpstring.str();
 			in_file.seekg(*recordend);
 			opos = outputfile.tellp();		//find out where in the output file you are now
