@@ -13,3 +13,6 @@ struct accountStruct
 	string name_Owner;
 	double amount_Avail;
 };
+
+const char filename[14] = "accounts.dat";
+

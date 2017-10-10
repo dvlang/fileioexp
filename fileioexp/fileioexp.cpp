@@ -43,7 +43,7 @@ int main()
 {
 	accountStruct AccountRecord;
 	accountStruct tmpAccount;
-
+	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
 	ifstream io_file;
@@ -73,12 +73,28 @@ int main()
 		switch (userselection)
 		{
 		case 'I':  
+			recordlocator = 0;
+			accountExists = false;
+
 			tmpstring.clear();
 			cout << "CREATE NEW ACCOUNT" << endl;
 			cout << "Desired account number (6digits): "<<endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
 			tmpstring >> tmpAccount.account_Number;
+			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+			if (accountExists) {
+
+				while (accountExists) {
+				tmpstring.clear();
+				cout << "Account Exists, Enter NEW Desired account number (6digits): " << endl;
+				getline(cin, tmp);
+				tmpstring.str(tmp);
+				tmpstring >> tmpAccount.account_Number;
+
+				accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+				}
+			}
 
 			cout << "Desired Account Holder Name: "<<endl;
 			getline(cin, tmp);
@@ -181,14 +197,17 @@ int main()
 		case 'V':  
 			cout << "VIEW ALL ACCOUNT RECORDS" << endl; 
 			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-			in_file.open("input.dat");
+			//in_file.open("input.dat");
+			
+			in_file.open(filename);
 			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
 			getline(in_file, tmp);	//force a getline to set .eof bit
 
 			if (!in_file.eof()) {
 				in_file.clear();  //clear flags
 				in_file.close(); // close it
-				in_file.open("input.dat"); //reopen
+			//	in_file.open("input.dat"); //reopen
+				in_file.open(filename);
 				while (in_file.good()) {	
 					GetRecord(AccountRecord, in_file); //pass strcture by reference
 					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$"<<AccountRecord.amount_Avail << endl;
@@ -277,7 +296,7 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	ostringstream tmpstring;
 
-	outputfile.open("input.dat", std::ios_base::app);	//open file in append mode
+	outputfile.open(filename, std::ios_base::app);	//open file in append mode
 	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
 		tmpstring << endl<< record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
@@ -304,7 +323,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	int lengthNotFound = 0;
 	int lengthFound = 0;
 
-	inputfile.open("input.dat");
+	inputfile.open(filename);
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
 	getline(inputfile, tmp);	//force a getline to set .eof bit
 
@@ -312,7 +331,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
 		
-		inputfile.open("input.dat"); //reopen
+		inputfile.open(filename); //reopen
 		
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
@@ -346,13 +365,14 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 			*recloc = 0;
 			*recordend = lengthFound - 2;
 
-	}
+		}
 	
 		return true;
 		
 	}
 	else {
 		return false;
+		cout <<"account does not exist" << endl;
 	}
 	
 
@@ -369,8 +389,8 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	outputfile.precision(10);
 	tmpstring.precision(10);
 
-	in_file.open("input.dat");			//open the input file
-	outputfile.open("input_new.dat");	//open temp output file in new output mode
+	in_file.open(filename);			//open the input file
+	outputfile.open("tmp.dat");	//open temp output file in new output mode
 
 	in_file.seekg(0, in_file.end);		//find the end of the old file
 	endpos = in_file.tellg();				//store end of old file
@@ -445,16 +465,12 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	outputfile.clear();
 	outputfile.close();
 	int result;
-	remove("input.dat");
+	remove(filename);
 
-	result = rename("input_new.dat", "input.dat");
-	if (result == 0)
-		puts("File successfully renamed");
-	else
-		perror("Error renaming file");
-	return 0;
+	result = rename("tmp.dat", &filename[0]);
 
-	remove("input.dat");
+
+	//remove("input.dat");
 
 	return true;
 }
