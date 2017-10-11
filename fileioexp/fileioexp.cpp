@@ -27,18 +27,8 @@ int recordlocator;
 int recordEnd;
 bool accountnumgood;
 int tmpaccountlength;
+bool lengthgood;
 
-/*
-struct accountStruct
-{
-	int account_Number;
-	string name_Owner;
-	double amount_Avail;
-};*/
-
-//--------------------BEGIN Function Prototype-----------------------------
-//void ViewAllRecords(accountStruct &record, ifstream&);
-//--------------------END Function Prototype-----------------------------
 
 //--------------------BEGIN MAIN--------------------------------------
 int main()
@@ -57,29 +47,34 @@ int main()
 	while (userselection != 'Q') {
 
 		//MENU / USER INTERFACE
+		cout << endl;
 		cout << "************************************************" << endl;
 		cout << "Please select from one of the following options:" << endl << endl;
 		cout << "Press ""I"" to insert a new account record" << endl;
 		cout << "Press ""M"" to modify an existing record" << endl;
 		cout << "Press ""V"" to view all account records" << endl;
-		cout << "Press ""H"" to return to this menu" << endl;
 		cout << "Press ""Q"" to quit" << endl;
 		cout << "************************************************" << endl;
 		cout << "Entry -> ";
 
-		//cin >> userselection;
+
 		getline(cin, tmp);
 		userselection = tmp[0];
 
 
 		switch (userselection)
 		{
-		case 'I':
+
+			
+		case 'I':	//-------------------USER INSERT OPTION-------------------------
 			recordlocator = 0;
 			accountExists = false;
 			accountnumgood = false;
+			lengthgood = false;
 
 			tmpstring.clear();
+			
+			//Get desired account number
 			cout << "CREATE NEW ACCOUNT" << endl;
 			cout << "Desired account number (6digits): " << endl;
 			getline(cin, tmp);
@@ -87,12 +82,9 @@ int main()
 
 			//check to make sure the account number is valid length
 			accountnumgood = CheckLength(tmpstring);
-
-			
-
 			while (!accountnumgood) {
 				tmpstring.clear();
-				cout << "Bad Length, Enter NEW Desired account number (6digits): " << endl;
+				cout << "ERROR: Bad Length, Enter NEW Desired account number (6digits): " << endl;
 				getline(cin, tmp);
 				tmpstring.str(tmp);
 
@@ -101,36 +93,55 @@ int main()
 
 			tmpstring >> tmpAccount.account_Number;
 
-			//check to see if account number already exists
+			//check to see if account number already exists, if it does stay here till they give you a good one
 			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
-			//if (accountExists) {
 
-				while (accountExists) {
-					tmpstring.clear();
-					cout << "Account Exists, Enter NEW Desired account number (6digits): " << endl;
-					getline(cin, tmp);
-					tmpstring.str(tmp);
-					tmpstring >> tmpAccount.account_Number;
+			while (accountExists) {
+				tmpstring.clear();
+				cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl;
+				getline(cin, tmp);
+				tmpstring.str(tmp);
+				tmpstring >> tmpAccount.account_Number;
 
-					accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
-				}
-		//	}
+				accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+			}
 
+			//Get user acccount name
 			cout << "Desired Account Holder Name: " << endl;
 			getline(cin, tmp);
+			tmpstring.str(tmp);
+			
+			//check to see if they field was empty, if it was, stay here till they give you a good one
+			lengthgood = CheckEmpty(tmpstring);
+			
+			while (!lengthgood) {
+				cout << "ERROR: Account Holder Name Can't Be Empty: " << endl;
+				getline(cin, tmp);
+				tmpstring.str(tmp);
+				lengthgood = CheckEmpty(tmpstring);
+			}
 			tmpAccount.name_Owner = tmp;
 
+			//check to see if they field was empty, if it was, set account value to 0
 			cout << "Desired Initial Value: " << endl;
 			getline(cin, tmp);
 			tmpstring.clear();
 			tmpstring.str(tmp);
-			tmpstring >> tmpAccount.amount_Avail;
 
+			lengthgood = CheckEmpty(tmpstring);
+			if (lengthgood) {
+				tmpstring >> tmpAccount.amount_Avail;
+			}
+			else {
+				tmpAccount.amount_Avail = 0.00;
+			}
+
+			//input data good, commit record
 			AddRecord(tmpAccount, out_file);
 
 			break;
 
-		case 'M':
+		case 'M':	//-------------------USER MODIFY OPTION-------------------------
 			tmpstring.clear();
 			recordlocator = 0;
 			accountExists = false;
@@ -149,8 +160,10 @@ int main()
 				accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
 
 				if (accountExists) {
-					cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << "\t" << "Record Locator: " << endl;
-					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << "\t\t" << recordlocator << endl;
+					cout << endl << "--------------------Account Information-----------------------" << endl;
+					cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
+					cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
+					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
 				}
 				else
 				{
@@ -172,8 +185,19 @@ int main()
 						cout << "CHANGE NAME: " << endl;
 						cout << "What is new Name: " << endl;
 						getline(cin, tmp);
-						AccountRecord.name_Owner = tmp;
 
+						tmpstring.str(tmp);
+
+						//check to see if they field was empty, if it was, stay here till they give you a good one
+						lengthgood = CheckEmpty(tmpstring);
+
+						if (!lengthgood) {
+							cout << "ERROR: Account Holder Name Can't Be Empty- Exiting" << endl << endl;
+						}
+						else {
+							AccountRecord.name_Owner = tmp;
+						}
+						
 						break;
 					case 'W':
 						cout << "WITHDRAWL: " << endl;
@@ -187,7 +211,7 @@ int main()
 							AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
 						}
 						else {
-							cout << "ERROR: Insufficient funds!" << endl;
+							cout << "ERROR: Insufficient funds!- Exiting" << endl;
 						}
 
 						break;
@@ -210,9 +234,9 @@ int main()
 					}
 					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W') {
 
-						cout << "New values to commit: " << endl;
-						cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-						cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+					//	cout << "New values to commit: " << endl;
+					//	cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+					//	cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
 						ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
 					}
 				}
@@ -223,10 +247,10 @@ int main()
 
 			break;
 
-		case 'V':
-			cout << "VIEW ALL ACCOUNT RECORDS" << endl;
-			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-
+		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
+			cout << endl << "--------------------Accounts on File-----------------------" << endl;
+			cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
+			cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
 
 			in_file.open(filename);
 			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
@@ -238,7 +262,7 @@ int main()
 
 				in_file.open(filename);
 				while (in_file.good()) {
-					GetRecord(AccountRecord, in_file); //pass strcture by reference
+					GetRecord(AccountRecord, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
 					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
 				}
 			}
@@ -249,8 +273,10 @@ int main()
 			in_file.clear();
 			in_file.close();
 			break;
+			//-------------------USER QUIT OPTION-------------------------
 		case 'Q':  cout << "user selected Q" << endl; break;
-		case 'H':  cout << "user selected H" << endl; break;
+
+			//-------------------DEFAULT OPTION-------------------------
 		default: cout << "ERROR: INVALID Selection!" << endl;
 		}
 
@@ -490,7 +516,7 @@ bool CheckLength(istringstream &tmpstring) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-
+//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength == accountlength) {
 		return true;
@@ -501,6 +527,26 @@ bool CheckLength(istringstream &tmpstring) {
 
 }
 //********FUNCTION: CheckLength  END******************************
+
+//********FUNCTION: CheckEmpty  BEGIN******************************
+bool CheckEmpty(istringstream &tmpstring) {
+	int tmpaccountlength = 0;
+
+	tmpstring.seekg(0, tmpstring.end);
+
+	tmpaccountlength = tmpstring.tellg();
+	tmpstring.seekg(0, tmpstring.beg);
+//	cout << "length= " << tmpaccountlength << endl;
+
+	if (tmpaccountlength != 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+//********FUNCTION: CheckEmpty  END******************************
 
 //--------------------END Functions----------------------------------------
 
