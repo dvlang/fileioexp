@@ -4,6 +4,7 @@
 void GetRecord(struct accountStruct &record, ifstream&);
 bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc, int *recordend);
 bool AddRecord(struct accountStruct &record, ofstream&);
+bool CheckLength(istringstream&);
 bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc, int *recordend);
 //--------------------END Function Prototype-------------------------------
 

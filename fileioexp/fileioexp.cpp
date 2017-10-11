@@ -123,16 +123,10 @@ int main()
 			cout << "Account Number to Modify" << endl; 
 			getline(cin, tmp);
 			tmpstring.str(tmp);
+			//tmpstring >> tmpTransAccount;
+
+			accountnumgood = CheckLength(tmpstring);
 			tmpstring >> tmpTransAccount;
-			tmpstring.seekg(0, tmpstring.end);
-
-			tmpaccountlength = tmpstring.tellg();
-
-			if (tmpaccountlength == accountlength) {
-				accountnumgood = true;
-			}
-
-
 
 			if (accountnumgood) {
 				accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
@@ -470,6 +464,26 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	}
 }
 //********FUNCTION: ModifyRecord  END******************************
+
+//********FUNCTION: CheckLength  BEGIN******************************
+bool CheckLength(istringstream &tmpstring) {
+	int tmpaccountlength = 0;
+
+	tmpstring.seekg(0, tmpstring.end);
+
+	tmpaccountlength = tmpstring.tellg();
+	tmpstring.seekg(0, tmpstring.beg);
+
+
+	if (tmpaccountlength == accountlength) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+//********FUNCTION: CheckLength  END******************************
 
 //--------------------END Functions----------------------------------------
 
