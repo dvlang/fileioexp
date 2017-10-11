@@ -458,9 +458,9 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 		outputfile.clear();
 		outputfile.close();
 
-	//	remove(filename);
+		remove(filename);
 
-	//	result = rename("tmp.dat", &filename[0]);
+		result = rename("tmp.dat", &filename[0]);
 	
 	if (result != 0) {
 		return false;
