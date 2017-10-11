@@ -49,7 +49,7 @@ int main()
 	ifstream in_file;
 	ofstream out_file;
 	ifstream io_file;
-	
+
 
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
@@ -58,7 +58,7 @@ int main()
 
 		//MENU / USER INTERFACE
 		cout << "************************************************" << endl;
-		cout << "Please select from one of the following options:" << endl<<endl;
+		cout << "Please select from one of the following options:" << endl << endl;
 		cout << "Press ""I"" to insert a new account record" << endl;
 		cout << "Press ""M"" to modify an existing record" << endl;
 		cout << "Press ""V"" to view all account records" << endl;
@@ -74,45 +74,63 @@ int main()
 
 		switch (userselection)
 		{
-		case 'I':  
+		case 'I':
 			recordlocator = 0;
 			accountExists = false;
+			accountnumgood = false;
 
 			tmpstring.clear();
 			cout << "CREATE NEW ACCOUNT" << endl;
-			cout << "Desired account number (6digits): "<<endl;
+			cout << "Desired account number (6digits): " << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
-			tmpstring >> tmpAccount.account_Number;
-			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
-			if (accountExists) {
 
-				while (accountExists) {
+			//check to make sure the account number is valid length
+			accountnumgood = CheckLength(tmpstring);
+
+			
+
+			while (!accountnumgood) {
 				tmpstring.clear();
-				cout << "Account Exists, Enter NEW Desired account number (6digits): " << endl;
+				cout << "Bad Length, Enter NEW Desired account number (6digits): " << endl;
 				getline(cin, tmp);
 				tmpstring.str(tmp);
-				tmpstring >> tmpAccount.account_Number;
 
-				accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
-				}
+				accountnumgood = CheckLength(tmpstring);
 			}
 
-			cout << "Desired Account Holder Name: "<<endl;
+			tmpstring >> tmpAccount.account_Number;
+
+			//check to see if account number already exists
+			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+			//if (accountExists) {
+
+				while (accountExists) {
+					tmpstring.clear();
+					cout << "Account Exists, Enter NEW Desired account number (6digits): " << endl;
+					getline(cin, tmp);
+					tmpstring.str(tmp);
+					tmpstring >> tmpAccount.account_Number;
+
+					accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+				}
+		//	}
+
+			cout << "Desired Account Holder Name: " << endl;
 			getline(cin, tmp);
 			tmpAccount.name_Owner = tmp;
-			
-			cout << "Desired Initial Value: "<<endl;
+
+			cout << "Desired Initial Value: " << endl;
 			getline(cin, tmp);
 			tmpstring.clear();
 			tmpstring.str(tmp);
 			tmpstring >> tmpAccount.amount_Avail;
 
 			AddRecord(tmpAccount, out_file);
-			
+
 			break;
-		
-		case 'M':  
+
+		case 'M':
 			tmpstring.clear();
 			recordlocator = 0;
 			accountExists = false;
@@ -120,10 +138,9 @@ int main()
 			tmpaccountlength = 0;
 
 			cout << "MODIFY AN ACCOUNT" << endl;
-			cout << "Account Number to Modify" << endl; 
+			cout << "Account Number to Modify" << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
-			//tmpstring >> tmpTransAccount;
 
 			accountnumgood = CheckLength(tmpstring);
 			tmpstring >> tmpTransAccount;
@@ -206,11 +223,11 @@ int main()
 
 			break;
 
-		case 'V':  
-			cout << "VIEW ALL ACCOUNT RECORDS" << endl; 
+		case 'V':
+			cout << "VIEW ALL ACCOUNT RECORDS" << endl;
 			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
 
-			
+
 			in_file.open(filename);
 			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
 			getline(in_file, tmp);	//force a getline to set .eof bit
@@ -220,9 +237,9 @@ int main()
 				in_file.close(); // close it
 
 				in_file.open(filename);
-				while (in_file.good()) {	
+				while (in_file.good()) {
 					GetRecord(AccountRecord, in_file); //pass strcture by reference
-					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$"<<AccountRecord.amount_Avail << endl;
+					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
 				}
 			}
 			else
@@ -231,7 +248,7 @@ int main()
 			}
 			in_file.clear();
 			in_file.close();
-			break;  
+			break;
 		case 'Q':  cout << "user selected Q" << endl; break;
 		case 'H':  cout << "user selected H" << endl; break;
 		default: cout << "ERROR: INVALID Selection!" << endl;
@@ -250,7 +267,7 @@ int main()
 /*
 GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 */
-void GetRecord( accountStruct &record, ifstream &inputfile) {
+void GetRecord(accountStruct &record, ifstream &inputfile) {
 	istringstream tmpstring;
 	string wholeentry;
 	string accountNumber;
@@ -258,43 +275,43 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 	string accountValue;
 
 	int i, j;
-	
-
-		tmpstring.clear();
-
-		getline(inputfile, wholeentry);
-
-		//BEGIN LINE PARSING
-		i = 0;
-		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-		accountNumber = wholeentry.substr(0, i);
-		tmpstring.str(accountNumber);
-		tmpstring >> record.account_Number;
 
 
+	tmpstring.clear();
 
-		i += 2;	//move i index off ";" and space
-		j = i;	//j is placeholder to beginning of next entry
-		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-		accountName = wholeentry.substr(j, i - j);
-		record.name_Owner = accountName;
+	getline(inputfile, wholeentry);
 
-		i += 2;	//move i index off ";" and space
-		j = i;	//j is placeholder to beginning of next entry
-		tmpstring.clear();
-		tmpstring.precision(10);
-		tmpstring.fixed;
-		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-		accountValue = wholeentry.substr(j, i - j);
+	//BEGIN LINE PARSING
+	i = 0;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountNumber = wholeentry.substr(0, i);
+	tmpstring.str(accountNumber);
+	tmpstring >> record.account_Number;
 
 
 
-		tmpstring.str(accountValue);
-		tmpstring >> record.amount_Avail;
-		cout.precision(15);
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountName = wholeentry.substr(j, i - j);
+	record.name_Owner = accountName;
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	tmpstring.clear();
+	tmpstring.precision(10);
+	tmpstring.fixed;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountValue = wholeentry.substr(j, i - j);
 
 
-		// END LINE PARSING	
+
+	tmpstring.str(accountValue);
+	tmpstring >> record.amount_Avail;
+	cout.precision(15);
+
+
+	// END LINE PARSING	
 
 	return;
 }
@@ -307,7 +324,7 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	outputfile.open(filename, std::ios_base::app);	//open file in append mode
 	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
-		tmpstring << endl<< record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
+		tmpstring << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
 		outputfile << tmpstring.str();
 	}
 	else
@@ -316,7 +333,7 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 		outputfile.close();
 		return false;
 	}
-	
+
 	outputfile.clear();
 	outputfile.close();
 	return true;
@@ -340,7 +357,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
 		inputfile.open(filename); //reopen
-		
+
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
 
@@ -358,7 +375,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 					inputfile.open(filename); //reopen
 					inputfile.seekg(0, inputfile.end);
 					lengthFound = inputfile.tellg();
-					lengthFound = lengthFound+2;
+					lengthFound = lengthFound + 2;
 
 				}
 				else {
@@ -375,28 +392,28 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	inputfile.clear();
 	inputfile.close();
 
-	if (accountExists){
+	if (accountExists) {
 		if (lengthNotFound > 0) {
-			*recloc = lengthNotFound-2; 
-			*recordend = lengthFound-2;
+			*recloc = lengthNotFound - 2;
+			*recordend = lengthFound - 2;
 		}
 		else {
 			*recloc = 0;
 			*recordend = lengthFound - 2;
 
 		}
-	
+
 		//cout << "last location not in file: " << lengthNotFound << endl;
 		//cout << "location in file: " << lengthFound << endl;
 
 		return true;
-		
+
 	}
 	else {
 		return false;
 
 	}
-	
+
 
 }
 //********FUNCTION: findRecord  END******************************
@@ -404,7 +421,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 //********FUNCTION: ModifyRecord  BEGIN******************************
 bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc, int *recordend) {
 	ostringstream tmpstring;
-	string tempstring, tempstring2,tmpfilename;
+	string tempstring, tempstring2, tmpfilename;
 	ifstream in_file;
 	int endpos;// = 0;
 	int opos = 0;
@@ -421,11 +438,11 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 
 	in_file.seekg(0, in_file.beg);		//set input file pointer back to beginning
 	opos = outputfile.tellp();
-	
+
 
 	while (in_file.good()) {			//while ur not at the end of the input file
 
-		if (opos == *recloc){
+		if (opos == *recloc) {
 
 			//cout << "TEST COUT " << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << endl;
 			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";// << endl;
@@ -446,16 +463,16 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 		}
 	}
 
-		in_file.clear();
-		in_file.close();
-		outputfile.clear();
-		outputfile.close();
+	in_file.clear();
+	in_file.close();
+	outputfile.clear();
+	outputfile.close();
 
-		remove("old.dat");
-		rename(&filename[0], "old.dat");
-		remove(filename);
-		result = rename("tmp.dat", &filename[0]);
-	
+	remove("old.dat");
+	rename(&filename[0], "old.dat");
+	remove(filename);
+	result = rename("tmp.dat", &filename[0]);
+
 	if (result != 0) {
 		return false;
 	}
