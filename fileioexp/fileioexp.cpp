@@ -123,7 +123,7 @@ int main()
 			tmpAccount.name_Owner = tmp;
 
 			//check to see if they field was empty, if it was, set account value to 0
-			cout << "Desired Initial Value: " << endl;
+			cout << "Desired Initial Value (00.00 format): " << endl;
 			getline(cin, tmp);
 			tmpstring.clear();
 			tmpstring.str(tmp);
@@ -206,7 +206,7 @@ int main()
 						tmpstring.clear();
 						tmpstring.str(tmp);
 						tmpstring >> tmpTransAmt;
-						cout << "tmpTransAmt = " << tmpTransAmt << endl;
+						//cout << "tmpTransAmt = " << tmpTransAmt << endl;
 						if (AccountRecord.amount_Avail >= tmpTransAmt) {
 							AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
 						}
@@ -217,13 +217,27 @@ int main()
 						break;
 					case 'D':
 						cout << "DEPOSIT: " << endl;
-						cout << "How Much: " << endl;
+						cout << "How Much (00.00 format):  " << endl;
 						getline(cin, tmp);
 						tmpstring.clear();
 						tmpstring.str(tmp);
-						tmpstring >> tmpTransAmt;
+						
+						
+						lengthgood = CheckEmpty(tmpstring);
+						bool numbergood;
+						numbergood = IsNumber(tmp);
 
-						AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+
+
+
+						tmpstring >> tmpTransAmt;
+						if (!lengthgood||!numbergood) {
+							cout << "ERROR: No valid value entered- Exiting" << endl << endl;
+						}
+						else {
+							AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+						}
+						
 
 						break;
 					case 'E': cout << "-Exit" << endl; userselection = 'H';
@@ -457,7 +471,16 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	tmpstring.precision(10);
 
 	in_file.open(filename);			//open the input file
+	if (in_file.fail()) {
+		cout << "ERROR: Can't open Input file!" << endl;
+		result++;
+	}
+
 	outputfile.open("tmp.dat");	//open temp output file in new output mode
+	if (outputfile.fail()) {
+		cout << "ERROR: Can't open temp output file!" << endl;
+		result++;
+	}
 
 	in_file.seekg(0, in_file.end);		//find the end of the old file
 	endpos = in_file.tellg();				//store end of old file
@@ -497,7 +520,7 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	remove("old.dat");
 	rename(&filename[0], "old.dat");
 	remove(filename);
-	result = rename("tmp.dat", &filename[0]);
+	result += rename("tmp.dat", &filename[0]);
 
 	if (result != 0) {
 		return false;
@@ -547,6 +570,57 @@ bool CheckEmpty(istringstream &tmpstring) {
 
 }
 //********FUNCTION: CheckEmpty  END******************************
+
+//********FUNCTION: IsNumber  BEGIN******************************
+bool IsNumber(const string& tmpstring) {
+	int tmpaccountlength = 0;
+	int i = 0;
+	int result = 0;
+	int size;
+	cout << "string " << tmpstring <<endl;
+/*
+	while (isdigit(tmpstring[i])) {
+		cout << "char= " << tmpstring[i] << endl;
+		if (isdigit(tmpstring[i])) {
+
+			result++;
+		}
+		i++;
+	}
+	if ((tmpstring[i] == '.') && (isdigit(tmpstring[(i + 1)])) && (isdigit(tmpstring[(i + 2)]))){// && isspace(tmpstring[i + 3])) {
+		result++;
+		cout << "good format " << endl;
+	}
+
+	else {
+		result = 0;
+		cout << "bad format " << endl;
+		cout << "tmpstring[i]  " << tmpstring[i] << endl;
+		cout << "tmpstring[i+1]  " << tmpstring[i+1]<< endl;
+		cout << "tmpstring[i+2] " << tmpstring[i+2]<<endl;
+		cout << "tmpstring[i+3] " << tmpstring[i + 3] << endl;
+
+		if (isspace(tmpstring[i + 3])) {
+			cout << "tmpstring[i+3] is space " << endl;
+		}
+		else
+		{
+			cout << "tmpstring[i+3] not space" << endl;
+		}
+	}
+
+
+		cout << "result= " << result << endl;
+		*/
+	if (result == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+//********FUNCTION: IsNumber  END******************************
 
 //--------------------END Functions----------------------------------------
 

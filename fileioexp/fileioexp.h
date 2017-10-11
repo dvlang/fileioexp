@@ -6,6 +6,7 @@ bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc, int *
 bool AddRecord(struct accountStruct &record, ofstream&);
 bool CheckLength(istringstream&);
 bool CheckEmpty(istringstream&);
+bool IsNumber(const string&);
 bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc, int *recordend);
 //--------------------END Function Prototype-------------------------------
 
