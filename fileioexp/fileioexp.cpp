@@ -322,6 +322,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	accountExists = false;
 	int lengthNotFound = 0;
 	int lengthFound = 0;
+	int y = 0;
 
 	inputfile.open(filename);
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
@@ -330,23 +331,40 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	if (!inputfile.eof()) {
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
-		
 		inputfile.open(filename); //reopen
 		
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
+			y= inputfile.tellg();
+			//cout << "y= " << y << endl;
 			if (record.account_Number != tmpAccountNum) {
 
 				accountExists = false;
 				lengthNotFound = inputfile.tellg();
-				cout << "last location not in file: " << lengthNotFound << endl;
+				//cout << "last location not in file: " << lengthNotFound << endl;
+
 			}
 
 			else {
-				lengthFound = inputfile.tellg();
-				cout << "location in file: " << lengthFound << endl;
 				accountExists = true;
+				if (inputfile.eof()) {
+					inputfile.clear();  //clear flags
+					inputfile.close(); // close it
+					inputfile.open(filename); //reopen
+					inputfile.seekg(0, inputfile.end);
+					lengthFound = inputfile.tellg();
+					cout << "account at end of file" << endl;
+					cout << "location at end of file: " << lengthFound << endl;
+
+				}
+				else {
+					lengthFound = inputfile.tellg();
+					//cout << "location in file: " << lengthFound << endl;
+					//accountExists = true;
+					cout << "account found" << endl;
+				}
 			}
+
 		}
 	}
 	else
@@ -358,8 +376,8 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 	if (accountExists){
 		if (lengthNotFound > 0) {
-		*recloc = lengthNotFound-2; 
-		*recordend = lengthFound-2;
+			*recloc = lengthNotFound-2; 
+			*recordend = lengthFound-2;
 		}
 		else {
 			*recloc = 0;
@@ -367,6 +385,9 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 		}
 	
+		cout << "last location not in file: " << lengthNotFound << endl;
+		cout << "location in file: " << lengthFound << endl;
+
 		return true;
 		
 	}
@@ -384,7 +405,9 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	ostringstream tmpstring;
 	string tempstring, tempstring2;
 	ifstream in_file;
-	int endpos, opos = 0;
+	int endpos;// = 0;
+	int opos = 0;
+	int result = 0;
 
 	outputfile.precision(10);
 	tmpstring.precision(10);
@@ -395,24 +418,24 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	in_file.seekg(0, in_file.end);		//find the end of the old file
 	endpos = in_file.tellg();				//store end of old file
 
-	in_file.seekg(0,in_file.beg);		//set input file pointer back to beginning
+	in_file.seekg(0, in_file.beg);		//set input file pointer back to beginning
 	opos = outputfile.tellp();
 	cout << "opos at begin: " << opos << endl;
 
 	while (in_file.good()) {			//while ur not at the end of the input file
 
-		if (opos == *recloc)
-		{
+		if (opos == *recloc){
 
 			cout << "TEST COUT " << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << endl;
 			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";// << endl;
 			outputfile << tmpstring.str();
 			in_file.seekg(*recordend);
 			opos = outputfile.tellp();		//find out where in the output file you are now
-			cout << "endpos: " << endpos << endl;
+		/*	cout << "endpos: " << endpos << endl;
 			cout << "opos: " << opos << endl;
 			cout << "recloc: " << *recloc << endl;
 			cout << "recend: " << *recordend << endl;
+		*/
 		}
 
 
@@ -421,58 +444,30 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 		opos = outputfile.tellp();		//find out where in the output file you are now
 
 
-		if(in_file.good()){
-			outputfile << endl;			// and dont add anothe endl
+		if (in_file.good()) {
+			outputfile << endl;			//  add anothe endl
 		}
-
-		cout << "endpos: "<< endpos << endl;
-		cout << "opos: " <<opos << endl;
-		cout << "recloc: " <<*recloc << endl;
-		cout << "recend: " <<*recordend << endl;
-/*
-		if (opos == *recloc) {
-			tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
-			outputfile << tmpstring.str();
-		}
-		in_file.seekg(*recordend);
-*/	
 	}
-
-	/*
-
-	//outputfile.open("input_new.dat", ios::in | ios::out);	//open file in editable mode
-	outputfile.open("input_new.dat");	//open file in new output mode
-	//if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
-	if (outputfile.good()) {
-	//	if (true) {
-		tmpstring << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";" << endl;
-
-		//outputfile.seekp(*recloc);
-		outputfile << tmpstring.str();
-		//remove("testfiletodelete.dat");
-	
-	}
-	else
-	{
+	/*	cout << "endpos: " << endpos << endl;
+		cout << "opos: " << opos << endl;
+		cout << "recloc: " << *recloc << endl;
+		cout << "recend: " << *recordend << endl;
+	*/
+		in_file.clear();
+		in_file.close();
 		outputfile.clear();
 		outputfile.close();
+
+	//	remove(filename);
+
+	//	result = rename("tmp.dat", &filename[0]);
+	
+	if (result != 0) {
 		return false;
 	}
-
-	*/
-	in_file.clear();
-	in_file.close();
-	outputfile.clear();
-	outputfile.close();
-	int result;
-	remove(filename);
-
-	result = rename("tmp.dat", &filename[0]);
-
-
-	//remove("input.dat");
-
-	return true;
+	else {
+		return true;
+	}
 }
 //********FUNCTION: ModifyRecord  END******************************
 
