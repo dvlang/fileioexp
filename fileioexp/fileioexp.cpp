@@ -25,6 +25,8 @@ double tmpTransAmt;
 int tmpTransAccount;
 int recordlocator;
 int recordEnd;
+bool accountnumgood;
+int tmpaccountlength;
 
 /*
 struct accountStruct
@@ -53,7 +55,7 @@ int main()
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
 
 	while (userselection != 'Q') {
-		//in_file.clear();
+
 		//MENU / USER INTERFACE
 		cout << "************************************************" << endl;
 		cout << "Please select from one of the following options:" << endl<<endl;
@@ -114,82 +116,98 @@ int main()
 			tmpstring.clear();
 			recordlocator = 0;
 			accountExists = false;
+			accountnumgood = false;
+			tmpaccountlength = 0;
 
 			cout << "MODIFY AN ACCOUNT" << endl;
 			cout << "Account Number to Modify" << endl; 
 			getline(cin, tmp);
 			tmpstring.str(tmp);
 			tmpstring >> tmpTransAccount;
+			tmpstring.seekg(0, tmpstring.end);
 
-			accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
+			tmpaccountlength = tmpstring.tellg();
 
-			if (accountExists) {
-				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << "\t" << "Record Locator: " << endl;
-				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail<<"\t\t" << recordlocator<< endl;
+			if (tmpaccountlength == accountlength) {
+				accountnumgood = true;
 			}
-			else
-			{
-				cout << "Account Not Found!!!" << endl << endl;
-			}
-			if (accountExists) {
 
-				cout << endl << "SELECT ACTION" << endl;
-				cout << "Press C to Change Name on account record" << endl;
-				cout << "Press W to perform a withdrawl" << endl;
-				cout << "Press D to make a deposit" << endl;
-				cout << "Press E to Exit" << endl;
-				getline(cin, tmp);
-				userSubselection = tmp[0];
 
-				switch (userSubselection)
+
+			if (accountnumgood) {
+				accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
+
+				if (accountExists) {
+					cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << "\t" << "Record Locator: " << endl;
+					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << "\t\t" << recordlocator << endl;
+				}
+				else
 				{
-				case 'C':
-					cout << "CHANGE NAME: " << endl;
-					cout << "What is new Name: " << endl;
-					getline(cin, tmp);
-					AccountRecord.name_Owner = tmp;
-
-					break;
-				case 'W':
-					cout << "WITHDRAWL: " << endl;
-					cout << "How Much: " << endl;
-					getline(cin, tmp);
-					tmpstring.clear();
-					tmpstring.str(tmp);
-					tmpstring >> tmpTransAmt;
-					cout << "tmpTransAmt = " << tmpTransAmt << endl;
-					if (AccountRecord.amount_Avail >= tmpTransAmt) {
-						AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
-					}
-					else {
-						cout << "Insufficient funds!" << endl;
-					}
-
-					break;
-				case 'D':
-					cout << "DEPOSIT: " << endl;
-					cout << "How Much: " << endl;
-					getline(cin, tmp);
-					tmpstring.clear();
-					tmpstring.str(tmp);
-					tmpstring >> tmpTransAmt;
-
-					AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
-
-					break;
-				case 'E': cout << "-Exit" << endl; userselection = 'H';
-					break;
-				default: cout << "INVALID Selection!" << endl;
-					break;
-
+					cout << "ERROR: Account Not Found!!!" << endl << endl;
 				}
-				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' ) {
-				
-				cout << "New values to commit: " << endl;
-				cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-				cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
-				ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
+				if (accountExists) {
+
+					cout << endl << "SELECT ACTION" << endl;
+					cout << "Press C to Change Name on account record" << endl;
+					cout << "Press W to perform a withdrawl" << endl;
+					cout << "Press D to make a deposit" << endl;
+					cout << "Press E to Exit" << endl;
+					getline(cin, tmp);
+					userSubselection = tmp[0];
+
+					switch (userSubselection)
+					{
+					case 'C':
+						cout << "CHANGE NAME: " << endl;
+						cout << "What is new Name: " << endl;
+						getline(cin, tmp);
+						AccountRecord.name_Owner = tmp;
+
+						break;
+					case 'W':
+						cout << "WITHDRAWL: " << endl;
+						cout << "How Much: " << endl;
+						getline(cin, tmp);
+						tmpstring.clear();
+						tmpstring.str(tmp);
+						tmpstring >> tmpTransAmt;
+						cout << "tmpTransAmt = " << tmpTransAmt << endl;
+						if (AccountRecord.amount_Avail >= tmpTransAmt) {
+							AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+						}
+						else {
+							cout << "ERROR: Insufficient funds!" << endl;
+						}
+
+						break;
+					case 'D':
+						cout << "DEPOSIT: " << endl;
+						cout << "How Much: " << endl;
+						getline(cin, tmp);
+						tmpstring.clear();
+						tmpstring.str(tmp);
+						tmpstring >> tmpTransAmt;
+
+						AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+
+						break;
+					case 'E': cout << "-Exit" << endl; userselection = 'H';
+						break;
+					default: cout << "ERROR: INVALID Selection!" << endl;
+						break;
+
+					}
+					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W') {
+
+						cout << "New values to commit: " << endl;
+						cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
+						cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+						ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
+					}
 				}
+			}
+			else {
+				cout << "ERROR:Invalid Account Number Entered!" << endl << endl;
 			}
 
 			break;
@@ -197,7 +215,7 @@ int main()
 		case 'V':  
 			cout << "VIEW ALL ACCOUNT RECORDS" << endl; 
 			cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-			//in_file.open("input.dat");
+
 			
 			in_file.open(filename);
 			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
@@ -206,7 +224,7 @@ int main()
 			if (!in_file.eof()) {
 				in_file.clear();  //clear flags
 				in_file.close(); // close it
-			//	in_file.open("input.dat"); //reopen
+
 				in_file.open(filename);
 				while (in_file.good()) {	
 					GetRecord(AccountRecord, in_file); //pass strcture by reference
@@ -222,7 +240,7 @@ int main()
 			break;  
 		case 'Q':  cout << "user selected Q" << endl; break;
 		case 'H':  cout << "user selected H" << endl; break;
-		default: cout << "INVALID Selection!" << endl;
+		default: cout << "ERROR: INVALID Selection!" << endl;
 		}
 
 	}
@@ -265,7 +283,6 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 		j = i;	//j is placeholder to beginning of next entry
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		accountName = wholeentry.substr(j, i - j);
-		//	Person1.name_Owner = accountname;
 		record.name_Owner = accountName;
 
 		i += 2;	//move i index off ";" and space
@@ -276,15 +293,12 @@ void GetRecord( accountStruct &record, ifstream &inputfile) {
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		accountValue = wholeentry.substr(j, i - j);
 
-	//	cout<< "GetRecord: accountValue " << accountValue<<endl;
+
 
 		tmpstring.str(accountValue);
 		tmpstring >> record.amount_Avail;
-		//std::string::size_type sz;
-
-		//record.amount_Avail = std::stod(accountValue,&sz);
 		cout.precision(15);
-		//cout << "GetRecord: record.amount_Avail " << record.amount_Avail << endl;
+
 
 		// END LINE PARSING	
 
@@ -371,7 +385,6 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 		if (lengthNotFound > 0) {
 			*recloc = lengthNotFound-2; 
 			*recordend = lengthFound-2;
-			//*recordend = lengthFound;
 		}
 		else {
 			*recloc = 0;
@@ -379,15 +392,15 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 		}
 	
-		cout << "last location not in file: " << lengthNotFound << endl;
-		cout << "location in file: " << lengthFound << endl;
+		//cout << "last location not in file: " << lengthNotFound << endl;
+		//cout << "location in file: " << lengthFound << endl;
 
 		return true;
 		
 	}
 	else {
 		return false;
-		//cout <<"account does not exist" << endl;
+
 	}
 	
 

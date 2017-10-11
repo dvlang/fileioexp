@@ -16,3 +16,4 @@ struct accountStruct
 
 const char filename[14] = "accounts.dat";
 
+const int accountlength = 6;
