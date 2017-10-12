@@ -20,3 +20,4 @@ struct accountStruct
 const char filename[14] = "accounts.dat";	//this is the name of the account data file
 
 const int accountlength = 6;	//this is the length required for an account number
+const float interestRate = 0.01;

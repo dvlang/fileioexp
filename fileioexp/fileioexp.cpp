@@ -175,6 +175,7 @@ int main()
 					cout << "Press C to Change Name on account record" << endl;
 					cout << "Press W to perform a withdrawl" << endl;
 					cout << "Press D to make a deposit" << endl;
+					cout << "Press P to factor in interest" << endl;
 					cout << "Press E to Exit" << endl;
 					getline(cin, tmp);
 					userSubselection = tmp[0];
@@ -242,6 +243,12 @@ int main()
 						else {
 							cout << "ERROR: Deposit amount not a number" << endl;
 						}
+						break;
+					case 'P':
+						cout << "INTEREST: " << endl;
+						AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + interestRate));
+						//cout << "Plus Interest Calc is "<< AccountRecord.amount_Avail << endl;
+
 
 
 						break;
@@ -251,7 +258,7 @@ int main()
 						break;
 
 					}
-					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W') {
+					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					//	cout << "New values to commit: " << endl;
 					//	cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
