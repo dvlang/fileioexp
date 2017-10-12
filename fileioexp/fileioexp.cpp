@@ -224,14 +224,13 @@ int main()
 						
 						
 						lengthgood = CheckEmpty(tmpstring);
-						bool numbergood;
-						numbergood = IsNumber(tmp);
+
 
 
 
 
 						tmpstring >> tmpTransAmt;
-						if (!lengthgood||!numbergood) {
+						if (!lengthgood) {
 							cout << "ERROR: No valid value entered- Exiting" << endl << endl;
 						}
 						else {
@@ -571,57 +570,6 @@ bool CheckEmpty(istringstream &tmpstring) {
 }
 //********FUNCTION: CheckEmpty  END******************************
 
-//********FUNCTION: IsNumber  BEGIN******************************
-bool IsNumber(const string& tmpstring) {
-	int tmpaccountlength = 0;
-	int i = 0;
-	int result = 0;
-	int size;
-	cout << "string " << tmpstring <<endl;
-/*
-	while (isdigit(tmpstring[i])) {
-		cout << "char= " << tmpstring[i] << endl;
-		if (isdigit(tmpstring[i])) {
 
-			result++;
-		}
-		i++;
-	}
-	if ((tmpstring[i] == '.') && (isdigit(tmpstring[(i + 1)])) && (isdigit(tmpstring[(i + 2)]))){// && isspace(tmpstring[i + 3])) {
-		result++;
-		cout << "good format " << endl;
-	}
-
-	else {
-		result = 0;
-		cout << "bad format " << endl;
-		cout << "tmpstring[i]  " << tmpstring[i] << endl;
-		cout << "tmpstring[i+1]  " << tmpstring[i+1]<< endl;
-		cout << "tmpstring[i+2] " << tmpstring[i+2]<<endl;
-		cout << "tmpstring[i+3] " << tmpstring[i + 3] << endl;
-
-		if (isspace(tmpstring[i + 3])) {
-			cout << "tmpstring[i+3] is space " << endl;
-		}
-		else
-		{
-			cout << "tmpstring[i+3] not space" << endl;
-		}
-	}
-
-
-		cout << "result= " << result << endl;
-		*/
-	if (result == 0) {
-		return true;
-	}
-	else {
-		return false;
-	}
-
-}
-//********FUNCTION: IsNumber  END******************************
-
-//--------------------END Functions----------------------------------------
 
 
