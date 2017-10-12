@@ -28,6 +28,7 @@ int recordEnd;
 bool accountnumgood;
 int tmpaccountlength;
 bool lengthgood;
+int tmpaccountnum;
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -65,7 +66,7 @@ int main()
 		switch (userselection)
 		{
 
-			
+
 		case 'I':	//-------------------USER INSERT OPTION-------------------------
 			recordlocator = 0;
 			accountExists = false;
@@ -73,7 +74,7 @@ int main()
 			lengthgood = false;
 
 			tmpstring.clear();
-			
+
 			//Get desired account number
 			cout << "CREATE NEW ACCOUNT" << endl;
 			cout << "Desired account number (6digits): " << endl;
@@ -110,10 +111,10 @@ int main()
 			cout << "Desired Account Holder Name: " << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
-			
+
 			//check to see if they field was empty, if it was, stay here till they give you a good one
 			lengthgood = CheckEmpty(tmpstring);
-			
+
 			while (!lengthgood) {
 				cout << "ERROR: Account Holder Name Can't Be Empty: " << endl;
 				getline(cin, tmp);
@@ -146,6 +147,7 @@ int main()
 			recordlocator = 0;
 			accountExists = false;
 			accountnumgood = false;
+			bool numbergood;
 			tmpaccountlength = 0;
 
 			cout << "MODIFY AN ACCOUNT" << endl;
@@ -197,7 +199,7 @@ int main()
 						else {
 							AccountRecord.name_Owner = tmp;
 						}
-						
+
 						break;
 					case 'W':
 						cout << "WITHDRAWL: " << endl;
@@ -206,15 +208,25 @@ int main()
 						tmpstring.clear();
 						tmpstring.str(tmp);
 						tmpstring >> tmpTransAmt;
-						//cout << "tmpTransAmt = " << tmpTransAmt << endl;
-						if (AccountRecord.amount_Avail >= tmpTransAmt) {
-							AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+
+	
+						if (!tmpstring.fail()) {	//convertion to int didnt fail
+							if (AccountRecord.amount_Avail >= tmpTransAmt) {
+								AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+							}
+							else {
+								cout << "ERROR: Insufficient funds!- Exiting" << endl;
+							}
+
 						}
-						else {
-							cout << "ERROR: Insufficient funds!- Exiting" << endl;
+						else
+						{
+							cout << "ERROR: Withdrawl amount not a number" << endl;
 						}
 
-						break;
+
+
+							break;
 					case 'D':
 						cout << "DEPOSIT: " << endl;
 						cout << "How Much (00.00 format):  " << endl;
@@ -222,22 +234,17 @@ int main()
 						tmpstring.clear();
 						tmpstring.str(tmp);
 						
-						
 						lengthgood = CheckEmpty(tmpstring);
-						bool numbergood;
-						numbergood = IsNumber(tmp);
-
-
-
-
+						
 						tmpstring >> tmpTransAmt;
-						if (!lengthgood||!numbergood) {
-							cout << "ERROR: No valid value entered- Exiting" << endl << endl;
+
+						if (!tmpstring.fail()) {	//convertion to int didnt fail
+								AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
 						}
 						else {
-							AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+							cout << "ERROR: Deposit amount not a number" << endl;
 						}
-						
+
 
 						break;
 					case 'E': cout << "-Exit" << endl; userselection = 'H';
@@ -248,9 +255,6 @@ int main()
 					}
 					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W') {
 
-					//	cout << "New values to commit: " << endl;
-					//	cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-					//	cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
 						ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
 					}
 				}
@@ -539,7 +543,7 @@ bool CheckLength(istringstream &tmpstring) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-//	cout << "length= " << tmpaccountlength << endl;
+	//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength == accountlength) {
 		return true;
@@ -559,7 +563,7 @@ bool CheckEmpty(istringstream &tmpstring) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-//	cout << "length= " << tmpaccountlength << endl;
+	//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength != 0) {
 		return true;
@@ -571,56 +575,7 @@ bool CheckEmpty(istringstream &tmpstring) {
 }
 //********FUNCTION: CheckEmpty  END******************************
 
-//********FUNCTION: IsNumber  BEGIN******************************
-bool IsNumber(const string& tmpstring) {
-	int tmpaccountlength = 0;
-	int i = 0;
-	int result = 0;
-	int size;
-	cout << "string " << tmpstring <<endl;
-/*
-	while (isdigit(tmpstring[i])) {
-		cout << "char= " << tmpstring[i] << endl;
-		if (isdigit(tmpstring[i])) {
 
-			result++;
-		}
-		i++;
-	}
-	if ((tmpstring[i] == '.') && (isdigit(tmpstring[(i + 1)])) && (isdigit(tmpstring[(i + 2)]))){// && isspace(tmpstring[i + 3])) {
-		result++;
-		cout << "good format " << endl;
-	}
-
-	else {
-		result = 0;
-		cout << "bad format " << endl;
-		cout << "tmpstring[i]  " << tmpstring[i] << endl;
-		cout << "tmpstring[i+1]  " << tmpstring[i+1]<< endl;
-		cout << "tmpstring[i+2] " << tmpstring[i+2]<<endl;
-		cout << "tmpstring[i+3] " << tmpstring[i + 3] << endl;
-
-		if (isspace(tmpstring[i + 3])) {
-			cout << "tmpstring[i+3] is space " << endl;
-		}
-		else
-		{
-			cout << "tmpstring[i+3] not space" << endl;
-		}
-	}
-
-
-		cout << "result= " << result << endl;
-		*/
-	if (result == 0) {
-		return true;
-	}
-	else {
-		return false;
-	}
-
-}
-//********FUNCTION: IsNumber  END******************************
 
 //--------------------END Functions----------------------------------------
 
