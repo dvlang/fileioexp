@@ -17,7 +17,7 @@ struct accountStruct
 	double amount_Avail;
 };
 
-const char filename[14] = "accounts.dat";	//this is the name of the account data file
+const char FILENAME[14] = "accounts.dat";	//this is the name of the account data file
 
-const int accountlength = 6;	//this is the length required for an account number
-const float interestRate = 0.01;
+const int ACCOUNTLENGTH = 6;	//this is the length required for an account number
+const float INTERESTRATE = 0.01;

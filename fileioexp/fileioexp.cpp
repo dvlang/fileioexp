@@ -223,9 +223,8 @@ int main()
 							cout << "ERROR: Withdrawl amount not a number" << endl;
 						}
 
-
-
 						break;
+
 					case 'D':
 						cout << "DEPOSIT: " << endl;
 						cout << "How Much (00.00 format):  " << endl;
@@ -244,14 +243,12 @@ int main()
 							cout << "ERROR: Deposit amount not a number" << endl;
 						}
 						break;
+
 					case 'P':
 						cout << "INTEREST: " << endl;
-						AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + interestRate));
-						//cout << "Plus Interest Calc is "<< AccountRecord.amount_Avail << endl;
-
-
-
+						AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + INTERESTRATE));
 						break;
+
 					case 'E': cout << "-Exit" << endl; userselection = 'H';
 						break;
 					default: cout << "ERROR: INVALID Selection!" << endl;
@@ -260,9 +257,6 @@ int main()
 					}
 					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
-					//	cout << "New values to commit: " << endl;
-					//	cout << "Account Number: " << "\t" << "Account Name: " << "\t" << "Account Value: " << endl;
-					//	cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
 						ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
 					}
 				}
@@ -278,7 +272,7 @@ int main()
 			cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
 			cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
 
-			in_file.open(filename);
+			in_file.open(FILENAME);
 			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
 			getline(in_file, tmp);	//force a getline to set .eof bit
 
@@ -286,7 +280,7 @@ int main()
 				in_file.clear();  //clear flags
 				in_file.close(); // close it
 
-				in_file.open(filename);
+				in_file.open(FILENAME);
 				while (in_file.good()) {
 					GetRecord(AccountRecord, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
 					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
@@ -373,7 +367,7 @@ void GetRecord(accountStruct &record, ifstream &inputfile) {
 bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	ostringstream tmpstring;
 
-	outputfile.open(filename, std::ios_base::app);	//open file in append mode
+	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
 	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
 		tmpstring << endl << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << ";";
@@ -401,14 +395,14 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 	int lengthFound = 0;
 	int y = 0;
 
-	inputfile.open(filename);
+	inputfile.open(FILENAME);
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
 	getline(inputfile, tmp);	//force a getline to set .eof bit
 
 	if (!inputfile.eof()) {
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
-		inputfile.open(filename); //reopen
+		inputfile.open(FILENAME); //reopen
 
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
@@ -424,7 +418,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 				if (inputfile.eof()) {		//if we read past end of file, need to go get the location of last ch
 					inputfile.clear();  //clear flags
 					inputfile.close(); // close it
-					inputfile.open(filename); //reopen
+					inputfile.open(FILENAME); //reopen
 					inputfile.seekg(0, inputfile.end);
 					lengthFound = inputfile.tellg();
 					lengthFound = lengthFound + 2;
@@ -455,9 +449,6 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 		}
 
-		//cout << "last location not in file: " << lengthNotFound << endl;
-		//cout << "location in file: " << lengthFound << endl;
-
 		return true;
 
 	}
@@ -482,7 +473,7 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	outputfile.precision(10);
 	tmpstring.precision(10);
 
-	in_file.open(filename);			//open the input file
+	in_file.open(FILENAME);			//open the input file
 	if (in_file.fail()) {
 		cout << "ERROR: Can't open Input file!" << endl;
 		result++;
@@ -530,9 +521,9 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	outputfile.close();
 
 	remove("old.dat");
-	rename(&filename[0], "old.dat");
-	remove(filename);
-	result += rename("tmp.dat", &filename[0]);
+	rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
+	remove(FILENAME);
+	result += rename("tmp.dat", &FILENAME[0]);
 
 	if (result != 0) {
 		return false;
@@ -553,7 +544,7 @@ bool CheckLength(istringstream &tmpstring) {
 	tmpstring.seekg(0, tmpstring.beg);
 //	cout << "length= " << tmpaccountlength << endl;
 
-	if (tmpaccountlength == accountlength) {
+	if (tmpaccountlength == ACCOUNTLENGTH) {
 		return true;
 	}
 	else {
