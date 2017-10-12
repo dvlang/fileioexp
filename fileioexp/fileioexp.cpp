@@ -206,13 +206,23 @@ int main()
 						tmpstring.clear();
 						tmpstring.str(tmp);
 						tmpstring >> tmpTransAmt;
-						//cout << "tmpTransAmt = " << tmpTransAmt << endl;
-						if (AccountRecord.amount_Avail >= tmpTransAmt) {
-							AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+
+
+						if (!tmpstring.fail()) {	//convertion to int didnt fail
+							if (AccountRecord.amount_Avail >= tmpTransAmt) {
+								AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+							}
+							else {
+								cout << "ERROR: Insufficient funds!- Exiting" << endl;
+							}
+
 						}
-						else {
-							cout << "ERROR: Insufficient funds!- Exiting" << endl;
+						else
+						{
+							cout << "ERROR: Withdrawl amount not a number" << endl;
 						}
+
+
 
 						break;
 					case 'D':
@@ -221,22 +231,18 @@ int main()
 						getline(cin, tmp);
 						tmpstring.clear();
 						tmpstring.str(tmp);
-						
-						
+
 						lengthgood = CheckEmpty(tmpstring);
 
-
-
-
-
 						tmpstring >> tmpTransAmt;
-						if (!lengthgood) {
-							cout << "ERROR: No valid value entered- Exiting" << endl << endl;
-						}
-						else {
+
+						if (!tmpstring.fail()) {	//convertion to int didnt fail
 							AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
 						}
-						
+						else {
+							cout << "ERROR: Deposit amount not a number" << endl;
+						}
+
 
 						break;
 					case 'E': cout << "-Exit" << endl; userselection = 'H';
