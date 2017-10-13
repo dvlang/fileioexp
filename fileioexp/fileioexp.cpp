@@ -89,29 +89,29 @@ int main()
 				cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl;
 				getline(cin, tmp);
 				tmpstring.str(tmp);
-				
+
 				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
 				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
 
 			tmpstring >> tmpAccount.account_Number;
-			
+
 			//check to see if account number already exists, if it does stay here till they give you a good one
 			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
 
-			while (accountExists||!accountnumgood) {
+			while (accountExists || !accountnumgood) {
 				tmpstring.clear();
 				if (accountExists) { cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl; }
 				if (!accountnumgood) { cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl; }
 				getline(cin, tmp);
 				tmpstring.str(tmp);
 				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);	
+				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 
 				//if its a good account number, then create an account
-				if (accountnumgood) {	
+				if (accountnumgood) {
 					tmpstring >> tmpAccount.account_Number;
 					accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
 				}
@@ -269,7 +269,7 @@ int main()
 						cout << "-Exit" << endl; userselection = 'H';
 						break;
 
-					default: 
+					default:
 						cout << "ERROR: INVALID Selection!" << endl;
 						break;
 
@@ -606,7 +606,7 @@ bool IsNumber(const string& tmpstring, int length) {
 	int i;
 	int result = 0;
 
-	for (i = 0; i < length; i++){
+	for (i = 0; i < length; i++) {
 
 		if (isdigit(tmpstring[i])) {
 			result++;
@@ -621,7 +621,7 @@ bool IsNumber(const string& tmpstring, int length) {
 	else {
 		return false;
 	}
-	
-		
+
+
 }
 //********FUNCTION: IsNumber  END******************************
