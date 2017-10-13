@@ -4,10 +4,11 @@
 void GetRecord(struct accountStruct &record, ifstream&);
 bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc, int *recordend);
 bool AddRecord(struct accountStruct &record, ofstream&);
-bool CheckLength(istringstream&);
+bool CheckLength(istringstream&, int);
 bool CheckEmpty(istringstream&);
 bool IsNumber(const string&);
 bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc, int *recordend);
+bool IsNumber(const string&, int);
 //--------------------END Function Prototype-------------------------------
 
 struct accountStruct

@@ -38,7 +38,7 @@ int main()
 	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
-	ifstream io_file;
+
 
 
 
@@ -65,7 +65,7 @@ int main()
 		switch (userselection)
 		{
 
-			
+
 		case 'I':	//-------------------USER INSERT OPTION-------------------------
 			recordlocator = 0;
 			accountExists = false;
@@ -73,47 +73,63 @@ int main()
 			lengthgood = false;
 
 			tmpstring.clear();
-			
+
 			//Get desired account number
 			cout << "CREATE NEW ACCOUNT" << endl;
 			cout << "Desired account number (6digits): " << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
 
-			//check to make sure the account number is valid length
-			accountnumgood = CheckLength(tmpstring);
+			//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
+			accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
+			if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
+
 			while (!accountnumgood) {
 				tmpstring.clear();
-				cout << "ERROR: Bad Length, Enter NEW Desired account number (6digits): " << endl;
+				cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl;
 				getline(cin, tmp);
 				tmpstring.str(tmp);
-
-				accountnumgood = CheckLength(tmpstring);
+				
+				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
+				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
+				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
 
 			tmpstring >> tmpAccount.account_Number;
-
+			
 			//check to see if account number already exists, if it does stay here till they give you a good one
 			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
 
-			while (accountExists) {
+			while (accountExists||!accountnumgood) {
 				tmpstring.clear();
-				cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl;
+				if (accountExists) { cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl; }
+				if (!accountnumgood) { cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl; }
 				getline(cin, tmp);
 				tmpstring.str(tmp);
-				tmpstring >> tmpAccount.account_Number;
+				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
+				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);	
+				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 
-				accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+				//if its a good account number, then create an account
+				if (accountnumgood) {	
+					tmpstring >> tmpAccount.account_Number;
+					accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+				}
+				else {
+					accountExists = false;
+				}
+
 			}
 
 			//Get user acccount name
 			cout << "Desired Account Holder Name: " << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
-			
+
 			//check to see if they field was empty, if it was, stay here till they give you a good one
 			lengthgood = CheckEmpty(tmpstring);
-			
+
+			//make sure the user didnt enter an empty value
 			while (!lengthgood) {
 				cout << "ERROR: Account Holder Name Can't Be Empty: " << endl;
 				getline(cin, tmp);
@@ -128,6 +144,7 @@ int main()
 			tmpstring.clear();
 			tmpstring.str(tmp);
 
+			//make sure the user didnt enter an empty value
 			lengthgood = CheckEmpty(tmpstring);
 			if (lengthgood) {
 				tmpstring >> tmpAccount.amount_Avail;
@@ -153,7 +170,7 @@ int main()
 			getline(cin, tmp);
 			tmpstring.str(tmp);
 
-			accountnumgood = CheckLength(tmpstring);
+			accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
 			tmpstring >> tmpTransAccount;
 
 			if (accountnumgood) {
@@ -182,11 +199,10 @@ int main()
 
 					switch (userSubselection)
 					{
-					case 'C':
+					case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 						cout << "CHANGE NAME: " << endl;
 						cout << "What is new Name: " << endl;
 						getline(cin, tmp);
-
 						tmpstring.str(tmp);
 
 						//check to see if they field was empty, if it was, stay here till they give you a good one
@@ -198,9 +214,9 @@ int main()
 						else {
 							AccountRecord.name_Owner = tmp;
 						}
-						
+
 						break;
-					case 'W':
+					case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 						cout << "WITHDRAWL: " << endl;
 						cout << "How Much: " << endl;
 						getline(cin, tmp);
@@ -225,7 +241,7 @@ int main()
 
 						break;
 
-					case 'D':
+					case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
 						cout << "DEPOSIT: " << endl;
 						cout << "How Much (00.00 format):  " << endl;
 						getline(cin, tmp);
@@ -244,14 +260,17 @@ int main()
 						}
 						break;
 
-					case 'P':
+					case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
 						cout << "INTEREST: " << endl;
 						AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + INTERESTRATE));
 						break;
 
-					case 'E': cout << "-Exit" << endl; userselection = 'H';
+					case 'E':	//-------------------USER EXIT OPTION-------------------------
+						cout << "-Exit" << endl; userselection = 'H';
 						break;
-					default: cout << "ERROR: INVALID Selection!" << endl;
+
+					default: 
+						cout << "ERROR: INVALID Selection!" << endl;
 						break;
 
 					}
@@ -364,6 +383,7 @@ void GetRecord(accountStruct &record, ifstream &inputfile) {
 //********FUNCTION: GetRecord  END******************************
 
 //********FUNCTION: AddRecord  BEGIN******************************
+//This function adds a record based on info in a passed struct
 bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	ostringstream tmpstring;
 
@@ -386,14 +406,14 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 }
 //********FUNCTION: AddRecord  END******************************
 
-//********FUNCTION: findRecord  BEGIN******************************
+//********FUNCTION: FindRecord  BEGIN******************************
+//This function looks to find a particular record, if it does, it populates the passed struct and reports length and end
 bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend) {
 	bool accountExists;
 	string tmp = "";
 	accountExists = false;
 	int lengthNotFound = 0;
 	int lengthFound = 0;
-	int y = 0;
 
 	inputfile.open(FILENAME);
 	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
@@ -462,6 +482,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 //********FUNCTION: findRecord  END******************************
 
 //********FUNCTION: ModifyRecord  BEGIN******************************
+//This function modifies the file to edit a particular record
 bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *recloc, int *recordend) {
 	ostringstream tmpstring;
 	string tempstring, tempstring2, tmpfilename;
@@ -535,16 +556,17 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 //********FUNCTION: ModifyRecord  END******************************
 
 //********FUNCTION: CheckLength  BEGIN******************************
-bool CheckLength(istringstream &tmpstring) {
+//This function tests to see if the TMPSTRING is LENGTH char string
+bool CheckLength(istringstream &tmpstring, int length) {
 	int tmpaccountlength = 0;
 
 	tmpstring.seekg(0, tmpstring.end);
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-//	cout << "length= " << tmpaccountlength << endl;
+	//	cout << "length= " << tmpaccountlength << endl;
 
-	if (tmpaccountlength == ACCOUNTLENGTH) {
+	if (tmpaccountlength == length) {
 		return true;
 	}
 	else {
@@ -555,6 +577,7 @@ bool CheckLength(istringstream &tmpstring) {
 //********FUNCTION: CheckLength  END******************************
 
 //********FUNCTION: CheckEmpty  BEGIN******************************
+//This function tests to see if the string is empty
 bool CheckEmpty(istringstream &tmpstring) {
 	int tmpaccountlength = 0;
 
@@ -562,7 +585,7 @@ bool CheckEmpty(istringstream &tmpstring) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-//	cout << "length= " << tmpaccountlength << endl;
+	//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength != 0) {
 		return true;
@@ -576,4 +599,29 @@ bool CheckEmpty(istringstream &tmpstring) {
 
 
 
+//********FUNCTION: IsNumber  BEGIN******************************
+//This function tests to see if the TMPSTRING is LENGTH digit number
+bool IsNumber(const string& tmpstring, int length) {
 
+	int i;
+	int result = 0;
+
+	for (i = 0; i < length; i++){
+
+		if (isdigit(tmpstring[i])) {
+			result++;
+		}
+
+	}
+
+
+	if (result == length) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+		
+}
+//********FUNCTION: IsNumber  END******************************
