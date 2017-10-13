@@ -1,4 +1,11 @@
-// fileioexp.cpp : Defines the entry point for the console application.
+// fileioexp.cpp : 
+//
+// Author: Dan Lang 
+// Date: 10/12/2017
+// Class: cs475
+// Assignment: project 1
+//
+//  This program simulates a simple bank database transaction program
 //
 
 #include "stdafx.h"
