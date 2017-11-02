@@ -20,6 +20,7 @@ using namespace std;
 
 
 #include "fileioexp.h"
+#include "accounts.h"
 
 char userselection = 'H';
 char userSubselection = 'E';
@@ -46,7 +47,15 @@ int main()
 	ifstream in_file;
 	ofstream out_file;
 
+	Accounts userAccount;
 
+	userAccount.printAccount();
+	cout << "and changed...." << endl;
+	userAccount.setAccountName("Dan Lang");
+	userAccount.setAccountNumber(123456);
+	userAccount.setAccountValue(12564.56);
+	userAccount.printAccount();
+	cout << "I should have printed something before this..." << endl;
 
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
