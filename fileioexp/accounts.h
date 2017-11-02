@@ -2,7 +2,8 @@
 #ifndef ACCOUNTS_H
 #define ACCOUNTS_H
 #include <string>
-
+#include <iostream>
+#include <fstream>
 
 
 class Accounts {
@@ -13,6 +14,7 @@ public:
 	void setAccountNumber(int);
 	void setAccountName(std::string);
 	void setAccountValue(double);
+
 
 private:
 	int account_Number;

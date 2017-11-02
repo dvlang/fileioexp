@@ -1,4 +1,6 @@
 #pragma once
+
+
 //--------------------BEGIN Function Prototype-----------------------------
 //void ViewAllRecords(ifstream&);
 void GetRecord(struct accountStruct &record, ifstream&);

@@ -48,6 +48,7 @@ int main()
 	ofstream out_file;
 
 	Accounts userAccount;
+	Accounts manyUserAccounts[4];
 
 	userAccount.printAccount();
 	cout << "and changed...." << endl;
@@ -56,6 +57,45 @@ int main()
 	userAccount.setAccountValue(12564.56);
 	userAccount.printAccount();
 	cout << "I should have printed something before this..." << endl;
+
+	int tmpAcctnum;
+	string tmpAcctname;
+	double tmpAcctval;
+
+	for (int i = 0; i <=1; i++) {
+		cout << "give me an account number" << endl;
+		getline(cin, tmp);
+		tmpstring.clear();
+		tmpstring.str(tmp);
+		tmpstring >> tmpAcctnum;
+
+		manyUserAccounts[i].setAccountNumber(tmpAcctnum);
+		cout << "give me an account name" << endl;
+
+		getline(cin, tmp);
+		tmpstring.clear();
+		tmpstring.str(tmp);
+		tmpstring >> tmpAcctname;
+
+		manyUserAccounts[i].setAccountName(tmpAcctname);
+		cout << "give me an account value "<< endl;
+
+		getline(cin, tmp);
+		tmpstring.clear();
+		tmpstring.str(tmp);
+		tmpstring >> tmpAcctval;
+		manyUserAccounts[i].setAccountValue(tmpAcctval);
+		
+		cout << "I entered this: " << endl;
+		manyUserAccounts[i].printAccount();
+
+	}
+	cout <<endl<< "Reprint all: " << endl;
+	for (int i = 0; i <=1; i++) {
+		manyUserAccounts[i].printAccount();
+	}
+
+	cout << "I should have printed many accounts before this..." << endl;
 
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;

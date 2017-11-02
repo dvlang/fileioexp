@@ -4,6 +4,7 @@
 #include "accounts.h"
 
 
+
 Accounts::Accounts() { account_Number = 0; name_Owner = "null"; amount_Avail = 1010; }
 
 void Accounts::printAccount()
