@@ -8,10 +8,12 @@ void GetRecordwc(Accounts &accref, ifstream&);
 bool FindRecord(struct accountStruct &record, ifstream&, int, int *recloc, int *recordend);
 bool FindRecordwClass(Accounts &accref, ifstream&, int, int *recloc, int *recordend);
 bool AddRecord(struct accountStruct &record, ofstream&);
+bool AddRecordwc(Accounts &accrec, ofstream&);
 bool CheckLength(istringstream&, int);
 bool CheckEmpty(istringstream&);
 bool IsNumber(const string&);
 bool ModifyRecord(struct accountStruct &record, ofstream&, int *recloc, int *recordend);
+bool ModifyRecordwc(Accounts &record, ofstream&, int *recloc, int *recordend);
 bool IsNumber(const string&, int);
 bool FindRecordwClass(Accounts &accrec);
 //--------------------END Function Prototype-------------------------------

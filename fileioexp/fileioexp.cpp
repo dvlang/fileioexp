@@ -49,23 +49,8 @@ int main()
 
 	Accounts userAccount;
 	Accounts tmpUserAccount;
-	bool y;
-
-	Accounts manyUserAccounts[4];
-
-	userAccount.printAccount();
-	cout << "and changed...." << endl;
-	userAccount.setAccountName("Dan Lang");
-	userAccount.setAccountNumber(123456);
-	userAccount.setAccountValue(12564.56);
-	userAccount.printAccount();
-	cout << "I should have printed something before this..." << endl;
-
-	//y= FindRecordwClass(userAccount);
-	cout <<endl<< "returned from function" << endl;
-	userAccount.printAccount();
-	cout << endl;
-	/*int tmpAcctnum;
+	
+/*int tmpAcctnum;
 	string tmpAcctname;
 	double tmpAcctval;
 
@@ -158,11 +143,13 @@ int main()
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
 
-			tmpstring >> tmpAccount.account_Number;
+			//tmpstring >> tmpAccount.account_Number;
 			int tmpacctnumber;
 			double tmpacctval;
 			tmpstring >> tmpacctnumber;
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
+
+			cout <<"here's the value I took in: "<< tmpUserAccount.getAccountNumber() << endl;
 
 
 			//check to see if account number already exists, if it does stay here till they give you a good one
@@ -181,7 +168,7 @@ int main()
 
 				//if its a good account number, then create an account
 				if (accountnumgood) {
-					tmpstring >> tmpAccount.account_Number;
+					//tmpstring >> tmpAccount.account_Number;
 					tmpstring >> tmpacctnumber;
 					tmpUserAccount.setAccountNumber(tmpacctnumber);
 					//accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
@@ -220,17 +207,20 @@ int main()
 			//make sure the user didnt enter an empty value
 			lengthgood = CheckEmpty(tmpstring);
 			if (lengthgood) {
-				tmpstring >> tmpAccount.amount_Avail;
+				//tmpstring >> tmpAccount.amount_Avail;
 				tmpstring >> tmpacctval;
+				cout << "the tmp string is" << tmpacctval;
 				tmpUserAccount.setAccountValue(tmpacctval);
 			}
 			else {
 				tmpAccount.amount_Avail = 0.00;
 				tmpUserAccount.setAccountValue(0.00);
 			}
-
+			cout << "print tmpUserAccount before committing" << endl;
+			tmpUserAccount.printAccount();
 			//input data good, commit record
-			AddRecord(tmpAccount, out_file);
+			//AddRecord(tmpAccount, out_file);
+			AddRecordwc(tmpUserAccount, out_file);
 
 			break;
 
@@ -248,16 +238,17 @@ int main()
 
 			accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
 			tmpstring >> tmpTransAccount;
+			tmpUserAccount.setAccountNumber(tmpTransAccount);
 
 			if (accountnumgood) {
-				accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
+				accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
 
 
 				if (accountExists) {
 					cout << endl << "--------------------Account Information-----------------------" << endl;
 					cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
 					cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
-					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << AccountRecord.amount_Avail << endl;
+					cout << userAccount.getAccountNumber()<< "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
 				}
 				else
 				{
@@ -289,7 +280,7 @@ int main()
 							cout << "ERROR: Account Holder Name Can't Be Empty- Exiting" << endl << endl;
 						}
 						else {
-							AccountRecord.name_Owner = tmp;
+							userAccount.setAccountName(tmp);
 						}
 
 						break;
@@ -303,8 +294,9 @@ int main()
 
 
 						if (!tmpstring.fail()) {	//convertion to int didnt fail
-							if (AccountRecord.amount_Avail >= tmpTransAmt) {
-								AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+							if (userAccount.getAccountValue() >= tmpTransAmt) {
+								//AccountRecord.amount_Avail = AccountRecord.amount_Avail - tmpTransAmt;
+								userAccount.setAccountValue(userAccount.getAccountValue() - tmpTransAmt);
 							}
 							else {
 								cout << "ERROR: Insufficient funds!- Exiting" << endl;
@@ -330,7 +322,8 @@ int main()
 						tmpstring >> tmpTransAmt;
 
 						if (!tmpstring.fail()) {	//convertion to int didnt fail
-							AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+							//AccountRecord.amount_Avail = AccountRecord.amount_Avail + tmpTransAmt;
+							userAccount.setAccountValue(userAccount.getAccountValue() + tmpTransAmt);
 						}
 						else {
 							cout << "ERROR: Deposit amount not a number" << endl;
@@ -339,7 +332,8 @@ int main()
 
 					case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
 						cout << "INTEREST: " << endl;
-						AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + INTERESTRATE));
+						//AccountRecord.amount_Avail = (AccountRecord.amount_Avail*(1.0 + INTERESTRATE));
+						userAccount.setAccountValue(userAccount.getAccountValue() *(1.0 + INTERESTRATE));
 						break;
 
 					case 'E':	//-------------------USER EXIT OPTION-------------------------
@@ -353,7 +347,8 @@ int main()
 					}
 					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
-						ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
+						//ModifyRecord(AccountRecord, out_file, &recordlocator, &recordEnd);
+						ModifyRecordwc(userAccount, out_file, &recordlocator, &recordEnd);
 					}
 				}
 			}
@@ -378,8 +373,10 @@ int main()
 
 				in_file.open(FILENAME);
 				while (in_file.good()) {
-					GetRecord(AccountRecord, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
-					cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
+					// GetRecord(AccountRecord, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
+					GetRecordwc(userAccount, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
+					//cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
+					cout << userAccount.getAccountNumber() << "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
 				}
 			}
 			else
@@ -459,7 +456,7 @@ void GetRecord(accountStruct &record, ifstream &inputfile) {
 }
 //********FUNCTION: GetRecord  END******************************
 
-//********FUNCTION: GetRecord  BEGIN******************************
+//********FUNCTION: GetRecordwc  BEGIN******************************
 /*
 GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 */
@@ -511,12 +508,13 @@ void GetRecordwc(Accounts &accref, ifstream &inputfile) {
 	accref.setAccountValue(value);
 	cout.precision(15);
 
-
+	//cout << "im in my getRecord funciton" << endl;
+	//accref.printAccount();
 	// END LINE PARSING	
 
 	return;
 }
-//********FUNCTION: GetRecord  END******************************
+//********FUNCTION: GetRecordwc  END******************************
 
 //********FUNCTION: AddRecord  BEGIN******************************
 //This function adds a record based on info in a passed struct
@@ -541,6 +539,34 @@ bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
 	return true;
 }
 //********FUNCTION: AddRecord  END******************************
+
+//********FUNCTION: AddRecordwc  BEGIN******************************
+//This function adds a record based on info in a passed struct
+bool AddRecordwc(Accounts &accrec, ofstream &outputfile) {
+	ostringstream tmpstring;
+
+	cout << "Im in AddRecordwc function " << endl;
+	accrec.printAccount();
+
+	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
+	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
+	if (outputfile.good()) {
+		tmpstring << endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
+		outputfile << tmpstring.str();
+	}
+	else
+	{
+		outputfile.clear();
+		outputfile.close();
+		return false;
+	}
+
+	outputfile.clear();
+	outputfile.close();
+	return true;
+}
+//********FUNCTION: AddRecordwc  END******************************
+
 
 //********FUNCTION: FindRecord  BEGIN******************************
 //This function looks to find a particular record, if it does, it populates the passed struct and reports length and end
@@ -776,6 +802,82 @@ bool ModifyRecord(struct accountStruct &record, ofstream &outputfile, int *reclo
 	}
 }
 //********FUNCTION: ModifyRecord  END******************************
+
+//********FUNCTION: ModifyRecordwc  BEGIN******************************
+//This function modifies the file to edit a particular record
+bool ModifyRecordwc(Accounts &record, ofstream &outputfile, int *recloc, int *recordend) {
+	ostringstream tmpstring;
+	string tempstring, tempstring2, tmpfilename;
+	ifstream in_file;
+	int endpos;// = 0;
+	int opos = 0;
+	int result = 0;
+
+	outputfile.precision(10);
+	tmpstring.precision(10);
+
+	in_file.open(FILENAME);			//open the input file
+	if (in_file.fail()) {
+		cout << "ERROR: Can't open Input file!" << endl;
+		result++;
+	}
+
+	outputfile.open("tmp.dat");	//open temp output file in new output mode
+	if (outputfile.fail()) {
+		cout << "ERROR: Can't open temp output file!" << endl;
+		result++;
+	}
+
+	in_file.seekg(0, in_file.end);		//find the end of the old file
+	endpos = in_file.tellg();				//store end of old file
+
+	in_file.seekg(0, in_file.beg);		//set input file pointer back to beginning
+	opos = outputfile.tellp();
+
+
+	while (in_file.good()) {			//while ur not at the end of the input file
+
+		if (opos == *recloc) {
+
+			//cout << "TEST COUT " << record.account_Number << "; " << record.name_Owner << "; " << record.amount_Avail << endl;
+			tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";// << endl;
+			outputfile << tmpstring.str();
+			in_file.seekg(*recordend);
+			opos = outputfile.tellp();		//find out where in the output file you are now
+
+		}
+
+
+		getline(in_file, tempstring2);	//get a line from input file	
+		outputfile << tempstring2;		//store the line from input file into old 
+		opos = outputfile.tellp();		//find out where in the output file you are now
+
+
+		if (in_file.good()) {
+			outputfile << endl;			//  add anothe endl
+		}
+	}
+
+	in_file.clear();
+	in_file.close();
+	outputfile.clear();
+	outputfile.close();
+
+	remove("old.dat");
+	rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
+	remove(FILENAME);
+	result += rename("tmp.dat", &FILENAME[0]);
+
+	if (result != 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+//********FUNCTION: ModifyRecordwc  END******************************
+
+
 
 //********FUNCTION: CheckLength  BEGIN******************************
 //This function tests to see if the TMPSTRING is LENGTH char string
