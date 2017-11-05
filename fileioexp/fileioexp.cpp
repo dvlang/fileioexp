@@ -43,8 +43,8 @@ double tmpacctval;
 //--------------------BEGIN MAIN--------------------------------------
 int main()
 {
-	accountStruct AccountRecord;
-	accountStruct tmpAccount;
+	//accountStruct AccountRecord;
+	//accountStruct tmpAccount;
 	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
@@ -158,7 +158,7 @@ int main()
 				tmpstring.str(tmp);
 				lengthgood = CheckEmpty(tmpstring);
 			}
-			tmpAccount.name_Owner = tmp;
+			//tmpAccount.name_Owner = tmp;
 			tmpUserAccount.setAccountName(tmp);
 
 			//check to see if they field was empty, if it was, set account value to 0
@@ -176,7 +176,7 @@ int main()
 				tmpUserAccount.setAccountValue(tmpacctval);
 			}
 			else {
-				tmpAccount.amount_Avail = 0.00;
+				//tmpAccount.amount_Avail = 0.00;
 				tmpUserAccount.setAccountValue(0.00);
 			}
 			cout << "print tmpUserAccount before committing" << endl;
