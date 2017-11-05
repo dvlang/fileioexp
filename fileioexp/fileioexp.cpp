@@ -37,6 +37,8 @@ bool accountnumgood;
 int tmpaccountlength;
 bool lengthgood;
 int size;
+int tmpacctnumber;
+double tmpacctval;
 
 //--------------------BEGIN MAIN--------------------------------------
 int main()
@@ -50,45 +52,7 @@ int main()
 	Accounts userAccount;
 	Accounts tmpUserAccount;
 	
-/*int tmpAcctnum;
-	string tmpAcctname;
-	double tmpAcctval;
 
-	for (int i = 0; i <=1; i++) {
-		cout << "give me an account number" << endl;
-		getline(cin, tmp);
-		tmpstring.clear();
-		tmpstring.str(tmp);
-		tmpstring >> tmpAcctnum;
-
-		manyUserAccounts[i].setAccountNumber(tmpAcctnum);
-		cout << "give me an account name" << endl;
-
-		getline(cin, tmp);
-		tmpstring.clear();
-		tmpstring.str(tmp);
-		tmpstring >> tmpAcctname;
-
-		manyUserAccounts[i].setAccountName(tmpAcctname);
-		cout << "give me an account value "<< endl;
-
-		getline(cin, tmp);
-		tmpstring.clear();
-		tmpstring.str(tmp);
-		tmpstring >> tmpAcctval;
-		manyUserAccounts[i].setAccountValue(tmpAcctval);
-		
-		cout << "I entered this: " << endl;
-		manyUserAccounts[i].printAccount();
-
-	}
-	cout <<endl<< "Reprint all: " << endl;
-	for (int i = 0; i <=1; i++) {
-		manyUserAccounts[i].printAccount();
-	}
-
-	cout << "I should have printed many accounts before this..." << endl;
-	*/
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
 
@@ -143,9 +107,8 @@ int main()
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
 
-			//tmpstring >> tmpAccount.account_Number;
-			int tmpacctnumber;
-			double tmpacctval;
+
+
 			tmpstring >> tmpacctnumber;
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
 
@@ -374,7 +337,7 @@ int main()
 				in_file.open(FILENAME);
 				while (in_file.good()) {
 
-					GetRecordwc(userAccount, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
+					GetRecordwc(userAccount, in_file); //pass strcture by reference, GetRecord expects an open file so open file beforehand
 
 					userAccount.printAccount();
 				}
