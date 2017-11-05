@@ -248,7 +248,8 @@ int main()
 					cout << endl << "--------------------Account Information-----------------------" << endl;
 					cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
 					cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
-					cout << userAccount.getAccountNumber()<< "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
+					//cout << userAccount.getAccountNumber()<< "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
+					userAccount.printAccount();
 				}
 				else
 				{
@@ -376,7 +377,8 @@ int main()
 					// GetRecord(AccountRecord, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
 					GetRecordwc(userAccount, in_file); //pass strcture by reference, GetRecord expects and open file so open file beforehand
 					//cout << AccountRecord.account_Number << "\t\t\t" << AccountRecord.name_Owner << "\t" << "$" << AccountRecord.amount_Avail << endl;
-					cout << userAccount.getAccountNumber() << "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
+					//cout << userAccount.getAccountNumber() << "\t\t\t" << userAccount.getAccountName() << "\t" << userAccount.getAccountValue() << endl;
+					userAccount.printAccount();
 				}
 			}
 			else
