@@ -36,7 +36,7 @@ int recordEnd;
 bool accountnumgood;
 int tmpaccountlength;
 bool lengthgood;
-
+int size;
 
 //--------------------BEGIN MAIN--------------------------------------
 int main()
@@ -48,6 +48,9 @@ int main()
 	ofstream out_file;
 
 	Accounts userAccount;
+	Accounts tmpUserAccount;
+	bool y;
+
 	Accounts manyUserAccounts[4];
 
 	userAccount.printAccount();
@@ -58,7 +61,11 @@ int main()
 	userAccount.printAccount();
 	cout << "I should have printed something before this..." << endl;
 
-	int tmpAcctnum;
+	//y= FindRecordwClass(userAccount);
+	cout <<endl<< "returned from function" << endl;
+	userAccount.printAccount();
+	cout << endl;
+	/*int tmpAcctnum;
 	string tmpAcctname;
 	double tmpAcctval;
 
@@ -96,7 +103,7 @@ int main()
 	}
 
 	cout << "I should have printed many accounts before this..." << endl;
-
+	*/
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
 
@@ -152,9 +159,15 @@ int main()
 			}
 
 			tmpstring >> tmpAccount.account_Number;
+			int tmpacctnumber;
+			double tmpacctval;
+			tmpstring >> tmpacctnumber;
+			tmpUserAccount.setAccountNumber(tmpacctnumber);
+
 
 			//check to see if account number already exists, if it does stay here till they give you a good one
-			accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+			//accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+			accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
 
 			while (accountExists || !accountnumgood) {
 				tmpstring.clear();
@@ -169,7 +182,10 @@ int main()
 				//if its a good account number, then create an account
 				if (accountnumgood) {
 					tmpstring >> tmpAccount.account_Number;
-					accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+					tmpstring >> tmpacctnumber;
+					tmpUserAccount.setAccountNumber(tmpacctnumber);
+					//accountExists = FindRecord(AccountRecord, in_file, tmpAccount.account_Number, &recordlocator, &recordEnd);
+					accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
 				}
 				else {
 					accountExists = false;
@@ -193,6 +209,7 @@ int main()
 				lengthgood = CheckEmpty(tmpstring);
 			}
 			tmpAccount.name_Owner = tmp;
+			tmpUserAccount.setAccountName(tmp);
 
 			//check to see if they field was empty, if it was, set account value to 0
 			cout << "Desired Initial Value (00.00 format): " << endl;
@@ -204,9 +221,12 @@ int main()
 			lengthgood = CheckEmpty(tmpstring);
 			if (lengthgood) {
 				tmpstring >> tmpAccount.amount_Avail;
+				tmpstring >> tmpacctval;
+				tmpUserAccount.setAccountValue(tmpacctval);
 			}
 			else {
 				tmpAccount.amount_Avail = 0.00;
+				tmpUserAccount.setAccountValue(0.00);
 			}
 
 			//input data good, commit record
@@ -231,6 +251,7 @@ int main()
 
 			if (accountnumgood) {
 				accountExists = FindRecord(AccountRecord, in_file, tmpTransAccount, &recordlocator, &recordEnd);
+
 
 				if (accountExists) {
 					cout << endl << "--------------------Account Information-----------------------" << endl;
@@ -438,6 +459,65 @@ void GetRecord(accountStruct &record, ifstream &inputfile) {
 }
 //********FUNCTION: GetRecord  END******************************
 
+//********FUNCTION: GetRecord  BEGIN******************************
+/*
+GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
+*/
+void GetRecordwc(Accounts &accref, ifstream &inputfile) {
+	istringstream tmpstring;
+	string wholeentry;
+	string accountNumber;
+	string accountName;
+	string accountValue;
+
+	int i, j;
+	int accountnum;
+	double value;
+
+
+	tmpstring.clear();
+
+	getline(inputfile, wholeentry);
+
+	//BEGIN LINE PARSING
+	i = 0;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountNumber = wholeentry.substr(0, i);
+	tmpstring.str(accountNumber);
+	//tmpstring >> record.account_Number;
+	tmpstring >> accountnum;
+	accref.setAccountNumber(accountnum);
+
+
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountName = wholeentry.substr(j, i - j);
+	//record.name_Owner = accountName;
+	accref.setAccountName(accountName);
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	tmpstring.clear();
+	tmpstring.precision(10);
+	tmpstring.fixed;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountValue = wholeentry.substr(j, i - j);
+
+	
+	tmpstring.str(accountValue);
+	tmpstring >> value;
+	accref.setAccountValue(value);
+	cout.precision(15);
+
+
+	// END LINE PARSING	
+
+	return;
+}
+//********FUNCTION: GetRecord  END******************************
+
 //********FUNCTION: AddRecord  BEGIN******************************
 //This function adds a record based on info in a passed struct
 bool AddRecord(struct accountStruct &record, ofstream &outputfile) {
@@ -482,6 +562,7 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 		while (inputfile.good() && !accountExists) {
 			GetRecord(record, inputfile); //pass strcture by reference
+			
 
 			if (record.account_Number != tmpAccountNum) {
 
@@ -536,6 +617,91 @@ bool FindRecord(accountStruct &record, ifstream &inputfile, int tmpAccountNum, i
 
 }
 //********FUNCTION: findRecord  END******************************
+
+//********FUNCTION: FindRecordwClass  BEGIN******************************
+
+bool FindRecordwClass(Accounts &accref, ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend)
+{
+	cout << "im in my find record w class function" << endl;
+
+	
+
+	bool accountExists;
+	string tmp = "";
+	accountExists = false;
+	int lengthNotFound = 0;
+	int lengthFound = 0;
+
+	inputfile.open(FILENAME);
+	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+		inputfile.open(FILENAME); //reopen
+
+		while (inputfile.good() && !accountExists) {
+			GetRecordwc(accref, inputfile); //pass strcture by reference
+
+
+			if ((accref.getAccountNumber()) != tmpAccountNum) {
+
+				accountExists = false;
+				lengthNotFound = inputfile.tellg();
+			}
+
+			else {
+				accountExists = true;
+				if (inputfile.eof()) {		//if we read past end of file, need to go get the location of last ch
+					inputfile.clear();  //clear flags
+					inputfile.close(); // close it
+					inputfile.open(FILENAME); //reopen
+					inputfile.seekg(0, inputfile.end);
+					lengthFound = inputfile.tellg();
+					lengthFound = lengthFound + 2;
+
+				}
+				else {
+					lengthFound = inputfile.tellg();
+				}
+			}
+
+		}
+	}
+	else
+	{
+		cout << "ERROR: FILE EMPTY!" << endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+
+	if (accountExists) {
+		if (lengthNotFound > 0) {
+			*recloc = lengthNotFound - 2;
+			*recordend = lengthFound - 2;
+		}
+		else {
+			*recloc = 0;
+			*recordend = lengthFound - 2;
+
+		}
+
+		return true;
+
+	}
+	else {
+		return false;
+
+	}
+
+
+
+
+}
+
+//********FUNCTION: findRecordwClass  END******************************
+
 
 //********FUNCTION: ModifyRecord  BEGIN******************************
 //This function modifies the file to edit a particular record

@@ -14,7 +14,9 @@ public:
 	void setAccountNumber(int);
 	void setAccountName(std::string);
 	void setAccountValue(double);
-
+	int getAccountNumber();
+	std::string getAccountName();
+	double getAccountValue();
 
 private:
 	int account_Number;

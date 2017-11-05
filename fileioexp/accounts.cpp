@@ -16,3 +16,8 @@ void Accounts::setAccountNumber(int accnum) { account_Number = accnum; }
 void Accounts::setAccountName(std::string accname) { name_Owner = accname; }
 void Accounts::setAccountValue(double accval) { amount_Avail = accval; }
 
+int Accounts::getAccountNumber() { return account_Number; }
+std::string Accounts::getAccountName() {
+	return name_Owner;
+}
+double Accounts::getAccountValue() { return amount_Avail; }
