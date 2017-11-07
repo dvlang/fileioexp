@@ -21,6 +21,8 @@ using namespace std;
 
 #include "fileioexp.h"
 #include "accounts.h"
+#include <time.h>
+
 
 char userselection = 'H';
 char userSubselection = 'E';
@@ -40,9 +42,18 @@ int size;
 int tmpacctnumber;
 double tmpacctval;
 
+
+
 //--------------------BEGIN MAIN--------------------------------------
 int main()
 {
+
+	//time functions
+	time_t timer;
+	time(&timer);
+	struct tm* brokentime = localtime(&timer);
+
+
 	//accountStruct AccountRecord;
 	//accountStruct tmpAccount;
 	tmpstring.precision(10);
@@ -52,7 +63,11 @@ int main()
 	Accounts userAccount;
 	Accounts tmpUserAccount;
 	
+	cout <<"the current date is: " << brokentime->tm_mon << "/" << brokentime->tm_mday << "/" << (brokentime->tm_year) + 1900 << std::endl;
+	
+	tmp = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
 
+	cout <<endl<< "the current date is : " << tmp << endl;
 
 	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
 
@@ -112,7 +127,7 @@ int main()
 			tmpstring >> tmpacctnumber;
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
 
-			cout <<"here's the value I took in: "<< tmpUserAccount.getAccountNumber() << endl;
+			//cout <<"here's the value I took in: "<< tmpUserAccount.getAccountNumber() << endl;
 
 
 			//check to see if account number already exists, if it does stay here till they give you a good one
