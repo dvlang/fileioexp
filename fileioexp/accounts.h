@@ -24,7 +24,7 @@ public:
 	//bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
 	bool AddRecordwc(std::ofstream&);
 
-	bool doesAccountExist(std::ifstream &inputfile, int);
+	bool doesAccountExist(std::ifstream &inputfile, const int);
 
 private:
 	int account_Number;

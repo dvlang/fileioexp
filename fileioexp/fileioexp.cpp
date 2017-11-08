@@ -94,12 +94,10 @@ int main()
 			while (accountExists) {
 				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-				tmpUserAccount.setAccountNumber(tmpacctnumber);
-
-				cout << "user enterd account number: " << tmpUserAccount.getAccountNumber() << endl;
+				//tmpUserAccount.setAccountNumber(tmpacctnumber);
 
 				//check to see if account number already exists, if it does stay here till they give you a good one
-				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpUserAccount.getAccountNumber());  //was userAccount
+				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);  //was userAccount
 				
 			}
 			tmpUserAccount.setAccountNumber(tmpacctnumber);

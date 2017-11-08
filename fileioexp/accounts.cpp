@@ -201,7 +201,7 @@ bool Accounts::FindRecordwClass( ifstream &inputfile, int tmpAccountNum, int *re
 */
 
 
-bool Accounts::doesAccountExist(std::ifstream &inputfile, int accnum) {
+bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 	bool accountExists;
 	std::string tmp = "";
