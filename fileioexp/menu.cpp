@@ -59,7 +59,7 @@ int Menu::getDesiredAcctNum()
 
 	while (!accountnumgood) {
 		tmpstring.clear();
-		std::cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << std::endl;
+		std::cout << "ERROR23: Bad Length or Value, Enter NEW Desired account number (6digits): " << std::endl;
 		getline(std::cin, tmp);
 		tmpstring.str(tmp);
 

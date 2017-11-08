@@ -87,7 +87,7 @@ int main()
 
 		case 'I':	//-------------------USER INSERT OPTION-------------------------
 			recordlocator = 0;
-			accountExists = false;
+			accountExists = true;
 			accountnumgood = false;
 			lengthgood = false;
 /*
@@ -114,20 +114,24 @@ int main()
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
 			*/
-			tmpacctnumber = systemMenu.getDesiredAcctNum();
+			while (accountExists) {
+				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-			//tmpstring >> tmpacctnumber;
-			tmpUserAccount.setAccountNumber(tmpacctnumber);
+				//tmpstring >> tmpacctnumber;
+				tmpUserAccount.setAccountNumber(tmpacctnumber);
 
-			
-			//check to see if account number already exists, if it does stay here till they give you a good one
+				cout << "the account number entered was: " << tmpUserAccount.getAccountNumber() << endl;
+				//check to see if account number already exists, if it does stay here till they give you a good one
 
-			accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
+				//accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
+				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpUserAccount.getAccountNumber());  //was userAccount
+				
+			}
 
-			while (accountExists || !accountnumgood) {
+			/*while (accountExists || !accountnumgood) {
 				tmpstring.clear();
 				if (accountExists) { cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl; }
-				if (!accountnumgood) { cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl; }
+				if (!accountnumgood) { cout << "ERROR24: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl; }
 				getline(cin, tmp);
 				tmpstring.str(tmp);
 				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
@@ -146,7 +150,7 @@ int main()
 					accountExists = false;
 				}
 
-			}
+			}*/
 
 			//Get user acccount name
 			cout << "Desired Account Holder Name: " << endl;

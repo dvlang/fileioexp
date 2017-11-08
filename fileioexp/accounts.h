@@ -18,11 +18,14 @@ public:
 	std::string getAccountName();
 	double getAccountValue();
 
-	/*
-	void GetRecordwc(ifstream&);
-	bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
+	
+	void GetRecordwc(std::ifstream&);
+	
+	/*bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
 	bool AddRecordwc(ofstream&);
 	*/
+
+	bool doesAccountExist(std::ifstream &inputfile, int);
 
 private:
 	int account_Number;

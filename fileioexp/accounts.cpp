@@ -1,7 +1,13 @@
 #include "stdafx.h"
+
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <cstring>
+#include <sstream>
 
 #include "accounts.h"
+
 
 
 
@@ -23,16 +29,16 @@ double Accounts::getAccountValue() { return amount_Avail; }
 
 
 
-/*
+
 
 //GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 
-void Accounts::GetRecordwc(ifstream &inputfile) {
-	istringstream tmpstring;
-	string wholeentry;
-	string accountNumber;
-	string accountName;
-	string accountValue;
+void Accounts::GetRecordwc(std::ifstream &inputfile) {
+	std::istringstream tmpstring;
+	std::string wholeentry;
+	std::string accountNumber;
+	std::string accountName;
+	std::string accountValue;
 
 	int i, j;
 	int accountnum;
@@ -49,8 +55,10 @@ void Accounts::GetRecordwc(ifstream &inputfile) {
 	accountNumber = wholeentry.substr(0, i);
 	tmpstring.str(accountNumber);
 
-	tmpstring >> accountnum;
-	accref.setAccountNumber(accountnum);
+	tmpstring >> account_Number;
+	
+	//tmpstring >> accountnum;
+	//accref.setAccountNumber(accountnum);
 
 
 
@@ -58,8 +66,10 @@ void Accounts::GetRecordwc(ifstream &inputfile) {
 	j = i;	//j is placeholder to beginning of next entry
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountName = wholeentry.substr(j, i - j);
-	//record.name_Owner = accountName;
-	accref.setAccountName(accountName);
+	//accref.setAccountName(accountName);
+
+	name_Owner = accountName;
+	
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
@@ -72,15 +82,18 @@ void Accounts::GetRecordwc(ifstream &inputfile) {
 
 	tmpstring.str(accountValue);
 	tmpstring >> value;
-	accref.setAccountValue(value);
-	cout.precision(15);
+	//accref.setAccountValue(value);
+	amount_Avail = value;
+
+	std::cout.precision(15);
 
 
 	// END LINE PARSING	
 
 	return;
 }
-/
+
+/*
 //This function adds a record based on info in a passed struct
 bool Accounts::AddRecordwc(ofstream &outputfile) {
 	ostringstream tmpstring;
@@ -182,10 +195,62 @@ bool Accounts::FindRecordwClass( ifstream &inputfile, int tmpAccountNum, int *re
 
 	}
 
-
-
-
 }
 
 */
 
+
+bool Accounts::doesAccountExist(std::ifstream &inputfile, int accnum) {
+
+	bool accountExists;
+	std::string tmp = "";
+	accountExists = false;
+
+
+	inputfile.open("accounts.dat");
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+		inputfile.open("accounts.dat"); //reopen
+
+		while (inputfile.good() && !accountExists) {
+			GetRecordwc(inputfile); //pass strcture by reference
+
+			std::cout << "account number for line is: " << account_Number << std::endl;
+			std::cout << "account passed was: " << accnum << std::endl;
+			if (account_Number != accnum) {
+
+				accountExists = false;
+			
+			}
+
+			else {
+				accountExists = true;
+			
+			}
+
+		}
+	}
+	else
+	{
+		std::cout << "ERROR: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+
+	if (accountExists) {
+		
+		return true;
+
+	}
+	else {
+		return false;
+
+	}
+
+}
+
+//}
