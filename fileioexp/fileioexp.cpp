@@ -103,55 +103,17 @@ int main()
 				
 			}
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
-			/*
-			//Get user acccount name
-			cout << "Desired Account Holder Name: " << endl;
-			getline(cin, tmp);
-			tmpstring.str(tmp);
-
-			//check to see if they field was empty, if it was, stay here till they give you a good one
-			lengthgood = CheckEmpty(tmpstring);
-
-			//make sure the user didnt enter an empty value
-			while (!lengthgood) {
-				cout << "ERROR: Account Holder Name Can't Be Empty: " << endl;
-				getline(cin, tmp);
-				tmpstring.str(tmp);
-				lengthgood = CheckEmpty(tmpstring);
-			}
-			//tmpAccount.name_Owner = tmp;
-			tmpUserAccount.setAccountName(tmp);
-			*/
+			
 			tmpUserAccount.setAccountName(systemMenu.getUserName());
-			
-			/*
-			//check to see if they field was empty, if it was, set account value to 0
-			cout << "Desired Initial Value (00.00 format): " << endl;
-			getline(cin, tmp);
-			tmpstring.clear();
-			tmpstring.str(tmp);
-
-			//make sure the user didnt enter an empty value
-			lengthgood = CheckEmpty(tmpstring);
-			if (lengthgood) {
-
-				tmpstring >> tmpacctval;
-				cout << "the tmp string is" << tmpacctval;
-				tmpUserAccount.setAccountValue(tmpacctval);
-			}
-			else {
-				//tmpAccount.amount_Avail = 0.00;
-				tmpUserAccount.setAccountValue(0.00);
-			}
-			*/
-			
+									
 			tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
 
-			cout << "print tmpUserAccount before committing" << endl;
-			tmpUserAccount.printAccount();
+			//cout << "print tmpUserAccount before committing" << endl;
+			//tmpUserAccount.printAccount();
+			
 			//input data good, commit record
-
-			AddRecordwc(tmpUserAccount, out_file);
+			tmpUserAccount.AddRecordwc(out_file);
+			//AddRecordwc(tmpUserAccount, out_file);
 
 			break;
 

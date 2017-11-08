@@ -93,18 +93,19 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	return;
 }
 
-/*
+
 //This function adds a record based on info in a passed struct
-bool Accounts::AddRecordwc(ofstream &outputfile) {
-	ostringstream tmpstring;
+bool Accounts::AddRecordwc(std::ofstream &outputfile) {
+	std::ostringstream tmpstring;
 
-	cout << "Im in AddRecordwc function " << endl;
-	accrec.printAccount();
+	std::cout << "Im in AddRecordwc function " << std::endl;
+	//accrec.printAccount();
 
-	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
-	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
+	outputfile.open("accounts.dat", std::ios_base::app);	//open file in append mode
+	if (!outputfile.is_open()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
-		tmpstring << endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
+		//tmpstring << std::endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
+		tmpstring << std::endl << account_Number << "; " << name_Owner << "; " << amount_Avail <<"; ";
 		outputfile << tmpstring.str();
 	}
 	else
@@ -119,7 +120,7 @@ bool Accounts::AddRecordwc(ofstream &outputfile) {
 	return true;
 }
 
-
+/*
 bool Accounts::FindRecordwClass( ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend)
 {
 	cout << "im in my find record w class function" << endl;

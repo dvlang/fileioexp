@@ -21,9 +21,8 @@ public:
 	
 	void GetRecordwc(std::ifstream&);
 	
-	/*bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
-	bool AddRecordwc(ofstream&);
-	*/
+	//bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
+	bool AddRecordwc(std::ofstream&);
 
 	bool doesAccountExist(std::ifstream &inputfile, int);
 
