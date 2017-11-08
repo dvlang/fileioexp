@@ -217,10 +217,10 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, int accnum) {
 		inputfile.open("accounts.dat"); //reopen
 
 		while (inputfile.good() && !accountExists) {
-			GetRecordwc(inputfile); //pass strcture by reference
+			GetRecordwc(inputfile); 
 
-			std::cout << "account number for line is: " << account_Number << std::endl;
-			std::cout << "account passed was: " << accnum << std::endl;
+			//std::cout << "account number for line is: " << account_Number << std::endl;
+			//std::cout << "account passed was: " << accnum << std::endl;
 			if (account_Number != accnum) {
 
 				accountExists = false;

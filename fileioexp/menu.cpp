@@ -75,6 +75,60 @@ int Menu::getDesiredAcctNum()
 
 }
 
+std::string Menu::getUserName() {
+	bool lengthgood;
+
+	//Get user acccount name
+	std::cout << "Desired Account Holder Name: " << std::endl;
+	getline(std::cin, tmp);
+	tmpstring.str(tmp);
+
+	//check to see if they field was empty, if it was, stay here till they give you a good one
+	lengthgood = CheckEmpty(tmpstring);
+
+	//make sure the user didnt enter an empty value
+	while (!lengthgood) {
+		std::cout << "ERROR: Account Holder Name Can't Be Empty: " << std::endl;
+		getline(std::cin, tmp);
+		tmpstring.str(tmp);
+		lengthgood = CheckEmpty(tmpstring);
+	}
+	//tmpAccount.name_Owner = tmp;
+	return tmp;
+}
+
+int Menu::getUserAcct() {
+	return 1;
+}
+
+double Menu::getUserAmount() {
+	bool lengthgood;
+	double tmpacctval;
+
+	//check to see if they field was empty, if it was, set account value to 0
+	std::cout << "Desired Initial Value (00.00 format): " << std::endl;
+	getline(std::cin, tmp);
+	tmpstring.clear();
+	tmpstring.str(tmp);
+
+	//make sure the user didnt enter an empty value
+	lengthgood = CheckEmpty(tmpstring);
+	if (lengthgood) {
+
+		tmpstring >> tmpacctval;
+		//std::cout << "the tmp string is" << tmpacctval;
+		//tmpUserAccount.setAccountValue(tmpacctval);
+		return tmpacctval;
+	}
+	else {
+		//tmpAccount.amount_Avail = 0.00;
+		//tmpUserAccount.setAccountValue(0.00);
+		return 0.0;
+	}
+	
+}
+
+
 
 //********FUNCTION: CheckLength  BEGIN******************************
 //This function tests to see if the TMPSTRING is LENGTH char string

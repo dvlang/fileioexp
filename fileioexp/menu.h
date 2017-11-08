@@ -17,7 +17,9 @@ public:
 	char getUserSelection();
 	int getDesiredAcctNum();
 
-
+	std::string getUserName();
+	int getUserAcct();
+	double getUserAmount();
 
 private:
 	char userselection;

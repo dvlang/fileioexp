@@ -90,68 +90,20 @@ int main()
 			accountExists = true;
 			accountnumgood = false;
 			lengthgood = false;
-/*
-			tmpstring.clear();
 
-			//Get desired account number
-			cout << "CREATE NEW ACCOUNT" << endl;
-			cout << "Desired account number (6digits): " << endl;
-			getline(cin, tmp);
-			tmpstring.str(tmp);
-
-			//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-			accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
-			if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
-
-			while (!accountnumgood) {
-				tmpstring.clear();
-				cout << "ERROR: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl;
-				getline(cin, tmp);
-				tmpstring.str(tmp);
-
-				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
-				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
-			}
-			*/
 			while (accountExists) {
 				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-				//tmpstring >> tmpacctnumber;
 				tmpUserAccount.setAccountNumber(tmpacctnumber);
 
-				cout << "the account number entered was: " << tmpUserAccount.getAccountNumber() << endl;
-				//check to see if account number already exists, if it does stay here till they give you a good one
+				cout << "user enterd account number: " << tmpUserAccount.getAccountNumber() << endl;
 
-				//accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
+				//check to see if account number already exists, if it does stay here till they give you a good one
 				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpUserAccount.getAccountNumber());  //was userAccount
 				
 			}
-
-			/*while (accountExists || !accountnumgood) {
-				tmpstring.clear();
-				if (accountExists) { cout << "ERROR: Account Exists, Enter NEW Desired account number (6digits): " << endl; }
-				if (!accountnumgood) { cout << "ERROR24: Bad Length or Value, Enter NEW Desired account number (6digits): " << endl; }
-				getline(cin, tmp);
-				tmpstring.str(tmp);
-				//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
-				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
-
-				//if its a good account number, then create an account
-				if (accountnumgood) {
-
-					tmpstring >> tmpacctnumber;
-					tmpUserAccount.setAccountNumber(tmpacctnumber);
-
-					accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
-				}
-				else {
-					accountExists = false;
-				}
-
-			}*/
-
+			tmpUserAccount.setAccountNumber(tmpacctnumber);
+			/*
 			//Get user acccount name
 			cout << "Desired Account Holder Name: " << endl;
 			getline(cin, tmp);
@@ -169,7 +121,10 @@ int main()
 			}
 			//tmpAccount.name_Owner = tmp;
 			tmpUserAccount.setAccountName(tmp);
-
+			*/
+			tmpUserAccount.setAccountName(systemMenu.getUserName());
+			
+			/*
 			//check to see if they field was empty, if it was, set account value to 0
 			cout << "Desired Initial Value (00.00 format): " << endl;
 			getline(cin, tmp);
@@ -188,6 +143,10 @@ int main()
 				//tmpAccount.amount_Avail = 0.00;
 				tmpUserAccount.setAccountValue(0.00);
 			}
+			*/
+			
+			tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
+
 			cout << "print tmpUserAccount before committing" << endl;
 			tmpUserAccount.printAccount();
 			//input data good, commit record
