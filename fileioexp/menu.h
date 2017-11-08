@@ -1,0 +1,36 @@
+#pragma once
+#ifndef MENU_H
+#define MENU_H
+#include <string>
+#include <iostream>
+#include <fstream>
+
+
+class Menu {
+
+public:
+	Menu();
+	void printHeader(std::string date);
+
+	void printMenu();
+
+	char getUserSelection();
+	int getDesiredAcctNum();
+
+
+
+private:
+	char userselection;
+	std::string tmp;
+	bool accountnumgood;
+	std::istringstream tmpstring;
+	int tmpacctnumber;
+
+	bool IsNumber(const std::string&, int);
+	bool CheckLength(std::istringstream&, int);
+	bool CheckEmpty(std::istringstream&);
+
+};
+#endif
+
+

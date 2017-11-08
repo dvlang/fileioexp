@@ -1,4 +1,9 @@
+
 #pragma once
+#ifndef FILEIOEXP_H
+#define FILEIOEXP_H
+
+
 #include "accounts.h"
 
 //--------------------BEGIN Function Prototype-----------------------------
@@ -32,3 +37,4 @@ const char FILENAME[14] = "accounts.dat";	//this is the name of the account data
 const int ACCOUNTLENGTH = 6;	//this is the length required for an account number
 const float INTERESTRATE = 0.01;
 
+#endif

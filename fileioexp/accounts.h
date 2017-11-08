@@ -18,6 +18,12 @@ public:
 	std::string getAccountName();
 	double getAccountValue();
 
+	/*
+	void GetRecordwc(ifstream&);
+	bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
+	bool AddRecordwc(ofstream&);
+	*/
+
 private:
 	int account_Number;
 	std::string name_Owner;

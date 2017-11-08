@@ -21,6 +21,7 @@ using namespace std;
 
 #include "fileioexp.h"
 #include "accounts.h"
+#include "menu.h"
 #include <time.h>
 
 
@@ -42,6 +43,7 @@ int size;
 int tmpacctnumber;
 double tmpacctval;
 
+string date;
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -62,32 +64,22 @@ int main()
 
 	Accounts userAccount;
 	Accounts tmpUserAccount;
-	
-	cout <<"the current date is: " << brokentime->tm_mon << "/" << brokentime->tm_mday << "/" << (brokentime->tm_year) + 1900 << std::endl;
-	
-	tmp = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
+	Menu systemMenu;
 
-	cout <<endl<< "the current date is : " << tmp << endl;
+	
+	//set date string
+	date = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
 
-	cout << "WELCOME TO THE ACCOUNTS MANAGER" << endl << endl;
+
+	//print out a the welcome header
+	systemMenu.printHeader(date);
 
 	while (userselection != 'Q') {
 
 		//MENU / USER INTERFACE
-		cout << endl;
-		cout << "************************************************" << endl;
-		cout << "Please select from one of the following options:" << endl << endl;
-		cout << "Press ""I"" to insert a new account record" << endl;
-		cout << "Press ""M"" to modify an existing record" << endl;
-		cout << "Press ""V"" to view all account records" << endl;
-		cout << "Press ""Q"" to quit" << endl;
-		cout << "************************************************" << endl;
-		cout << "Entry -> ";
+		systemMenu.printMenu();
 
-
-		getline(cin, tmp);
-		userselection = tmp[0];
-
+		userselection= systemMenu.getUserSelection();
 
 		switch (userselection)
 		{
@@ -98,7 +90,7 @@ int main()
 			accountExists = false;
 			accountnumgood = false;
 			lengthgood = false;
-
+/*
 			tmpstring.clear();
 
 			//Get desired account number
@@ -121,15 +113,13 @@ int main()
 				accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
 				if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 			}
+			*/
+			tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-
-
-			tmpstring >> tmpacctnumber;
+			//tmpstring >> tmpacctnumber;
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
 
-			//cout <<"here's the value I took in: "<< tmpUserAccount.getAccountNumber() << endl;
-
-
+			
 			//check to see if account number already exists, if it does stay here till they give you a good one
 
 			accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);

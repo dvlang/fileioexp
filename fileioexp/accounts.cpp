@@ -20,3 +20,172 @@ void Accounts::setAccountValue(double accval) { amount_Avail = accval; }
 int Accounts::getAccountNumber() { return account_Number; }
 std::string Accounts::getAccountName() { return name_Owner; }
 double Accounts::getAccountValue() { return amount_Avail; }
+
+
+
+/*
+
+//GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
+
+void Accounts::GetRecordwc(ifstream &inputfile) {
+	istringstream tmpstring;
+	string wholeentry;
+	string accountNumber;
+	string accountName;
+	string accountValue;
+
+	int i, j;
+	int accountnum;
+	double value;
+
+
+	tmpstring.clear();
+
+	getline(inputfile, wholeentry);
+
+	//BEGIN LINE PARSING
+	i = 0;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountNumber = wholeentry.substr(0, i);
+	tmpstring.str(accountNumber);
+
+	tmpstring >> accountnum;
+	accref.setAccountNumber(accountnum);
+
+
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountName = wholeentry.substr(j, i - j);
+	//record.name_Owner = accountName;
+	accref.setAccountName(accountName);
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	tmpstring.clear();
+	tmpstring.precision(10);
+	tmpstring.fixed;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountValue = wholeentry.substr(j, i - j);
+
+
+	tmpstring.str(accountValue);
+	tmpstring >> value;
+	accref.setAccountValue(value);
+	cout.precision(15);
+
+
+	// END LINE PARSING	
+
+	return;
+}
+/
+//This function adds a record based on info in a passed struct
+bool Accounts::AddRecordwc(ofstream &outputfile) {
+	ostringstream tmpstring;
+
+	cout << "Im in AddRecordwc function " << endl;
+	accrec.printAccount();
+
+	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
+	if (!outputfile.is_open()) { cout << "ERROR: NO SUCH FILE" << endl; return false; }	//check for failure when opening
+	if (outputfile.good()) {
+		tmpstring << endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
+		outputfile << tmpstring.str();
+	}
+	else
+	{
+		outputfile.clear();
+		outputfile.close();
+		return false;
+	}
+
+	outputfile.clear();
+	outputfile.close();
+	return true;
+}
+
+
+bool Accounts::FindRecordwClass( ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend)
+{
+	cout << "im in my find record w class function" << endl;
+
+
+
+	bool accountExists;
+	string tmp = "";
+	accountExists = false;
+	int lengthNotFound = 0;
+	int lengthFound = 0;
+
+	inputfile.open(FILENAME);
+	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+		inputfile.open(FILENAME); //reopen
+
+		while (inputfile.good() && !accountExists) {
+			GetRecordwc(accref, inputfile); //pass strcture by reference
+
+
+			if ((accref.getAccountNumber()) != tmpAccountNum) {
+
+				accountExists = false;
+				lengthNotFound = inputfile.tellg();
+			}
+
+			else {
+				accountExists = true;
+				if (inputfile.eof()) {		//if we read past end of file, need to go get the location of last ch
+					inputfile.clear();  //clear flags
+					inputfile.close(); // close it
+					inputfile.open(FILENAME); //reopen
+					inputfile.seekg(0, inputfile.end);
+					lengthFound = inputfile.tellg();
+					lengthFound = lengthFound + 2;
+
+				}
+				else {
+					lengthFound = inputfile.tellg();
+				}
+			}
+
+		}
+	}
+	else
+	{
+		cout << "ERROR: FILE EMPTY!" << endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+
+	if (accountExists) {
+		if (lengthNotFound > 0) {
+			*recloc = lengthNotFound - 2;
+			*recordend = lengthFound - 2;
+		}
+		else {
+			*recloc = 0;
+			*recordend = lengthFound - 2;
+
+		}
+
+		return true;
+
+	}
+	else {
+		return false;
+
+	}
+
+
+
+
+}
+
+*/
+
