@@ -293,3 +293,11 @@ bool Accounts::accountWithdrawl(double transamt) {
 		return false;
 	}
 }
+
+void Accounts::accountDeposit(double transamt) {
+	amount_Avail = amount_Avail + transamt;
+}
+
+void Accounts::accountAddInterest(){
+	amount_Avail = amount_Avail*(1.0 + 0.02);  //was INTERSTRATE
+}

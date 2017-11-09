@@ -20,7 +20,8 @@ public:
 	double getAccountValue();
 
 	bool accountWithdrawl(double);
-
+	void accountDeposit(double);
+	void accountAddInterest();
 	
 	void GetRecordwc(std::ifstream&);
 	

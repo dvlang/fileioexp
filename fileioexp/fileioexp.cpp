@@ -42,6 +42,7 @@ bool lengthgood;
 int size;
 int tmpacctnumber;
 double tmpacctval;
+bool transactionResult;
 
 string date;
 
@@ -121,32 +122,7 @@ int main()
 			tmpaccountlength = 0;
 
 			cout << "MODIFY AN ACCOUNT" << endl;
-			/*
-			//cout << "MODIFY AN ACCOUNT" << endl;
-			cout << "Account Number to Modify" << endl;
-			getline(cin, tmp);
-			tmpstring.str(tmp);
-
-			accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
-			tmpstring >> tmpTransAccount;
-			tmpUserAccount.setAccountNumber(tmpTransAccount);
-
-			if (accountnumgood) {
-				accountExists = FindRecordwClass(userAccount, in_file, tmpUserAccount.getAccountNumber(), &recordlocator, &recordEnd);
-
-
-				if (accountExists) {
-					cout << endl << "--------------------Account Information-----------------------" << endl;
-					cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
-					cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
-
-					userAccount.printAccount();
-				}
-				else
-				{
-					cout << "ERROR: Account Not Found!!!" << endl << endl;
-				}
-				*/
+			
 
 				while (!accountExists) {
 					tmpacctnumber = systemMenu.getDesiredAcctNum();
@@ -170,57 +146,18 @@ int main()
 					case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 						
 						cout << "CHANGE NAME: " << endl;
-						//cout << "What is new Name: " << endl;
 						
-						/*
-						getline(cin, tmp);
-						tmpstring.str(tmp);
-
-						//check to see if they field was empty, if it was, stay here till they give you a good one
-						lengthgood = CheckEmpty(tmpstring);
-
-						if (!lengthgood) {
-							cout << "ERROR: Account Holder Name Can't Be Empty- Exiting" << endl << endl;
-						}
-						else {
-							userAccount.setAccountName(tmp);
-						}
-						*/
 							tmpUserAccount.setAccountName(systemMenu.getUserName());
 
 						break;
 					case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
-						bool transactionResult;
+
 						cout << "WITHDRAWL: " << endl;
-						//cout << "How Much: " << endl;
-						
+												
 						tmpTransAmt = systemMenu.getUserAmount();
 						
-						/*
-						getline(cin, tmp);
-						tmpstring.clear();
-						tmpstring.str(tmp);
-						tmpstring >> tmpTransAmt;
-						*/
-						
-						/*
-						if (!tmpstring.fail()) {	//convertion to int didnt fail
-							if (userAccount.getAccountValue() >= tmpTransAmt) {
-
-								userAccount.setAccountValue(userAccount.getAccountValue() - tmpTransAmt);
-							}
-							else {
-								cout << "ERROR: Insufficient funds!- Exiting" << endl;
-							}
-
-						}
-						else
-						{
-							cout << "ERROR: Withdrawl amount not a number" << endl;
-						}
-						*/
-						//tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
 						transactionResult=tmpUserAccount.accountWithdrawl(tmpTransAmt);
+						
 						if (!transactionResult) {
 							cout << "ERROR: Insufficient funds!- Exiting" << endl;
 						}
@@ -230,27 +167,21 @@ int main()
 
 					case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
 						cout << "DEPOSIT: " << endl;
-						cout << "How Much (00.00 format):  " << endl;
-						getline(cin, tmp);
-						tmpstring.clear();
-						tmpstring.str(tmp);
+					
+						tmpTransAmt = systemMenu.getUserAmount();
+						
+						tmpUserAccount.accountDeposit(tmpTransAmt);
 
-						lengthgood = CheckEmpty(tmpstring);
+						tmpUserAccount.printAccount();
 
-						tmpstring >> tmpTransAmt;
 
-						if (!tmpstring.fail()) {	//convertion to int didnt fail
-
-							userAccount.setAccountValue(userAccount.getAccountValue() + tmpTransAmt);
-						}
-						else {
-							cout << "ERROR: Deposit amount not a number" << endl;
-						}
 						break;
 
 					case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
 
-						userAccount.setAccountValue(userAccount.getAccountValue() *(1.0 + INTERESTRATE));
+						//userAccount.setAccountValue(userAccount.getAccountValue() *(1.0 + INTERESTRATE));
+						tmpUserAccount.accountAddInterest();
+						tmpUserAccount.printAccount();
 						break;
 
 					case 'E':	//-------------------USER EXIT OPTION-------------------------
