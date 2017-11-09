@@ -32,6 +32,23 @@ void Menu::printMenu()
 	std::cout << "************************************************" << std::endl;
 }
 
+
+void Menu::printViewAllMenu() {
+	std::cout << std::endl << "--------------------Accounts on File-----------------------" << std::endl;
+	std::cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << std::endl;
+	std::cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << std::endl;
+}
+
+void Menu::printModifyMenu() {
+	std::cout << std::endl << "SELECT ACTION" << std::endl;
+	std::cout << "Press C to Change Name on account record" << std::endl;
+	std::cout << "Press W to perform a withdrawl" << std::endl;
+	std::cout << "Press D to make a deposit" << std::endl;
+	std::cout << "Press P to factor in interest" << std::endl;
+	std::cout << "Press E to Exit" << std::endl;
+}
+
+
 char Menu::getUserSelection()
 {
 	std::cout << "Entry -> ";
@@ -48,7 +65,7 @@ int Menu::getDesiredAcctNum()
 	tmpstring.clear();
 
 	//Get desired account number
-	std::cout << "CREATE NEW ACCOUNT" << std::endl;
+
 	std::cout << "Desired account number (6digits): " << std::endl;
 	getline(std::cin, tmp);
 	tmpstring.str(tmp);
@@ -88,12 +105,12 @@ std::string Menu::getUserName() {
 
 	//make sure the user didnt enter an empty value
 	while (!lengthgood) {
-		std::cout << "ERROR: Account Holder Name Can't Be Empty: " << std::endl;
+		std::cout << "ERROR: Account Holder Name Can't Be Empty, Re-try: " << std::endl;
 		getline(std::cin, tmp);
 		tmpstring.str(tmp);
 		lengthgood = CheckEmpty(tmpstring);
 	}
-	//tmpAccount.name_Owner = tmp;
+
 	return tmp;
 }
 
@@ -116,13 +133,11 @@ double Menu::getUserAmount() {
 	if (lengthgood) {
 
 		tmpstring >> tmpacctval;
-		//std::cout << "the tmp string is" << tmpacctval;
-		//tmpUserAccount.setAccountValue(tmpacctval);
+
 		return tmpacctval;
 	}
 	else {
-		//tmpAccount.amount_Avail = 0.00;
-		//tmpUserAccount.setAccountValue(0.00);
+
 		return 0.0;
 	}
 	
@@ -139,7 +154,6 @@ bool Menu::CheckLength(std::istringstream &tmpstring, int length) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-	//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength == length) {
 		return true;
@@ -160,7 +174,6 @@ bool Menu::CheckEmpty(std::istringstream &tmpstring) {
 
 	tmpaccountlength = tmpstring.tellg();
 	tmpstring.seekg(0, tmpstring.beg);
-	//	cout << "length= " << tmpaccountlength << endl;
 
 	if (tmpaccountlength != 0) {
 		return true;

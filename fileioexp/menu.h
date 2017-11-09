@@ -13,7 +13,8 @@ public:
 	void printHeader(std::string date);
 
 	void printMenu();
-
+	void printViewAllMenu();
+	void printModifyMenu();
 	char getUserSelection();
 	int getDesiredAcctNum();
 

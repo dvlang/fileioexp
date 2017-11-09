@@ -254,4 +254,31 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 }
 
-//}
+void Accounts::printAllAccounts(std::ifstream &inputfile){
+	std::string tmp = "";
+
+	std::cout << "hi, im in my new print all function" << std::endl;
+
+	inputfile.open("accounts.dat");
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+
+		inputfile.open("accounts.dat");
+		while (inputfile.good()) {
+
+			GetRecordwc(inputfile); //pass strcture by reference, GetRecord expects an open file so open file beforehand
+
+			printAccount();
+		}
+	}
+	else
+	{
+		std::cout << "ERROR: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+}

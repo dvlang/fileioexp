@@ -11,12 +11,14 @@ class Accounts {
 public:
 	Accounts();
 	void printAccount();
+	void printAllAccounts(std::ifstream&);
 	void setAccountNumber(int);
 	void setAccountName(std::string);
 	void setAccountValue(double);
 	int getAccountNumber();
 	std::string getAccountName();
 	double getAccountValue();
+
 
 	
 	void GetRecordwc(std::ifstream&);

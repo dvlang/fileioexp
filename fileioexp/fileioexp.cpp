@@ -91,13 +91,13 @@ int main()
 			accountnumgood = false;
 			lengthgood = false;
 
+			std::cout << "CREATE NEW ACCOUNT" << std::endl;
+
 			while (accountExists) {
 				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-				//tmpUserAccount.setAccountNumber(tmpacctnumber);
-
 				//check to see if account number already exists, if it does stay here till they give you a good one
-				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);  //was userAccount
+				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);  
 				
 			}
 			tmpUserAccount.setAccountNumber(tmpacctnumber);
@@ -106,12 +106,10 @@ int main()
 									
 			tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
 
-			//cout << "print tmpUserAccount before committing" << endl;
-			//tmpUserAccount.printAccount();
-			
+						
 			//input data good, commit record
 			tmpUserAccount.AddRecordwc(out_file);
-			//AddRecordwc(tmpUserAccount, out_file);
+
 
 			break;
 
@@ -123,6 +121,8 @@ int main()
 			tmpaccountlength = 0;
 
 			cout << "MODIFY AN ACCOUNT" << endl;
+			/*
+			//cout << "MODIFY AN ACCOUNT" << endl;
 			cout << "Account Number to Modify" << endl;
 			getline(cin, tmp);
 			tmpstring.str(tmp);
@@ -146,16 +146,30 @@ int main()
 				{
 					cout << "ERROR: Account Not Found!!!" << endl << endl;
 				}
+				*/
+
+				while (!accountExists) {
+					tmpacctnumber = systemMenu.getDesiredAcctNum();
+
+					//check to see if account number already exists, if it does stay here till they give you a good one
+					accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);
+
+				}
+
 				if (accountExists) {
 
-					cout << endl << "SELECT ACTION" << endl;
-					cout << "Press C to Change Name on account record" << endl;
-					cout << "Press W to perform a withdrawl" << endl;
-					cout << "Press D to make a deposit" << endl;
-					cout << "Press P to factor in interest" << endl;
-					cout << "Press E to Exit" << endl;
-					getline(cin, tmp);
-					userSubselection = tmp[0];
+					systemMenu.printViewAllMenu();
+					tmpUserAccount.printAccount();
+
+
+					systemMenu.printModifyMenu();
+					userSubselection = systemMenu.getUserSelection();
+
+
+
+
+
+
 
 					switch (userSubselection)
 					{
@@ -242,7 +256,7 @@ int main()
 						ModifyRecordwc(userAccount, out_file, &recordlocator, &recordEnd);
 					}
 				}
-			}
+			//}
 			else {
 				cout << "ERROR:Invalid Account Number Entered!" << endl << endl;
 			}
@@ -250,32 +264,12 @@ int main()
 			break;
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
-			cout << endl << "--------------------Accounts on File-----------------------" << endl;
-			cout << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << endl;
-			cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << endl;
+			
+			systemMenu.printViewAllMenu();
+			
+			tmpUserAccount.printAllAccounts(in_file);  //does this break requirement for all users to get pulled into their own account object???????????????
+			
 
-			in_file.open(FILENAME);
-			if (in_file.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening
-			getline(in_file, tmp);	//force a getline to set .eof bit
-
-			if (!in_file.eof()) {
-				in_file.clear();  //clear flags
-				in_file.close(); // close it
-
-				in_file.open(FILENAME);
-				while (in_file.good()) {
-
-					GetRecordwc(userAccount, in_file); //pass strcture by reference, GetRecord expects an open file so open file beforehand
-
-					userAccount.printAccount();
-				}
-			}
-			else
-			{
-				cout << "ERROR: FILE EMPTY!" << endl;
-			}
-			in_file.clear();
-			in_file.close();
 			break;
 			//-------------------USER QUIT OPTION-------------------------
 		case 'Q':  cout << "user selected Q" << endl; break;
