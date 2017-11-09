@@ -25,7 +25,8 @@ public:
 	
 	void GetRecordwc(std::ifstream&);
 	
-	//bool FindRecordwClass(ifstream&, int, int *recloc, int *recordend);
+	bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
+	bool ModifyRecordwc(Accounts &record, std::ofstream&);
 	bool AddRecordwc(std::ofstream&);
 
 	bool doesAccountExist(std::ifstream &inputfile, const int);
@@ -34,6 +35,8 @@ private:
 	int account_Number;
 	std::string name_Owner;
 	double amount_Avail;
+	int recordlocator;
+	int recordEnd;
 
 };
 #endif

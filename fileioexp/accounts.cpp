@@ -44,7 +44,7 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	int accountnum;
 	double value;
 
-
+	//std::cout << "in the GetRecordwc function" << std::endl;
 	tmpstring.clear();
 
 	getline(inputfile, wholeentry);
@@ -56,20 +56,19 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	tmpstring.str(accountNumber);
 
 	tmpstring >> account_Number;
+	//std::cout << "gr_ account number is: " << account_Number << std::endl;
 	
-	//tmpstring >> accountnum;
-	//accref.setAccountNumber(accountnum);
-
 
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountName = wholeentry.substr(j, i - j);
-	//accref.setAccountName(accountName);
+	
 
 	name_Owner = accountName;
 	
+	//std::cout << "gr_ account name is: " << name_Owner << std::endl;
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
@@ -82,11 +81,11 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 
 	tmpstring.str(accountValue);
 	tmpstring >> value;
-	//accref.setAccountValue(value);
+
 	amount_Avail = value;
 
 	std::cout.precision(15);
-
+	//std::cout << "gr_ account value is: " << amount_Avail << std::endl;
 
 	// END LINE PARSING	
 
@@ -119,86 +118,6 @@ bool Accounts::AddRecordwc(std::ofstream &outputfile) {
 	outputfile.close();
 	return true;
 }
-
-/*
-bool Accounts::FindRecordwClass( ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend)
-{
-	cout << "im in my find record w class function" << endl;
-
-
-
-	bool accountExists;
-	string tmp = "";
-	accountExists = false;
-	int lengthNotFound = 0;
-	int lengthFound = 0;
-
-	inputfile.open(FILENAME);
-	if (inputfile.fail()) { cout << "ERROR: NO SUCH FILE" << endl; }	//check for failure when opening (i.e no file)
-	getline(inputfile, tmp);	//force a getline to set .eof bit
-
-	if (!inputfile.eof()) {
-		inputfile.clear();  //clear flags
-		inputfile.close(); // close it
-		inputfile.open(FILENAME); //reopen
-
-		while (inputfile.good() && !accountExists) {
-			GetRecordwc(accref, inputfile); //pass strcture by reference
-
-
-			if ((accref.getAccountNumber()) != tmpAccountNum) {
-
-				accountExists = false;
-				lengthNotFound = inputfile.tellg();
-			}
-
-			else {
-				accountExists = true;
-				if (inputfile.eof()) {		//if we read past end of file, need to go get the location of last ch
-					inputfile.clear();  //clear flags
-					inputfile.close(); // close it
-					inputfile.open(FILENAME); //reopen
-					inputfile.seekg(0, inputfile.end);
-					lengthFound = inputfile.tellg();
-					lengthFound = lengthFound + 2;
-
-				}
-				else {
-					lengthFound = inputfile.tellg();
-				}
-			}
-
-		}
-	}
-	else
-	{
-		cout << "ERROR: FILE EMPTY!" << endl;
-	}
-	inputfile.clear();
-	inputfile.close();
-
-	if (accountExists) {
-		if (lengthNotFound > 0) {
-			*recloc = lengthNotFound - 2;
-			*recordend = lengthFound - 2;
-		}
-		else {
-			*recloc = 0;
-			*recordend = lengthFound - 2;
-
-		}
-
-		return true;
-
-	}
-	else {
-		return false;
-
-	}
-
-}
-
-*/
 
 
 bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
@@ -237,7 +156,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 	}
 	else
 	{
-		std::cout << "ERROR: FILE EMPTY!" << std::endl;
+		std::cout << "ERROR_dae: FILE EMPTY!" << std::endl;
 	}
 	inputfile.clear();
 	inputfile.close();
@@ -257,7 +176,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 void Accounts::printAllAccounts(std::ifstream &inputfile){
 	std::string tmp = "";
 
-	std::cout << "hi, im in my new print all function" << std::endl;
+	//std::cout << "hi, im in my new print all function" << std::endl;
 
 	inputfile.open("accounts.dat");
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
@@ -277,7 +196,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 	}
 	else
 	{
-		std::cout << "ERROR: FILE EMPTY!" << std::endl;
+		std::cout << "ERROR_paa: FILE EMPTY!" << std::endl;
 	}
 	inputfile.clear();
 	inputfile.close();
@@ -300,4 +219,172 @@ void Accounts::accountDeposit(double transamt) {
 
 void Accounts::accountAddInterest(){
 	amount_Avail = amount_Avail*(1.0 + 0.02);  //was INTERSTRATE
+}
+
+
+//*----------------FUNCTION: FindRecordwClass  BEGIN--------------------------------
+
+bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum)
+{
+	std::cout << "im in my find record w class function" << std::endl;
+	std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
+	
+	bool accountExists;
+	std::string tmp = "";
+	accountExists = false;
+	int lengthNotFound = 0;
+	int lengthFound = 0;
+
+	inputfile.clear();  //clear flags
+	inputfile.open("accounts.dat");
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+		inputfile.open("accounts.dat"); //reopen
+
+		while (inputfile.good() && !accountExists) {
+			GetRecordwc(inputfile);
+
+
+			if (account_Number != tmpAccountNum) {
+
+				accountExists = false;
+				lengthNotFound = inputfile.tellg();
+			}
+
+			else {
+				accountExists = true;
+				if (inputfile.eof()) {	//if we read past end of file, need to go get the location of last ch
+					inputfile.clear();  //clear flags
+					inputfile.close();	// close it
+					inputfile.open("accounts.dat"); //reopen
+					inputfile.seekg(0, inputfile.end);
+					lengthFound = inputfile.tellg();
+					lengthFound = lengthFound + 2;
+
+				}
+				else {
+					lengthFound = inputfile.tellg();
+				}
+			}
+
+		}
+	}
+	else
+	{
+		std::cout << "ERROR_frc: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+
+	if (accountExists) {
+		if (lengthNotFound > 0) {
+			recordlocator = lengthNotFound - 2;
+			recordEnd = lengthFound - 2;
+
+			std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+			std::cout << "here is the matching account: " << std::endl;
+			printAccount();
+		}
+		else {
+			recordlocator = 0;
+			recordEnd = lengthFound - 2;
+
+		}
+
+		return true;
+
+	}
+	else {
+		return false;
+
+	}
+}
+
+//----------------FUNCTION: findRecordwClass  END----------------------------------------
+
+
+//----------------FUNCTION: ModifyRecordwc  BEGIN----------------------------------------
+//This function modifies the file to edit a particular record
+bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
+	std::ostringstream tmpstring;
+	std::string tempstring, tempstring2, tmpfilename;
+	std::ifstream in_file;
+	int endpos;// = 0;
+	int opos = 0;
+	int result = 0;
+
+	outputfile.precision(10);
+	tmpstring.precision(10);
+
+	FindRecordwClass(record, in_file, record.getAccountNumber());
+
+	in_file.open("accounts.dat");			//open the input file
+	if (in_file.fail()) {
+		std::cout << "ERROR: Can't open Input file!" << std::endl;
+		result++;
+	}
+
+	outputfile.open("tmp.dat");	//open temp output file in new output mode
+	if (outputfile.fail()) {
+		std::cout << "ERROR: Can't open temp output file!" << std::endl;
+		result++;
+	}
+
+
+
+
+	in_file.seekg(0, in_file.end);		//find the end of the old file
+	endpos = in_file.tellg();				//store end of old file
+
+	in_file.seekg(0, in_file.beg);		//set input file pointer back to beginning
+	opos = outputfile.tellp();
+
+
+	while (in_file.good()) {			//while ur not at the end of the input file
+
+
+		if (opos == recordlocator) {
+
+			
+			tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
+
+			//tmpstring << account_Number << "; " << name_Owner << "; " << amount_Avail << ";";
+
+			outputfile << tmpstring.str();
+			in_file.seekg(recordEnd);
+			opos = outputfile.tellp();		//find out where in the output file you are now
+
+		}
+
+
+		getline(in_file, tempstring2);	//get a line from input file	
+		outputfile << tempstring2;		//store the line from input file into old 
+		opos = outputfile.tellp();		//find out where in the output file you are now
+		std::cout << "im at position: " << opos << std::endl;
+
+		if (in_file.good()) {
+			outputfile << std::endl;			//  add anothe endl
+		}
+	}
+
+	in_file.clear();
+	in_file.close();
+	outputfile.clear();
+	outputfile.close();
+
+	remove("old.dat");
+	rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
+	remove("accounts.dat");
+	result += rename("tmp.dat", "accounts.dat");
+
+	if (result != 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }

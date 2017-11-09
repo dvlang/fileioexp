@@ -195,8 +195,11 @@ int main()
 					}
 					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
+						bool saveok;
+						saveok= userAccount.ModifyRecordwc(tmpUserAccount, out_file);
+						if (saveok) {cout << "the file was saved ok" << endl;}
+						else{ cout << "the file was NOT saved ok" << endl; }
 
-						ModifyRecordwc(userAccount, out_file, &recordlocator, &recordEnd);
 					}
 				}
 			//}
@@ -230,12 +233,12 @@ int main()
 
 //--------------------BEGIN Functions--------------------------------------
 
-
-
-//********FUNCTION: GetRecordwc  BEGIN******************************
 /*
-GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
-*/
+
+//--------------------FUNCTION: GetRecordwc  BEGIN//--------------------
+
+//GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
+
 void GetRecordwc(Accounts &accref, ifstream &inputfile) {
 	istringstream tmpstring;
 	string wholeentry;
@@ -289,11 +292,11 @@ void GetRecordwc(Accounts &accref, ifstream &inputfile) {
 
 	return;
 }
-//********FUNCTION: GetRecordwc  END******************************
+//--------------------FUNCTION: GetRecordwc  END//--------------------
 
 
 
-//********FUNCTION: AddRecordwc  BEGIN******************************
+//--------------------FUNCTION: AddRecordwc  BEGIN//--------------------
 //This function adds a record based on info in a passed struct
 bool AddRecordwc(Accounts &accrec, ofstream &outputfile) {
 	ostringstream tmpstring;
@@ -318,12 +321,12 @@ bool AddRecordwc(Accounts &accrec, ofstream &outputfile) {
 	outputfile.close();
 	return true;
 }
-//********FUNCTION: AddRecordwc  END******************************
+//--------------------FUNCTION: AddRecordwc  END//--------------------
 
 
 
 
-//********FUNCTION: FindRecordwClass  BEGIN******************************
+//--------------------FUNCTION: FindRecordwClass  BEGIN//--------------------
 
 bool FindRecordwClass(Accounts &accref, ifstream &inputfile, int tmpAccountNum, int *recloc, int *recordend)
 {
@@ -358,9 +361,9 @@ bool FindRecordwClass(Accounts &accref, ifstream &inputfile, int tmpAccountNum, 
 
 			else {
 				accountExists = true;
-				if (inputfile.eof()) {		//if we read past end of file, need to go get the location of last ch
+				if (inputfile.eof()) {	//if we read past end of file, need to go get the location of last ch
 					inputfile.clear();  //clear flags
-					inputfile.close(); // close it
+					inputfile.close();	// close it
 					inputfile.open(FILENAME); //reopen
 					inputfile.seekg(0, inputfile.end);
 					lengthFound = inputfile.tellg();
@@ -405,12 +408,12 @@ bool FindRecordwClass(Accounts &accref, ifstream &inputfile, int tmpAccountNum, 
 
 }
 
-//********FUNCTION: findRecordwClass  END******************************
+//--------------------FUNCTION: findRecordwClass  END//--------------------
 
 
 
 
-//********FUNCTION: ModifyRecordwc  BEGIN******************************
+//--------------------FUNCTION: ModifyRecordwc  BEGIN//--------------------
 //This function modifies the file to edit a particular record
 bool ModifyRecordwc(Accounts &record, ofstream &outputfile, int *recloc, int *recordend) {
 	ostringstream tmpstring;
@@ -482,11 +485,11 @@ bool ModifyRecordwc(Accounts &record, ofstream &outputfile, int *recloc, int *re
 		return true;
 	}
 }
-//********FUNCTION: ModifyRecordwc  END******************************
+//--------------------FUNCTION: ModifyRecordwc  END//--------------------
 
 
 
-//********FUNCTION: CheckLength  BEGIN******************************
+//--------------------FUNCTION: CheckLength  BEGIN//--------------------
 //This function tests to see if the TMPSTRING is LENGTH char string
 bool CheckLength(istringstream &tmpstring, int length) {
 	int tmpaccountlength = 0;
@@ -505,9 +508,9 @@ bool CheckLength(istringstream &tmpstring, int length) {
 	}
 
 }
-//********FUNCTION: CheckLength  END******************************
+//--------------------FUNCTION: CheckLength  END//--------------------
 
-//********FUNCTION: CheckEmpty  BEGIN******************************
+//--------------------FUNCTION: CheckEmpty  BEGIN//--------------------
 //This function tests to see if the string is empty
 bool CheckEmpty(istringstream &tmpstring) {
 	int tmpaccountlength = 0;
@@ -526,11 +529,11 @@ bool CheckEmpty(istringstream &tmpstring) {
 	}
 
 }
-//********FUNCTION: CheckEmpty  END******************************
+//--------------------FUNCTION: CheckEmpty  END//--------------------
 
 
 
-//********FUNCTION: IsNumber  BEGIN******************************
+//--------------------FUNCTION: IsNumber  BEGIN//--------------------
 //This function tests to see if the TMPSTRING is LENGTH digit number
 bool IsNumber(const string& tmpstring, int length) {
 
@@ -555,4 +558,6 @@ bool IsNumber(const string& tmpstring, int length) {
 
 
 }
-//********FUNCTION: IsNumber  END******************************
+//--------------------FUNCTION: IsNumber  END//--------------------
+
+*/
