@@ -161,21 +161,18 @@ int main()
 					systemMenu.printViewAllMenu();
 					tmpUserAccount.printAccount();
 
-
-					systemMenu.printModifyMenu();
+					systemMenu.printModifyBaseAccountMenu();
 					userSubselection = systemMenu.getUserSelection();
-
-
-
-
-
-
+					
 
 					switch (userSubselection)
 					{
 					case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
+						
 						cout << "CHANGE NAME: " << endl;
-						cout << "What is new Name: " << endl;
+						//cout << "What is new Name: " << endl;
+						
+						/*
 						getline(cin, tmp);
 						tmpstring.str(tmp);
 
@@ -188,17 +185,25 @@ int main()
 						else {
 							userAccount.setAccountName(tmp);
 						}
+						*/
+							tmpUserAccount.setAccountName(systemMenu.getUserName());
 
 						break;
 					case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
+						bool transactionResult;
 						cout << "WITHDRAWL: " << endl;
-						cout << "How Much: " << endl;
+						//cout << "How Much: " << endl;
+						
+						tmpTransAmt = systemMenu.getUserAmount();
+						
+						/*
 						getline(cin, tmp);
 						tmpstring.clear();
 						tmpstring.str(tmp);
 						tmpstring >> tmpTransAmt;
-
-
+						*/
+						
+						/*
 						if (!tmpstring.fail()) {	//convertion to int didnt fail
 							if (userAccount.getAccountValue() >= tmpTransAmt) {
 
@@ -213,6 +218,13 @@ int main()
 						{
 							cout << "ERROR: Withdrawl amount not a number" << endl;
 						}
+						*/
+						//tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
+						transactionResult=tmpUserAccount.accountWithdrawl(tmpTransAmt);
+						if (!transactionResult) {
+							cout << "ERROR: Insufficient funds!- Exiting" << endl;
+						}
+						tmpUserAccount.printAccount();
 
 						break;
 

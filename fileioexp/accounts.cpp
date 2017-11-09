@@ -270,7 +270,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 		inputfile.open("accounts.dat");
 		while (inputfile.good()) {
 
-			GetRecordwc(inputfile); //pass strcture by reference, GetRecord expects an open file so open file beforehand
+			GetRecordwc(inputfile); 
 
 			printAccount();
 		}
@@ -281,4 +281,15 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 	}
 	inputfile.clear();
 	inputfile.close();
+}
+
+bool Accounts::accountWithdrawl(double transamt) {
+	if (amount_Avail >= transamt) {
+
+		amount_Avail = amount_Avail - transamt;
+		return true;
+	}
+	else {
+		return false;
+	}
 }

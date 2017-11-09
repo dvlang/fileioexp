@@ -19,6 +19,7 @@ public:
 	std::string getAccountName();
 	double getAccountValue();
 
+	bool accountWithdrawl(double);
 
 	
 	void GetRecordwc(std::ifstream&);

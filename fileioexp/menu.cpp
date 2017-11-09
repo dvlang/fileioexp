@@ -39,7 +39,7 @@ void Menu::printViewAllMenu() {
 	std::cout << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << std::endl;
 }
 
-void Menu::printModifyMenu() {
+void Menu::printModifyBaseAccountMenu() {
 	std::cout << std::endl << "SELECT ACTION" << std::endl;
 	std::cout << "Press C to Change Name on account record" << std::endl;
 	std::cout << "Press W to perform a withdrawl" << std::endl;
@@ -123,7 +123,7 @@ double Menu::getUserAmount() {
 	double tmpacctval;
 
 	//check to see if they field was empty, if it was, set account value to 0
-	std::cout << "Desired Initial Value (00.00 format): " << std::endl;
+	std::cout << "Desired Value (00.00 format): " << std::endl;
 	getline(std::cin, tmp);
 	tmpstring.clear();
 	tmpstring.str(tmp);

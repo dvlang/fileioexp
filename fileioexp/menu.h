@@ -14,7 +14,7 @@ public:
 
 	void printMenu();
 	void printViewAllMenu();
-	void printModifyMenu();
+	void printModifyBaseAccountMenu();
 	char getUserSelection();
 	int getDesiredAcctNum();
 
