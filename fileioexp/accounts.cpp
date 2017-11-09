@@ -226,8 +226,8 @@ void Accounts::accountAddInterest(){
 
 bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum)
 {
-	std::cout << "im in my find record w class function" << std::endl;
-	std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
+	//std::cout << "im in my find record w class function" << std::endl;
+	//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
 	
 	bool accountExists;
 	std::string tmp = "";
@@ -285,8 +285,8 @@ bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int 
 			recordlocator = lengthNotFound - 2;
 			recordEnd = lengthFound - 2;
 
-			std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-			std::cout << "here is the matching account: " << std::endl;
+			//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+			//std::cout << "here is the matching account: " << std::endl;
 			printAccount();
 		}
 		else {
@@ -352,7 +352,7 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 			
 			tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
 
-			//tmpstring << account_Number << "; " << name_Owner << "; " << amount_Avail << ";";
+			
 
 			outputfile << tmpstring.str();
 			in_file.seekg(recordEnd);
@@ -364,7 +364,7 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 		getline(in_file, tempstring2);	//get a line from input file	
 		outputfile << tempstring2;		//store the line from input file into old 
 		opos = outputfile.tellp();		//find out where in the output file you are now
-		std::cout << "im at position: " << opos << std::endl;
+
 
 		if (in_file.good()) {
 			outputfile << std::endl;			//  add anothe endl
