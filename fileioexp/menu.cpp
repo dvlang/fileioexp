@@ -71,8 +71,8 @@ int Menu::getDesiredAcctNum()
 	tmpstring.str(tmp);
 
 	//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-	accountnumgood = CheckLength(tmpstring, 6);
-	if (accountnumgood) { accountnumgood = IsNumber(tmp, 6); }
+	accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
+	if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 
 	while (!accountnumgood) {
 		tmpstring.clear();
@@ -81,8 +81,8 @@ int Menu::getDesiredAcctNum()
 		tmpstring.str(tmp);
 
 		//check to make sure the account number is valid length, if it is then make sure a ACCOUNTLENGTH number
-		accountnumgood = CheckLength(tmpstring, 6);
-		if (accountnumgood) { accountnumgood = IsNumber(tmp, 6); }
+		accountnumgood = CheckLength(tmpstring, ACCOUNTLENGTH);
+		if (accountnumgood) { accountnumgood = IsNumber(tmp, ACCOUNTLENGTH); }
 	}
 	
 	tmpstring >> tmpacctnumber;
@@ -119,27 +119,30 @@ int Menu::getUserAcct() {
 }
 
 double Menu::getUserAmount() {
-	bool lengthgood;
-	double tmpacctval;
+	bool lengthgood = false;
+	bool valgood=false;
+	double tmpacctval=0.0;
+	std::string tmpval;
+	
+	while (!lengthgood || !valgood) {
+		//check to see if they field was empty, if it was, set account value to 0
+		std::cout << "Desired Value (00.00 format): " << std::endl;
+		getline(std::cin, tmp);
+		tmpstring.clear();
+		tmpstring.str(tmp);
 
-	//check to see if they field was empty, if it was, set account value to 0
-	std::cout << "Desired Value (00.00 format): " << std::endl;
-	getline(std::cin, tmp);
-	tmpstring.clear();
-	tmpstring.str(tmp);
+		//make sure the user didnt enter an empty value
+		lengthgood = CheckEmpty(tmpstring);
 
-	//make sure the user didnt enter an empty value
-	lengthgood = CheckEmpty(tmpstring);
-	if (lengthgood) {
+		tmpstring >> tmpval;
+		valgood = IsNumber(tmpval, 1);
+		
+	}
 
-		tmpstring >> tmpacctval;
+		tmpacctval = std::stod(tmpval);
 
 		return tmpacctval;
-	}
-	else {
-
-		return 0.0;
-	}
+	
 	
 }
 
@@ -198,6 +201,7 @@ bool Menu::IsNumber(const std::string& tmpstring, int length) {
 
 		if (isdigit(tmpstring[i])) {
 			result++;
+
 		}
 
 	}
@@ -207,6 +211,7 @@ bool Menu::IsNumber(const std::string& tmpstring, int length) {
 		return true;
 	}
 	else {
+
 		return false;
 	}
 

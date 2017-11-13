@@ -6,6 +6,11 @@
 #include <fstream>
 
 
+const char FILENAME[14] = "accounts.dat";	//this is the name of the account data file
+
+const float INTERESTRATE = 0.01;
+
+
 class Accounts {
 
 public:

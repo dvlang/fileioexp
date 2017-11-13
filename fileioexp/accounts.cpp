@@ -97,10 +97,10 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 bool Accounts::AddRecordwc(std::ofstream &outputfile) {
 	std::ostringstream tmpstring;
 
-	std::cout << "Im in AddRecordwc function " << std::endl;
+	//std::cout << "Im in AddRecordwc function " << std::endl;
 	//accrec.printAccount();
 
-	outputfile.open("accounts.dat", std::ios_base::app);	//open file in append mode
+	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
 	if (!outputfile.is_open()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
 		//tmpstring << std::endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
@@ -127,14 +127,14 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 	accountExists = false;
 
 
-	inputfile.open("accounts.dat");
+	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
 	getline(inputfile, tmp);	//force a getline to set .eof bit
 
 	if (!inputfile.eof()) {
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
-		inputfile.open("accounts.dat"); //reopen
+		inputfile.open(FILENAME); //reopen
 
 		while (inputfile.good() && !accountExists) {
 			GetRecordwc(inputfile); 
@@ -178,7 +178,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 
 	//std::cout << "hi, im in my new print all function" << std::endl;
 
-	inputfile.open("accounts.dat");
+	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
 	getline(inputfile, tmp);	//force a getline to set .eof bit
 
@@ -186,7 +186,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
 
-		inputfile.open("accounts.dat");
+		inputfile.open(FILENAME);
 		while (inputfile.good()) {
 
 			GetRecordwc(inputfile); 
@@ -218,7 +218,7 @@ void Accounts::accountDeposit(double transamt) {
 }
 
 void Accounts::accountAddInterest(){
-	amount_Avail = amount_Avail*(1.0 + 0.02);  //was INTERSTRATE
+	amount_Avail = amount_Avail*(1.0 + INTERESTRATE);  //was INTERSTRATE
 }
 
 
@@ -236,14 +236,14 @@ bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int 
 	int lengthFound = 0;
 
 	inputfile.clear();  //clear flags
-	inputfile.open("accounts.dat");
+	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
 	getline(inputfile, tmp);	//force a getline to set .eof bit
 
 	if (!inputfile.eof()) {
 		inputfile.clear();  //clear flags
 		inputfile.close(); // close it
-		inputfile.open("accounts.dat"); //reopen
+		inputfile.open(FILENAME); //reopen
 
 		while (inputfile.good() && !accountExists) {
 			GetRecordwc(inputfile);
@@ -260,7 +260,7 @@ bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int 
 				if (inputfile.eof()) {	//if we read past end of file, need to go get the location of last ch
 					inputfile.clear();  //clear flags
 					inputfile.close();	// close it
-					inputfile.open("accounts.dat"); //reopen
+					inputfile.open(FILENAME); //reopen
 					inputfile.seekg(0, inputfile.end);
 					lengthFound = inputfile.tellg();
 					lengthFound = lengthFound + 2;
@@ -322,7 +322,7 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 
 	FindRecordwClass(record, in_file, record.getAccountNumber());
 
-	in_file.open("accounts.dat");			//open the input file
+	in_file.open(FILENAME);			//open the input file
 	if (in_file.fail()) {
 		std::cout << "ERROR: Can't open Input file!" << std::endl;
 		result++;
@@ -376,10 +376,18 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 	outputfile.clear();
 	outputfile.close();
 
+	/*
 	remove("old.dat");
 	rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
 	remove("accounts.dat");
 	result += rename("tmp.dat", "accounts.dat");
+	*/
+	remove("old.dat");
+	rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
+	remove(FILENAME);
+	result += rename("tmp.dat", &FILENAME[0]);
+
+
 
 	if (result != 0) {
 		return false;

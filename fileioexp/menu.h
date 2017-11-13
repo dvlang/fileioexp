@@ -6,6 +6,8 @@
 #include <fstream>
 
 
+const int ACCOUNTLENGTH = 6;	//this is the length required for an account number
+
 class Menu {
 
 public:
