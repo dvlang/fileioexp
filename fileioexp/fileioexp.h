@@ -22,7 +22,7 @@
 //bool IsNumber(const string&, int);
 //bool FindRecordwClass(Accounts &accrec);
 
-void printAllAccounts(Accounts&, Accounts&, std::ifstream&);
+void printAllAccounts(Checking&, Savings&, std::ifstream&);
 std::string getAccountType(std::ifstream&);
 
 //--------------------END Function Prototype-------------------------------

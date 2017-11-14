@@ -65,8 +65,8 @@ int main()
 
 	Accounts userAccount;
 	Accounts tmpUserAccount;
-	Accounts checkingAccount;
-	Accounts savingsAccount;
+	Checking checkingAccount;
+	Savings savingsAccount;
 
 	Menu systemMenu;
 
@@ -241,7 +241,7 @@ int main()
 
 //--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
 //--THIS FUNCTION WILL DETERMINE TYPE AN CALL THE APPROPRIATE CLASS FUNCTIONS
-void printAllAccounts(Accounts &checkingAcct, Accounts &savAccount, std::ifstream &inputfile) {
+void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream &inputfile) {
 	std::string tmp = "";
 	std::string accounttype;
 
