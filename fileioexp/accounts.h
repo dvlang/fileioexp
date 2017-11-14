@@ -41,6 +41,8 @@ protected:
 	int account_Number;
 	std::string name_Owner;
 	double amount_Avail;
+	std::string date_Opened;
+	std::string account_Type;
 	int recordlocator;
 	int recordEnd;
 
@@ -73,7 +75,7 @@ public:
 			getline(inputfile, wholeentry);
 
 			//BEGIN LINE PARSING
-			std::cout << "input line is: " << wholeentry << std::endl;
+			//std::cout << "input line is: " << wholeentry << std::endl;
 
 			//GET ACCOUNT TYPE
 			i = 0;
@@ -82,7 +84,8 @@ public:
 			tmpstring.str(accountType);
 
 			tmpstring >> accountType;
-			std::cout << "gr_ account type is: " << accountType << std::endl;
+			account_Type = accountType;
+			//std::cout << "gr_ account type is: " << accountType << std::endl;
 
 			//GET ACCOUNT NUMBER
 
@@ -95,7 +98,7 @@ public:
 
 			tmpstring >> account_Number;
 			account_Number = std::stoi(accountNumber);
-			std::cout << "gr_ account number is: " << account_Number << std::endl;
+			//std::cout << "gr_ account number is: " << account_Number << std::endl;
 
 			//GET NAME OF THE OWNER
 			i += 2;	//move i index off ";" and space
@@ -105,7 +108,7 @@ public:
 
 			name_Owner = accountName;
 
-			std::cout << "gr_ account name is: " << name_Owner << std::endl;
+			//std::cout << "gr_ account name is: " << name_Owner << std::endl;
 
 			//GET AMOUNT AVAILABLE IN ACCOUNT
 			i += 2;	//move i index off ";" and space
@@ -122,7 +125,7 @@ public:
 			amount_Avail = value;
 
 			std::cout.precision(15);
-			std::cout << "gr_ account value is: " << amount_Avail << std::endl;
+			//std::cout << "gr_ account value is: " << amount_Avail << std::endl;
 
 			//GET DATE ACCOUNT OPENED
 			i += 2;	//move i index off ";" and space
@@ -130,7 +133,8 @@ public:
 			while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 			dateOpened = wholeentry.substr(j, i - j);
 
-			std::cout << "gr_ account opened: " << dateOpened << std::endl;
+			date_Opened = dateOpened;
+			//std::cout << "gr_ account opened: " << date_Opened << std::endl;
 			
 			tmpstring.clear();
 			//GET Direct deposit
@@ -145,11 +149,11 @@ public:
 			
 			if (direct_Deposit){
 				//direct_Deposit = true;
-				std::cout << "gr_ account direct_Deposit: true " << std::endl;
+				//std::cout << "gr_ account direct_Deposit: true " << std::endl;
 			}
 			else{ 
 				//direct_Deposit = false; 
-				std::cout << "gr_ account direct_Deposit: false " << std::endl;
+				//std::cout << "gr_ account direct_Deposit: false " << std::endl;
 			}
 			
 			tmpstring.clear();
@@ -166,7 +170,7 @@ public:
 			transaction_Fee = value;
 
 			std::cout.precision(15);
-			std::cout << "gr_ trans fee is: " << transaction_Fee << std::endl;
+			//std::cout << "gr_ trans fee is: " << transaction_Fee << std::endl;
 
 
 			// END LINE PARSING	
@@ -174,6 +178,11 @@ public:
 			return;
 		}
 
+	virtual void printAccount()
+	{
+			
+		std::cout << account_Type << "\t\t"<<  account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << direct_Deposit << "\t" <<transaction_Fee << std::endl;
+	}
 
 private:
 	bool direct_Deposit;
@@ -211,7 +220,7 @@ public:
 		getline(inputfile, wholeentry);
 
 		//BEGIN LINE PARSING
-		std::cout << "input line is: " << wholeentry << std::endl;
+		//std::cout << "input line is: " << wholeentry << std::endl;
 
 		//GET ACCOUNT TYPE
 		i = 0;
@@ -220,7 +229,8 @@ public:
 		tmpstring.str(accountType);
 
 		tmpstring >> accountType;
-		std::cout << "gr_ account type is: " << accountType << std::endl;
+		account_Type = accountType;
+	//	std::cout << "gr_ account type is: " << accountType << std::endl;
 
 		//GET ACCOUNT NUMBER
 
@@ -233,7 +243,7 @@ public:
 
 		tmpstring >> account_Number;
 		account_Number = std::stoi(accountNumber);
-		std::cout << "gr_ account number is: " << account_Number << std::endl;
+		//std::cout << "gr_ account number is: " << account_Number << std::endl;
 
 		//GET NAME OF THE OWNER
 		i += 2;	//move i index off ";" and space
@@ -243,7 +253,7 @@ public:
 
 		name_Owner = accountName;
 
-		std::cout << "gr_ account name is: " << name_Owner << std::endl;
+		//std::cout << "gr_ account name is: " << name_Owner << std::endl;
 
 		//GET AMOUNT AVAILABLE IN ACCOUNT
 		i += 2;	//move i index off ";" and space
@@ -260,7 +270,7 @@ public:
 		amount_Avail = value;
 
 		std::cout.precision(15);
-		std::cout << "gr_ account value is: " << amount_Avail << std::endl;
+		//std::cout << "gr_ account value is: " << amount_Avail << std::endl;
 
 		//GET DATE ACCOUNT OPENED
 		i += 2;	//move i index off ";" and space
@@ -268,7 +278,8 @@ public:
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		dateOpened = wholeentry.substr(j, i - j);
 
-		std::cout << "gr_ account opened: " << dateOpened << std::endl;
+		date_Opened = dateOpened;
+		//std::cout << "gr_ account opened: " << date_Opened << std::endl;
 
 		tmpstring.clear();
 		
@@ -279,7 +290,7 @@ public:
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		maturity_Date = wholeentry.substr(j, i - j);
 
-		std::cout << "gr_ MATURITY DATE : " << maturity_Date << std::endl;
+		//std::cout << "gr_ MATURITY DATE : " << maturity_Date << std::endl;
 
 		tmpstring.clear();
 
@@ -298,7 +309,7 @@ public:
 		current_Interest = value;
 
 		std::cout.precision(15);
-		std::cout << "gr_ current_Interest value is: " << current_Interest << std::endl;
+		//std::cout << "gr_ current_Interest value is: " << current_Interest << std::endl;
 		tmpstring.clear();
 
 
@@ -317,7 +328,7 @@ public:
 		default_Interest = value;
 
 		std::cout.precision(15);
-		std::cout << "gr_ default_Interest value is: " << default_Interest << std::endl;
+		//std::cout << "gr_ default_Interest value is: " << default_Interest << std::endl;
 		tmpstring.clear();
 
 
@@ -326,7 +337,11 @@ public:
 
 		return;
 	}
+	virtual void printAccount()
+	{
 
+		std::cout << account_Type << "\t\t\t" << account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
+	}
 
 private:
 	std::string maturity_Date;

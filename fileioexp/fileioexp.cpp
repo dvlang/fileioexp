@@ -213,7 +213,7 @@ int main()
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
 			
-			//systemMenu.printViewAllMenu();
+			systemMenu.printViewAllMenu();
 			//tmpUserAccount.printAllAccounts(in_file);  //does this break requirement for all users to get pulled into their own account object???????????????
 			
 			printAllAccounts(checkingAccount, savingsAccount, in_file);
@@ -259,17 +259,17 @@ void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream
 		while (inputfile.good()) {
 
 			accounttype = getAccountType(inputfile);
-			std::cout << "paa_ account type is: " << accounttype << std::endl;
+		//	std::cout << "paa_ account type is: " << accounttype << std::endl;
 
 			if (accounttype == "Checking") {
 				//This needs to get converted to a call to the appropriate class function based on account type
 				checkingAcct.GetRecordwc(inputfile);
-				//printAccount();
+				checkingAcct.printAccount();
 			}
 			else if(accounttype=="Savings"){
 				//This needs to get converted to a call to the appropriate class function based on account type
 				savAccount.GetRecordwc(inputfile);
-				//printAccount();
+				savAccount.printAccount();
 
 			}
 			else { std::cout << "ERROR: invalid account type found!" << std::endl; }
@@ -304,10 +304,8 @@ std::string getAccountType(std::ifstream &inputfile) {
 	i = 0;
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountType = wholeentry.substr(0, i);
-	//tmpstring.str(accountType);
 
-	//tmpstring >> accountType;
-	std::cout << "ga_ account type is: " << accountType << std::endl;
+	//std::cout << "ga_ account type is: " << accountType << std::endl;
 
 	inputfile.seekg(currentpos);  //set the file pointer back to where we were
 
