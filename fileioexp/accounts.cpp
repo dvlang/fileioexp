@@ -29,7 +29,32 @@ double Accounts::getAccountValue() { return amount_Avail; }
 
 
 
+std::string Accounts::getAccountType(std::ifstream &inputfile) {
+	std::istringstream tmpstring;
+	std::string wholeentry;
+	std::string accountType;
+	int currentpos;
 
+	int i, j;
+	tmpstring.clear();
+
+	currentpos = inputfile.tellg();  //get the current position in the file
+
+	getline(inputfile, wholeentry);
+	std::cout << "ga_input line is: " << wholeentry << std::endl;
+
+	i = 0;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountType = wholeentry.substr(0, i);
+	//tmpstring.str(accountType);
+
+	//tmpstring >> accountType;
+	std::cout << "ga_ account type is: " << accountType << std::endl;
+
+	inputfile.seekg(currentpos);  //set the file pointer back to where we were
+
+	return accountType;
+}
 
 //GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 
@@ -39,25 +64,40 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	std::string accountNumber;
 	std::string accountName;
 	std::string accountValue;
+	std::string accountType;
+	std::string dateOpened;
 
 	int i, j;
 	int accountnum;
 	double value;
 
-	//std::cout << "in the GetRecordwc function" << std::endl;
 	tmpstring.clear();
 
 	getline(inputfile, wholeentry);
 
 	//BEGIN LINE PARSING
+	std::cout << "input line is: " << wholeentry << std::endl;
+
 	i = 0;
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-	accountNumber = wholeentry.substr(0, i);
-	tmpstring.str(accountNumber);
+	accountType = wholeentry.substr(0, i);
+	tmpstring.str(accountType);
 
-	tmpstring >> account_Number;
-	//std::cout << "gr_ account number is: " << account_Number << std::endl;
+	tmpstring >> accountType;
+	std::cout << "gr_ account type is: " << accountType << std::endl;
+
+	//i = 0;
+	i += 2;
+	j = i;	//j is placeholder to beginning of next entry
 	
+	//accountNumber = wholeentry.substr(0, i);
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountNumber = wholeentry.substr(j, i - j);
+	tmpstring.str(accountNumber);
+	
+	tmpstring >> account_Number;
+	account_Number = std::stoi(accountNumber);
+	std::cout << "gr_ account number is: " << account_Number << std::endl;
 
 
 	i += 2;	//move i index off ";" and space
@@ -67,8 +107,8 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	
 
 	name_Owner = accountName;
-	
-	//std::cout << "gr_ account name is: " << name_Owner << std::endl;
+
+	std::cout << "gr_ account name is: " << name_Owner << std::endl;
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
@@ -85,7 +125,18 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	amount_Avail = value;
 
 	std::cout.precision(15);
-	//std::cout << "gr_ account value is: " << amount_Avail << std::endl;
+	std::cout << "gr_ account value is: " << amount_Avail << std::endl;
+
+
+	i += 2;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	dateOpened = wholeentry.substr(j, i - j);
+
+
+	//date_Opened = dateOpened;
+
+	std::cout << "gr_ account opened: " << dateOpened << std::endl;
 
 	// END LINE PARSING	
 
@@ -175,6 +226,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 void Accounts::printAllAccounts(std::ifstream &inputfile){
 	std::string tmp = "";
+	std::string accounttype;
 
 	//std::cout << "hi, im in my new print all function" << std::endl;
 
@@ -189,6 +241,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 		inputfile.open(FILENAME);
 		while (inputfile.good()) {
 
+			accounttype= getAccountType(inputfile);
 			GetRecordwc(inputfile); 
 
 			printAccount();

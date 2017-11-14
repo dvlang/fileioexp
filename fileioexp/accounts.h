@@ -29,6 +29,7 @@ public:
 	void accountAddInterest();
 	
 	void GetRecordwc(std::ifstream&);
+	std::string getAccountType(std::ifstream &inputfile);
 	
 	bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
 	bool ModifyRecordwc(Accounts &record, std::ofstream&);
