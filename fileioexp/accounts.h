@@ -45,4 +45,25 @@ private:
 	int recordEnd;
 
 };
+/*
+class Checking {
+
+public:
+	Accounts();
+
+	void GetRecordwc(std::ifstream&);
+	
+
+private:
+
+
+};
+
+*/
+
+
+
+
+
+
 #endif

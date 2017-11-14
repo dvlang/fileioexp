@@ -21,6 +21,10 @@
 //bool ModifyRecordwc(Accounts &record, ofstream&, int *recloc, int *recordend);
 //bool IsNumber(const string&, int);
 //bool FindRecordwClass(Accounts &accrec);
+
+void printAllAccounts(Accounts&, Accounts&, std::ifstream&);
+std::string getAccountType(std::ifstream&);
+
 //--------------------END Function Prototype-------------------------------
 
 /*

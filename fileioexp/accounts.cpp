@@ -28,7 +28,7 @@ std::string Accounts::getAccountName() { return name_Owner; }
 double Accounts::getAccountValue() { return amount_Avail; }
 
 
-
+//------------------------IM GOING TO DEPRECIATE THIS USAGE-------------------------------------
 std::string Accounts::getAccountType(std::ifstream &inputfile) {
 	std::istringstream tmpstring;
 	std::string wholeentry;
@@ -55,6 +55,7 @@ std::string Accounts::getAccountType(std::ifstream &inputfile) {
 
 	return accountType;
 }
+//------------------------------END getaccounttype---------------------------------------------
 
 //GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
 
@@ -224,6 +225,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 }
 
+//-------------------IM GOING TO DEPRECIATE THIS FUNCTION IN ACCOUNT-------------------
 void Accounts::printAllAccounts(std::ifstream &inputfile){
 	std::string tmp = "";
 	std::string accounttype;
@@ -254,6 +256,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 	inputfile.clear();
 	inputfile.close();
 }
+//-------------------end printAllAccounts-------------------
 
 bool Accounts::accountWithdrawl(double transamt) {
 	if (amount_Avail >= transamt) {

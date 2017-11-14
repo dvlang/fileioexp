@@ -65,6 +65,9 @@ int main()
 
 	Accounts userAccount;
 	Accounts tmpUserAccount;
+	Accounts checkingAccount;
+	Accounts savingsAccount;
+
 	Menu systemMenu;
 
 	
@@ -179,7 +182,6 @@ int main()
 
 					case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
 
-						//userAccount.setAccountValue(userAccount.getAccountValue() *(1.0 + INTERESTRATE));
 						tmpUserAccount.accountAddInterest();
 						tmpUserAccount.printAccount();
 						break;
@@ -202,7 +204,7 @@ int main()
 
 					}
 				}
-			//}
+			
 			else {
 				cout << "ERROR:Invalid Account Number Entered!" << endl << endl;
 			}
@@ -211,10 +213,10 @@ int main()
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
 			
-			systemMenu.printViewAllMenu();
+			//systemMenu.printViewAllMenu();
+			//tmpUserAccount.printAllAccounts(in_file);  //does this break requirement for all users to get pulled into their own account object???????????????
 			
-			tmpUserAccount.printAllAccounts(in_file);  //does this break requirement for all users to get pulled into their own account object???????????????
-			
+			printAllAccounts(checkingAccount, savingsAccount, in_file);
 
 			break;
 			//-------------------USER QUIT OPTION-------------------------
@@ -231,3 +233,84 @@ int main()
 }//--------------------END MAIN--------------------------------------
 
 
+
+
+//--------------------FUNCTIONS STILL IN FILEIOEXP-----------------------------------
+//-----------------------------------------------------------------------------------
+
+
+//--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
+//--THIS FUNCTION WILL DETERMINE TYPE AN CALL THE APPROPRIATE CLASS FUNCTIONS
+void printAllAccounts(Accounts &checkingAcct, Accounts &savAccount, std::ifstream &inputfile) {
+	std::string tmp = "";
+	std::string accounttype;
+
+	//std::cout << "hi, im in my new print all function" << std::endl;
+
+	inputfile.open(FILENAME);
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+
+		inputfile.open(FILENAME);
+		while (inputfile.good()) {
+
+			accounttype = getAccountType(inputfile);
+			std::cout << "paa_ account type is: " << accounttype << std::endl;
+
+			if (accounttype == "Checking") {
+				//This needs to get converted to a call to the appropriate class function based on account type
+				checkingAcct.GetRecordwc(inputfile);
+				//printAccount();
+			}
+			else if(accounttype=="Savings"){
+				//This needs to get converted to a call to the appropriate class function based on account type
+				savAccount.GetRecordwc(inputfile);
+				//printAccount();
+
+			}
+			else { std::cout << "ERROR: invalid account type found!" << std::endl; }
+			
+			
+		}
+	}
+	else
+	{
+		std::cout << "ERROR_paa: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+}
+//--------------------end FUNCTION: PRINTALLACCOUNTS-------------------------------------
+
+//--------------------FUNCTION: getAccountType-------------------------------------
+std::string getAccountType(std::ifstream &inputfile) {
+	std::istringstream tmpstring;
+	std::string wholeentry;
+	std::string accountType;
+	int currentpos;
+
+	int i, j;
+	tmpstring.clear();
+
+	currentpos = inputfile.tellg();  //get the current position in the file
+
+	getline(inputfile, wholeentry);
+	//std::cout << "ga_input line is: " << wholeentry << std::endl;
+
+	i = 0;
+	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
+	accountType = wholeentry.substr(0, i);
+	//tmpstring.str(accountType);
+
+	//tmpstring >> accountType;
+	std::cout << "ga_ account type is: " << accountType << std::endl;
+
+	inputfile.seekg(currentpos);  //set the file pointer back to where we were
+
+	return accountType;
+}
+//--------------------end  FUNCTION: getAccountType-------------------------------------
