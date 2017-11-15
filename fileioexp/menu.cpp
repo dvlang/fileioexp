@@ -35,8 +35,8 @@ void Menu::printMenu()
 
 void Menu::printViewAllMenu() {
 	std::cout << std::endl << "--------------------Accounts on File-----------------------" << std::endl;
-	std::cout << "Account Type" << "\t\t" << "Account Number" << "\t\t" << "Account Name" << "\t" << "Account Value " << std::endl;
-	std::cout << "--------------" << "\t\t" << "--------------" << "\t\t" << "------------" << "\t" << "-------------" << std::endl;
+	std::cout << "Account Type" << "\t" <<   "Acc Number" << "\t" << "Account Name" << "\t" << "Account Value" << "\t" << "Field 1" << "\t" << "Field 2" << "\t" << "Field 3" << std::endl;
+	std::cout << "------------" << "\t" << "----------" << "\t" <<   "------------" << "\t" << "-------------" <<"\t"<<   "-------" << "\t" << "-------" << "\t" << "-------" << std::endl;
 }
 
 void Menu::printModifyBaseAccountMenu() {
@@ -113,6 +113,33 @@ std::string Menu::getUserName() {
 
 	return tmp;
 }
+
+
+std::string Menu::getAccountType() {
+	bool lengthgood;
+
+	//Get user acccount name
+	std::cout << "Desired Account Type (Checking(c) or Savings(s): " << std::endl;
+	getline(std::cin, tmp);
+	tmpstring.str(tmp);
+
+	//check to see if they field was empty, if it was, stay here till they give you a good one
+	lengthgood = CheckEmpty(tmpstring);
+
+	//make sure the user didnt enter an empty value
+	while (!lengthgood) {
+		std::cout << "ERROR: Account Holder Name Can't Be Empty, Re-try: " << std::endl;
+		getline(std::cin, tmp);
+		tmpstring.str(tmp);
+		lengthgood = CheckEmpty(tmpstring);
+	}
+
+	if (tmp == "c") { return "Checking"; }
+	else if(tmp=="s") { return "Savings"; }
+	else { return NULL; }
+	return tmp;
+}
+
 
 int Menu::getUserAcct() {
 	return 1;

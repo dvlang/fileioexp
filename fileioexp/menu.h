@@ -23,6 +23,7 @@ public:
 	std::string getUserName();
 	int getUserAcct();
 	double getUserAmount();
+	std::string getAccountType();
 
 private:
 	char userselection;

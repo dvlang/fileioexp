@@ -19,6 +19,7 @@ void Accounts::printAccount()
 	std::cout << account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << std::endl;
 }
 
+void Accounts::setAccountType(std::string acctype) { account_Type = acctype; }
 void Accounts::setAccountNumber(int accnum) { account_Number = accnum; }
 void Accounts::setAccountName(std::string accname) { name_Owner = accname; }
 void Accounts::setAccountValue(double accval) { amount_Avail = accval; }
@@ -145,17 +146,16 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 }
 
 
-//This function adds a record based on info in a passed struct
+//This function adds a record based on info in a passed 
 bool Accounts::AddRecordwc(std::ofstream &outputfile) {
 	std::ostringstream tmpstring;
 
-	//std::cout << "Im in AddRecordwc function " << std::endl;
-	//accrec.printAccount();
+
 
 	outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
 	if (!outputfile.is_open()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; return false; }	//check for failure when opening
 	if (outputfile.good()) {
-		//tmpstring << std::endl << accrec.getAccountNumber() << "; " << accrec.getAccountName() << "; " << accrec.getAccountValue() << ";";
+	
 		tmpstring << std::endl << account_Number << "; " << name_Owner << "; " << amount_Avail <<"; ";
 		outputfile << tmpstring.str();
 	}

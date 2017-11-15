@@ -17,6 +17,7 @@ public:
 	Accounts();
 	void printAccount();
 	void printAllAccounts(std::ifstream&);
+	void setAccountType(std::string);
 	void setAccountNumber(int);
 	void setAccountName(std::string);
 	void setAccountValue(double);
@@ -53,6 +54,10 @@ class Checking:public Accounts {
 
 public:
 	Checking() :direct_Deposit(false), transaction_Fee(0.0) {}
+
+	void setDirectdeposit(bool dd) { direct_Deposit = dd; }
+	void setTransFee(double transfee) {transaction_Fee = transfee;}
+
 
 	virtual void GetRecordwc(std::ifstream& inputfile) {
 		
@@ -181,10 +186,10 @@ public:
 	virtual void printAccount()
 	{
 			
-		std::cout << account_Type << "\t\t"<<  account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << direct_Deposit << "\t" <<transaction_Fee << std::endl;
+		std::cout << account_Type << "\t"<<  account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << direct_Deposit << "\t" <<transaction_Fee << std::endl;
 	}
 
-	/*virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 		bool accountExists;
 		std::string tmp = "";
@@ -235,8 +240,29 @@ public:
 
 		}
 
-	}*/
+	}
+	
+	virtual bool AddRecordwc(std::ofstream &outputfile) {
+		std::ostringstream tmpstring;
+		
+		outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
+		if (!outputfile.is_open()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; return false; }	//check for failure when opening
+		if (outputfile.good()) {
 
+			tmpstring << std::endl << account_Type << "; "<< account_Number << "; " << name_Owner << "; " << amount_Avail << "; " << date_Opened << "; " << std::boolalpha<<direct_Deposit<< "; " << transaction_Fee << "; ";
+			outputfile << tmpstring.str();
+		}
+		else
+		{
+			outputfile.clear();
+			outputfile.close();
+			return false;
+		}
+
+		outputfile.clear();
+		outputfile.close();
+		return true;
+	}
 
 private:
 	bool direct_Deposit;
@@ -394,10 +420,10 @@ public:
 	virtual void printAccount()
 	{
 
-		std::cout << account_Type << "\t\t\t" << account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
+		std::cout << account_Type << " \t" << account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
 	}
 
-	/*virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 		bool accountExists;
 		std::string tmp = "";
@@ -448,8 +474,28 @@ public:
 
 		}
 
-	}*/
+	}
+	virtual bool AddRecordwc(std::ofstream &outputfile) {
+		std::ostringstream tmpstring;
 
+		outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
+		if (!outputfile.is_open()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; return false; }	//check for failure when opening
+		if (outputfile.good()) {
+
+			tmpstring << std::endl << account_Type << "; " << account_Number << "; " << name_Owner << "; " << amount_Avail << "; " << date_Opened << "; " << maturity_Date << "; " << current_Interest << "; " << default_Interest << "; ";
+			outputfile << tmpstring.str();
+		}
+		else
+		{
+			outputfile.clear();
+			outputfile.close();
+			return false;
+		}
+
+		outputfile.clear();
+		outputfile.close();
+		return true;
+	}
 private:
 	std::string maturity_Date;
 	double current_Interest;

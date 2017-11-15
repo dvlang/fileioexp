@@ -43,6 +43,7 @@ int size;
 int tmpacctnumber;
 double tmpacctval;
 bool transactionResult;
+std::string tmpaccttype;
 
 string date;
 
@@ -63,8 +64,8 @@ int main()
 	ifstream in_file;
 	ofstream out_file;
 
-	Accounts userAccount;
-	Accounts tmpUserAccount;
+	//Accounts userAccount;
+	//Accounts tmpUserAccount;
 	Checking checkingAccount;
 	Savings savingsAccount;
 
@@ -94,31 +95,67 @@ int main()
 			accountExists = true;
 			accountnumgood = false;
 			lengthgood = false;
+			
 
 			std::cout << "CREATE NEW ACCOUNT" << std::endl;
 
-			while (accountExists) {
-				tmpacctnumber = systemMenu.getDesiredAcctNum();
+			//get user account type here
+			tmpaccttype=systemMenu.getAccountType();//user account type 
 
-				//check to see if account number already exists, if it does stay here till they give you a good one
-				accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);  
-				
+			if (tmpaccttype == "Checking") {
+
+				while (accountExists) {
+					tmpacctnumber = systemMenu.getDesiredAcctNum();
+
+					//check to see if account number already exists, if it does stay here till they give you a good one
+					accountExists = checkingAccount.doesAccountExist(in_file, tmpacctnumber);
+					if (accountExists) { std::cout << "Account already exists, choose another. " << std::endl; }
+
+				}
+				checkingAccount.setAccountType(tmpaccttype);
+				checkingAccount.setAccountNumber(tmpacctnumber);
+				checkingAccount.setAccountName(systemMenu.getUserName());
+				checkingAccount.setAccountValue(systemMenu.getUserAmount());
+
+				std::cout << "Enable Direct Deposit? y/n: ";
+				userselection = systemMenu.getUserSelection();
+				if (userselection == 'y') { 
+					checkingAccount.setDirectdeposit(true); 
+					checkingAccount.setTransFee(0.0);
+				}
+				else { 
+					checkingAccount.setDirectdeposit(false); 
+					checkingAccount.setTransFee(3.5);
+				}
+
+				checkingAccount.AddRecordwc(out_file);
 			}
-			tmpUserAccount.setAccountNumber(tmpacctnumber);
-			
-			tmpUserAccount.setAccountName(systemMenu.getUserName());
-									
-			tmpUserAccount.setAccountValue(systemMenu.getUserAmount());
+			else if (tmpaccttype == "Savings") {
 
-						
-			//input data good, commit record
-			tmpUserAccount.AddRecordwc(out_file);
+				while (accountExists) {
+					tmpacctnumber = systemMenu.getDesiredAcctNum();
 
+					//check to see if account number already exists, if it does stay here till they give you a good one
+					accountExists = checkingAccount.doesAccountExist(in_file, tmpacctnumber);
+
+				}
+				savingsAccount.setAccountType(tmpaccttype);
+				savingsAccount.setAccountNumber(tmpacctnumber);
+				savingsAccount.setAccountName(systemMenu.getUserName());
+				savingsAccount.setAccountValue(systemMenu.getUserAmount());
+
+
+				savingsAccount.AddRecordwc(out_file);
+			}
+			//tmpUserAccount.AddRecordwc(out_file);
+			else {
+				std::cout << "invalid acct type requested" << std::endl;
+			}
 
 			break;
 
 		case 'M':	//-------------------USER MODIFY OPTION-------------------------
-			tmpstring.clear();
+			/*tmpstring.clear();
 			recordlocator = 0;
 			accountExists = false;
 			accountnumgood = false;
@@ -208,7 +245,7 @@ int main()
 			else {
 				cout << "ERROR:Invalid Account Number Entered!" << endl << endl;
 			}
-
+			*/
 			break;
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
