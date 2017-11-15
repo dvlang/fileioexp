@@ -127,7 +127,7 @@ int main()
 					checkingAccount.setDirectdeposit(false); 
 					checkingAccount.setTransFee(3.5);
 				}
-
+				checkingAccount.setDateOpened(date);
 				checkingAccount.AddRecordwc(out_file);
 			}
 			else if (tmpaccttype == "Savings") {
@@ -144,6 +144,13 @@ int main()
 				savingsAccount.setAccountName(systemMenu.getUserName());
 				savingsAccount.setAccountValue(systemMenu.getUserAmount());
 
+				std::cout << "Enter Maturity Date? (MM/DD/YYYY)";
+				savingsAccount.setMatDate(systemMenu.getUserName());//not techically a username, but it returns a non-zero string so i'll resuse it
+				std::cout << "Enter Current Interest Rate ";
+				savingsAccount.setCurInt(systemMenu.getUserAmount()); //again, not technically following name inferred function, but it will work
+				std::cout << "Enter Default Interest Rate ";
+				savingsAccount.setDefInt(systemMenu.getUserAmount()); //again, not technically following name inferred function, but it will work
+				savingsAccount.setDateOpened(date);
 
 				savingsAccount.AddRecordwc(out_file);
 			}

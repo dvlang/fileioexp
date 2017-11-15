@@ -21,6 +21,7 @@ public:
 	void setAccountNumber(int);
 	void setAccountName(std::string);
 	void setAccountValue(double);
+	void setDateOpened(std::string);
 	int getAccountNumber();
 	std::string getAccountName();
 	double getAccountValue();
@@ -278,6 +279,10 @@ public:
 	Savings() :maturity_Date("01/01/1980"), current_Interest(0.01), default_Interest(0.01)
 	{
 	}
+
+	void setMatDate(std::string matdate) { maturity_Date = matdate; }
+	void setCurInt(double curint) { current_Interest = curint; }
+	void setDefInt(double defint) { default_Interest = defint; }
 
 	virtual void GetRecordwc(std::ifstream& inputfile) {
 

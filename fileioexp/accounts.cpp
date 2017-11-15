@@ -23,6 +23,7 @@ void Accounts::setAccountType(std::string acctype) { account_Type = acctype; }
 void Accounts::setAccountNumber(int accnum) { account_Number = accnum; }
 void Accounts::setAccountName(std::string accname) { name_Owner = accname; }
 void Accounts::setAccountValue(double accval) { amount_Avail = accval; }
+void Accounts::setDateOpened(std::string dateop) { date_Opened = dateop; }
 
 int Accounts::getAccountNumber() { return account_Number; }
 std::string Accounts::getAccountName() { return name_Owner; }
