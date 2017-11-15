@@ -28,7 +28,7 @@ public:
 	void accountDeposit(double);
 	void accountAddInterest();
 	
-	virtual void GetRecordwc(std::ifstream&);
+	virtual void GetRecordwc(std::ifstream&)=0;
 	std::string getAccountType(std::ifstream &inputfile);
 	
 	bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
@@ -183,6 +183,60 @@ public:
 			
 		std::cout << account_Type << "\t\t"<<  account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << direct_Deposit << "\t" <<transaction_Fee << std::endl;
 	}
+
+	/*virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+
+		bool accountExists;
+		std::string tmp = "";
+		accountExists = false;
+
+
+		inputfile.open(FILENAME);
+		if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
+		getline(inputfile, tmp);	//force a getline to set .eof bit
+
+		if (!inputfile.eof()) {
+			inputfile.clear();  //clear flags
+			inputfile.close(); // close it
+			inputfile.open(FILENAME); //reopen
+
+			while (inputfile.good() && !accountExists) {
+				GetRecordwc(inputfile);
+
+				//std::cout << "account number for line is: " << account_Number << std::endl;
+				//std::cout << "account passed was: " << accnum << std::endl;
+				if (account_Number != accnum) {
+
+					accountExists = false;
+
+				}
+
+				else {
+					accountExists = true;
+
+				}
+
+			}
+		}
+		else
+		{
+			std::cout << "ERROR_dae: FILE EMPTY!" << std::endl;
+		}
+		inputfile.clear();
+		inputfile.close();
+
+		if (accountExists) {
+
+			return true;
+
+		}
+		else {
+			return false;
+
+		}
+
+	}*/
+
 
 private:
 	bool direct_Deposit;
@@ -342,6 +396,59 @@ public:
 
 		std::cout << account_Type << "\t\t\t" << account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
 	}
+
+	/*virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+
+		bool accountExists;
+		std::string tmp = "";
+		accountExists = false;
+
+
+		inputfile.open(FILENAME);
+		if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening (i.e no file)
+		getline(inputfile, tmp);	//force a getline to set .eof bit
+
+		if (!inputfile.eof()) {
+			inputfile.clear();  //clear flags
+			inputfile.close(); // close it
+			inputfile.open(FILENAME); //reopen
+
+			while (inputfile.good() && !accountExists) {
+				GetRecordwc(inputfile);
+
+				//std::cout << "account number for line is: " << account_Number << std::endl;
+				//std::cout << "account passed was: " << accnum << std::endl;
+				if (account_Number != accnum) {
+
+					accountExists = false;
+
+				}
+
+				else {
+					accountExists = true;
+
+				}
+
+			}
+		}
+		else
+		{
+			std::cout << "ERROR_dae: FILE EMPTY!" << std::endl;
+		}
+		inputfile.clear();
+		inputfile.close();
+
+		if (accountExists) {
+
+			return true;
+
+		}
+		else {
+			return false;
+
+		}
+
+	}*/
 
 private:
 	std::string maturity_Date;
