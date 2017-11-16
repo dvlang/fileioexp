@@ -11,7 +11,8 @@
 
 
 
-Accounts::Accounts() { account_Number = 0; name_Owner = "null"; amount_Avail = 1010; }
+Accounts::Accounts() { account_Number = 0; name_Owner = "null"; amount_Avail = 1010; account_Type = "null";
+}
 
 void Accounts::printAccount()
 {
@@ -29,8 +30,10 @@ int Accounts::getAccountNumber() { return account_Number; }
 std::string Accounts::getAccountName() { return name_Owner; }
 double Accounts::getAccountValue() { return amount_Avail; }
 
+std::string Accounts::getAccountType() { return account_Type; }
 
 //------------------------IM GOING TO DEPRECIATE THIS USAGE-------------------------------------
+/*
 std::string Accounts::getAccountType(std::ifstream &inputfile) {
 	std::istringstream tmpstring;
 	std::string wholeentry;
@@ -57,6 +60,7 @@ std::string Accounts::getAccountType(std::ifstream &inputfile) {
 
 	return accountType;
 }
+*/
 //------------------------------END getaccounttype---------------------------------------------
 
 //GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
@@ -87,7 +91,9 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	tmpstring.str(accountType);
 
 	tmpstring >> accountType;
-	std::cout << "gr_ account type is: " << accountType << std::endl;
+	account_Type = accountType;
+	std::cout << "gr_ account type is: " << account_Type << std::endl;
+	
 
 	//i = 0;
 	i += 2;
@@ -202,7 +208,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 			else {
 				accountExists = true;
-			
+				std::cout << "HI! acc type ->" << amount_Avail << "<-"<<std::endl;
 			}
 
 		}
@@ -227,6 +233,7 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 }
 
 //-------------------IM GOING TO DEPRECIATE THIS FUNCTION IN ACCOUNT-------------------
+/*
 void Accounts::printAllAccounts(std::ifstream &inputfile){
 	std::string tmp = "";
 	std::string accounttype;
@@ -257,6 +264,7 @@ void Accounts::printAllAccounts(std::ifstream &inputfile){
 	inputfile.clear();
 	inputfile.close();
 }
+*/
 //-------------------end printAllAccounts-------------------
 
 bool Accounts::accountWithdrawl(double transamt) {

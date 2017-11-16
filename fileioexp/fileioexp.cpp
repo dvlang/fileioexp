@@ -68,6 +68,7 @@ int main()
 	//Accounts tmpUserAccount;
 	Checking checkingAccount;
 	Savings savingsAccount;
+	Master allAccounts;
 
 	Menu systemMenu;
 
@@ -167,11 +168,47 @@ int main()
 			accountExists = false;
 			accountnumgood = false;
 			tmpaccountlength = 0;
+			*/
 
+			accountExists = false;
 			cout << "MODIFY AN ACCOUNT" << endl;
 			
+			while (!accountExists) {
+				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
-				while (!accountExists) {
+				//check to see if account number already exists, if it does stay here till they give you a good one
+				accountExists = allAccounts.doesAccountExist(in_file, tmpacctnumber);
+				//tmpaccttype = allAccounts.getAccountType();
+				if (!accountExists) { std::cout << "Account doesn't exists, choose another. " << std::endl; }
+				else { tmpaccttype = allAccounts.getAccountType(); }
+
+			}
+
+			//std::cout << "good account bro! It a type: "<< tmpaccttype << std::endl;
+			
+			if (tmpaccttype == "Checking") {
+				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
+				accountExists = checkingAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
+				checkingAccount.printAccount();
+				
+			}
+			else if (tmpaccttype == "Savings") {
+				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
+				accountExists = savingsAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
+				savingsAccount.printAccount();
+				
+			}
+
+
+
+
+
+
+
+
+
+
+			/*	while (!accountExists) {
 					tmpacctnumber = systemMenu.getDesiredAcctNum();
 
 					//check to see if account number already exists, if it does stay here till they give you a good one
@@ -356,3 +393,4 @@ std::string getAccountType(std::ifstream &inputfile) {
 	return accountType;
 }
 //--------------------end  FUNCTION: getAccountType-------------------------------------
+
