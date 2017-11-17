@@ -58,16 +58,16 @@ int main()
 	struct tm* brokentime = localtime(&timer);
 
 
-	//accountStruct AccountRecord;
-	//accountStruct tmpAccount;
+
 	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
 
-	//Accounts userAccount;
-	//Accounts tmpUserAccount;
+
 	Checking checkingAccount;
+	Checking curUserCheckingAcct;
 	Savings savingsAccount;
+	Savings curUserSavAcct;
 	Master allAccounts;
 
 	Menu systemMenu;
@@ -188,15 +188,159 @@ int main()
 			
 			if (tmpaccttype == "Checking") {
 				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
-				accountExists = checkingAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
-				checkingAccount.printAccount();
-				
-			}
+				accountExists = curUserCheckingAcct.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
+				curUserCheckingAcct.printAccount();
+
+				systemMenu.printModifyBaseAccountMenu();
+				userSubselection = systemMenu.getUserSelection();
+
+				switch (userSubselection)
+				{
+				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
+
+					cout << "CHANGE NAME: " << endl;
+
+					curUserCheckingAcct.setAccountName(systemMenu.getUserName());
+
+					break;
+				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
+
+					cout << "WITHDRAWL: " << endl;
+
+					tmpTransAmt = systemMenu.getUserAmount();
+
+					transactionResult = curUserCheckingAcct.accountWithdrawl(tmpTransAmt);
+
+					if (!transactionResult) {
+						cout << "ERROR: Insufficient funds!- Exiting" << endl;
+					}
+					curUserCheckingAcct.printAccount();
+
+					break;
+
+				case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
+					cout << "DEPOSIT: " << endl;
+
+					tmpTransAmt = systemMenu.getUserAmount();
+
+					curUserCheckingAcct.accountDeposit(tmpTransAmt);
+
+					curUserCheckingAcct.printAccount();
+
+
+					break;
+
+				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
+
+					curUserCheckingAcct.accountAddInterest();
+					curUserCheckingAcct.printAccount();
+					break;
+
+				case 'E':	//-------------------USER EXIT OPTION-------------------------
+					cout << "-Exit" << endl; userselection = 'H';
+					break;
+
+				default:
+					cout << "ERROR: INVALID Selection!" << endl;
+					break;
+
+				}
+				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
+
+					bool saveok;
+					//std::cout << "Im going to save this to the database: " << std::endl;
+					//curUserCheckingAcct.printAccount();
+					curUserCheckingAcct.setAccountValue(curUserCheckingAcct.getAccountValue() - curUserCheckingAcct.getTransFee());
+					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
+					//std::cout << "I did it: " << std::endl;
+					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+
+
+				}
+
+							
+			}//end if tmpacctype=checking
 			else if (tmpaccttype == "Savings") {
 				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
-				accountExists = savingsAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
-				savingsAccount.printAccount();
+				//accountExists = savingsAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
+			//	savingsAccount.printAccount();
 				
+
+				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
+				accountExists = curUserSavAcct.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
+				curUserSavAcct.printAccount();
+
+				systemMenu.printModifyBaseAccountMenu();
+				userSubselection = systemMenu.getUserSelection();
+
+				switch (userSubselection)
+				{
+				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
+
+					cout << "CHANGE NAME: " << endl;
+
+					curUserSavAcct.setAccountName(systemMenu.getUserName());
+
+					break;
+				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
+
+					cout << "WITHDRAWL: " << endl;
+
+					tmpTransAmt = systemMenu.getUserAmount();
+
+					transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
+
+					if (!transactionResult) {
+						cout << "ERROR: Insufficient funds!- Exiting" << endl;
+					}
+					curUserSavAcct.printAccount();
+
+					break;
+
+				case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
+					cout << "DEPOSIT: " << endl;
+
+					tmpTransAmt = systemMenu.getUserAmount();
+
+					curUserSavAcct.accountDeposit(tmpTransAmt);
+
+					curUserSavAcct.printAccount();
+
+
+					break;
+
+				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
+
+					curUserSavAcct.accountAddInterest();
+					curUserSavAcct.printAccount();
+					break;
+
+				case 'E':	//-------------------USER EXIT OPTION-------------------------
+					cout << "-Exit" << endl; userselection = 'H';
+					break;
+
+				default:
+					cout << "ERROR: INVALID Selection!" << endl;
+					break;
+
+				}
+				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
+
+					bool saveok;
+					//std::cout << "Im going to save this to the database: " << std::endl;
+					//curUserCheckingAcct.printAccount();
+					//curUserSavAcct.setAccountValue(curUserSavAcct.getAccountValue() - curUserSavAcct.getTransFee());
+					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
+					//std::cout << "I did it: " << std::endl;
+					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+
+
+				}
+
+
+
+
+
 			}
 
 

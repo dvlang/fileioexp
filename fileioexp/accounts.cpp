@@ -29,6 +29,7 @@ void Accounts::setDateOpened(std::string dateop) { date_Opened = dateop; }
 int Accounts::getAccountNumber() { return account_Number; }
 std::string Accounts::getAccountName() { return name_Owner; }
 double Accounts::getAccountValue() { return amount_Avail; }
+std::string Accounts::getDateOpened() { return date_Opened; }
 
 std::string Accounts::getAccountType() { return account_Type; }
 

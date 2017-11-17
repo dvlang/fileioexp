@@ -35,8 +35,8 @@ void Menu::printMenu()
 
 void Menu::printViewAllMenu() {
 	std::cout << std::endl << "--------------------Accounts on File-----------------------" << std::endl;
-	std::cout << "Account Type" << "\t" <<   "Acc Number" << "\t" << "Account Name" << "\t" << "Account Value" << "\t" << "DateOpened" << "\t" << "Field 1" <<"\t"<< "Field 2" << "\t" << "Field 3" << std::endl;
-	std::cout << "------------" << "\t" << "----------" << "\t" <<   "------------" << "\t" << "-------------" <<"\t"<<   "----------" << "\t" << "-------" << "\t" << "-------" << "\t" << "-------" << std::endl;
+	std::cout << "Account Type" << "\t" <<   "Acc Number" << "\t" << "Account Name" << "\t" << "Account Value" << "\t" << "DateOpened" << "\t" << "Field 1" <<"\t\t"<< "Field 2" << "\t" << "Field 3" << std::endl;
+	std::cout << "------------" << "\t" << "----------" << "\t" <<   "------------" << "\t" << "-------------" <<"\t"<<   "----------" << "\t" << "-------" << "\t\t" << "-------" << "\t" << "-------" << std::endl;
 }
 
 void Menu::printModifyBaseAccountMenu() {
