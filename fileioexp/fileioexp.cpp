@@ -252,9 +252,10 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					std::cout << "CHECKING: Im going to save this to the database: " << std::endl;
-					curUserCheckingAcct.printAccount();
-					curUserCheckingAcct.setAccountValue(curUserCheckingAcct.getAccountValue() - curUserCheckingAcct.getTransFee());
+					//std::cout << "CHECKING: Im going to save this to the database: " << std::endl;
+					//curUserCheckingAcct.printAccount();
+					//curUserCheckingAcct.setAccountValue(curUserCheckingAcct.getAccountValue() - curUserCheckingAcct.getTransFee());
+					curUserCheckingAcct.assessCheckingTransFee();
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 					//std::cout << "I did it: " << std::endl;
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
@@ -291,11 +292,6 @@ int main()
 
 					cout << "WITHDRAWL: " << endl;
 
-					//check for date here
-					std::cout << "Maturity Date is: " << curUserSavAcct.getMatDate() << std::endl;
-
-					//parseDate(curUserSavAcct.getMatDate());
-
 
 					tmpTransAmt = systemMenu.getUserAmount();
 
@@ -304,7 +300,7 @@ int main()
 					if (!transactionResult) {
 						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
 					}
-					curUserSavAcct.printAccount();
+					//curUserSavAcct.printAccount();
 
 					break;
 
@@ -338,8 +334,8 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					std::cout << "SAVINGS: Im going to save this to the database: " << std::endl;
-					curUserSavAcct.printAccount();
+					//std::cout << "SAVINGS: Im going to save this to the database: " << std::endl;
+					//curUserSavAcct.printAccount();
 					//curUserSavAcct.setAccountValue(curUserSavAcct.getAccountValue() - curUserSavAcct.getTransFee());
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
 					//std::cout << "I did it: " << std::endl;

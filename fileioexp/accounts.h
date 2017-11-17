@@ -213,6 +213,10 @@ public:
 	bool getDirectDeposit() { return direct_Deposit; }
 	double getTransFee() { return transaction_Fee; }
 
+	void assessCheckingTransFee() {
+		
+		amount_Avail = amount_Avail - transaction_Fee;
+	}
 
 	virtual void GetRecordwc(std::ifstream& inputfile) {
 		
@@ -480,9 +484,9 @@ public:
 				recordlocator = lengthNotFound - 2;
 				recordEnd = lengthFound - 2;
 
-				std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-				std::cout << "here is the matching account: " << std::endl;
-				printAccount();
+				//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+				//std::cout << "here is the matching account: " << std::endl;
+				//printAccount();
 			}
 			else {
 				recordlocator = 0;
@@ -896,9 +900,9 @@ public:
 				recordlocator = lengthNotFound - 2;
 				recordEnd = lengthFound - 2;
 
-				std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-				std::cout << "here is the matching account: " << std::endl;
-				printAccount();
+				//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+				//std::cout << "here is the matching account: " << std::endl;
+				//printAccount();
 			}
 			else {
 				recordlocator = 0;
@@ -1014,7 +1018,7 @@ public:
 		matdate = maturity_Date;
 		bool dategood;
 
-		
+		//get current date
 		//time functions
 		time_t timer;
 		time(&timer);
@@ -1025,31 +1029,31 @@ public:
 		month = std::to_string(brokentime->tm_mon);
 		year = std::to_string((brokentime->tm_year) + 1900);
 		
-
+		//parse the maturity date from the data record
 		int i, j;
 		i = 0;
 		while (matdate.compare(i, 1, "/") != 0) { i++; }
 		parmonth = matdate.substr(0, i);
-		std::cout << "MatMo: " << parmonth << std::endl;
+		//std::cout << "MatMo: " << parmonth << std::endl;
 
 		i += 1;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (matdate.compare(i, 1, "/") != 0) { i++; }
 		parday = matdate.substr(j, i - j);
-		std::cout << "MatDay: " << parday << std::endl;
+		//std::cout << "MatDay: " << parday << std::endl;
 
 		i += 1;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (i<matdate.size()) { i++; }
 		paryear = matdate.substr(j, i - j);
-		std::cout << "MatYear: " << paryear << std::endl;
+		//std::cout << "MatYear: " << paryear << std::endl;
 
 
 		dategood = false;
 		if (paryear <= year && parmonth <= month && parday <= day) { dategood = true; }
 		else { std::cout << "Maturity Date Not met " << std::endl; }
 
-
+		//process the transaction if ok
 		if (amount_Avail >= transamt && dategood) {
 
 			amount_Avail = amount_Avail - transamt;
