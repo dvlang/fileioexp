@@ -82,7 +82,7 @@ int main()
 	month = std::to_string(brokentime->tm_mon);
 	year = std::to_string((brokentime->tm_year) + 1900);
 
-	std::cout << "day " << day << " month " << month << " year " << year << std::endl;
+	
 
 	//print out a the welcome header
 	systemMenu.printHeader(date);
@@ -294,7 +294,7 @@ int main()
 					//check for date here
 					std::cout << "Maturity Date is: " << curUserSavAcct.getMatDate() << std::endl;
 
-					parseDate(curUserSavAcct.getMatDate());
+					//parseDate(curUserSavAcct.getMatDate());
 
 
 					tmpTransAmt = systemMenu.getUserAmount();
@@ -302,7 +302,7 @@ int main()
 					transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
 
 					if (!transactionResult) {
-						cout << "ERROR: Insufficient funds!- Exiting" << endl;
+						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
 					}
 					curUserSavAcct.printAccount();
 
@@ -459,7 +459,7 @@ std::string getAccountType(std::ifstream &inputfile) {
 //--------------------end  FUNCTION: getAccountType-------------------------------------
 
 //--------------------FUNCTION: getAccountType-------------------------------------
-void parseDate(std::string strdate) {
+/*void parseDate(std::string strdate) {
 
 	std::string month;
 	std::string day;
@@ -487,5 +487,6 @@ void parseDate(std::string strdate) {
 
 	return ;
 }
+*/
 //--------------------end  FUNCTION: getAccountType-------------------------------------
 
