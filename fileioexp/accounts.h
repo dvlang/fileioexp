@@ -15,8 +15,8 @@ class Accounts {
 
 public:
 	Accounts();
-	void printAccount();
-	//void printAllAccounts(std::ifstream&);
+	//void printAccount();
+
 	void setAccountType(std::string);
 	void setAccountNumber(int);
 	void setAccountName(std::string);
@@ -34,15 +34,12 @@ public:
 	void accountDeposit(double);
 	void accountAddInterest();
 	
-	virtual void GetRecordwc(std::ifstream&)=0;
-	//std::string getAccountType(std::ifstream &inputfile);
-
-	
-	bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
-	bool ModifyRecordwc(Accounts &record, std::ofstream&);
-	bool AddRecordwc(std::ofstream&);
-
-	bool doesAccountExist(std::ifstream &inputfile, const int);
+	virtual void GetRecordwc(std::ifstream&)=0;//make it abstract
+	virtual void printAccount();
+	virtual bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
+	virtual bool ModifyRecordwc(Accounts &record, std::ofstream&);
+	virtual bool AddRecordwc(std::ofstream&);
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int);
 
 protected:
 	int account_Number;
@@ -55,7 +52,7 @@ protected:
 
 };
 
-//------------------------------CHECKING CLASS------------------------------------------------------
+//------------------------------MASTER CLASS------------------------------------------------------
 class Master :public Accounts {
 	//this class exists just to provide access to base class methods and data objects
 public:
@@ -248,7 +245,7 @@ public:
 			tmpstring >> accountType;
 			account_Type = accountType;
 			//std::cout << "gr_ account type is: " << accountType << std::endl;
-			if (account_Type == "Checking") {
+
 				//GET ACCOUNT NUMBER
 
 				i += 2;
@@ -297,7 +294,7 @@ public:
 
 				date_Opened = dateOpened;
 				//std::cout << "gr_ account opened: " << date_Opened << std::endl;
-
+				if (account_Type == "Checking") {
 				tmpstring.clear();
 				//GET Direct deposit
 				i += 2;	//move i index off ";" and space
@@ -512,10 +509,17 @@ public:
 		outputfile.precision(10);
 		tmpstring.precision(10);
 
+		std::cout << "modifyrecwc(checking) was called to save this data: " << std::endl;
+		record.printAccount();
+
+
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//std::cout << "here is the matching account: " << std::endl;
+		std::cout << "ERETURN FROM FIND RECORD" << std::endl;
+		std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+		std::cout << "here is the matching account: " << std::endl;
+		printAccount();
+		std::cout << "AGAIN- modifyrecwc(checking) was called to save this data: " << std::endl;
+		record.printAccount();
 
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
@@ -649,7 +653,7 @@ public:
 		account_Type = accountType;
 		//std::cout << "SAVINGSgr_ account type is: " << account_Type << std::endl;
 
-		if (account_Type == "Savings") {
+		
 
 			//GET ACCOUNT NUMBER
 
@@ -701,7 +705,7 @@ public:
 			//std::cout << "SAVINGSgr_ account opened: " << date_Opened << std::endl;
 
 			tmpstring.clear();
-
+			if (account_Type == "Savings") {
 
 			//GET MATURITY DATE
 			i += 2;	//move i index off ";" and space
@@ -927,12 +931,13 @@ public:
 
 		outputfile.precision(10);
 		tmpstring.precision(10);
-
+		std::cout << "modifyrecwc(SAV) was called to save this data: " << std::endl;
+		record.printAccount();
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//std::cout << "here is the matching account: " << std::endl;
-
+		std::cout << "ERETURN FROM FIND RECORD" << std::endl;
+		std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+		std::cout << "here is the matching account: " << std::endl;
+		record.printAccount();
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
 			std::cout << "ERROR: Can't open Input file!" << std::endl;

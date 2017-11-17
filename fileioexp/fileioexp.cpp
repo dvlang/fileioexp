@@ -248,8 +248,8 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					//std::cout << "Im going to save this to the database: " << std::endl;
-					//curUserCheckingAcct.printAccount();
+					std::cout << "CHECKING: Im going to save this to the database: " << std::endl;
+					curUserCheckingAcct.printAccount();
 					curUserCheckingAcct.setAccountValue(curUserCheckingAcct.getAccountValue() - curUserCheckingAcct.getTransFee());
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 					//std::cout << "I did it: " << std::endl;
@@ -327,8 +327,8 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					//std::cout << "Im going to save this to the database: " << std::endl;
-					//curUserCheckingAcct.printAccount();
+					std::cout << "SAVINGS: Im going to save this to the database: " << std::endl;
+					curUserSavAcct.printAccount();
 					//curUserSavAcct.setAccountValue(curUserSavAcct.getAccountValue() - curUserSavAcct.getTransFee());
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
 					//std::cout << "I did it: " << std::endl;
