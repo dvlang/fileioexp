@@ -46,6 +46,9 @@ bool transactionResult;
 std::string tmpaccttype;
 
 string date;
+string day;
+string month;
+string year;
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -75,7 +78,11 @@ int main()
 	
 	//set date string
 	date = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
+	day = std::to_string(brokentime->tm_mday);
+	month = std::to_string(brokentime->tm_mon);
+	year = std::to_string((brokentime->tm_year) + 1900);
 
+	std::cout << "day " << day << " month " << month << " year " << year << std::endl;
 
 	//print out a the welcome header
 	systemMenu.printHeader(date);
@@ -155,7 +162,7 @@ int main()
 
 				savingsAccount.AddRecordwc(out_file);
 			}
-			//tmpUserAccount.AddRecordwc(out_file);
+			
 			else {
 				std::cout << "invalid acct type requested" << std::endl;
 			}
@@ -163,12 +170,7 @@ int main()
 			break;
 
 		case 'M':	//-------------------USER MODIFY OPTION-------------------------
-			/*tmpstring.clear();
-			recordlocator = 0;
-			accountExists = false;
-			accountnumgood = false;
-			tmpaccountlength = 0;
-			*/
+
 
 			accountExists = false;
 			cout << "MODIFY AN ACCOUNT" << endl;
@@ -178,16 +180,16 @@ int main()
 
 				//check to see if account number already exists, if it does stay here till they give you a good one
 				accountExists = allAccounts.doesAccountExist(in_file, tmpacctnumber);
-				//tmpaccttype = allAccounts.getAccountType();
+
 				if (!accountExists) { std::cout << "Account doesn't exists, choose another. " << std::endl; }
 				else { tmpaccttype = allAccounts.getAccountType(); }
 
 			}
 
-			//std::cout << "good account bro! It a type: "<< tmpaccttype << std::endl;
+
 			
 			if (tmpaccttype == "Checking") {
-				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
+
 				accountExists = curUserCheckingAcct.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
 				curUserCheckingAcct.printAccount();
 
@@ -206,6 +208,8 @@ int main()
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
 					cout << "WITHDRAWL: " << endl;
+					
+
 
 					tmpTransAmt = systemMenu.getUserAmount();
 
@@ -260,6 +264,7 @@ int main()
 
 							
 			}//end if tmpacctype=checking
+
 			else if (tmpaccttype == "Savings") {
 				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
 				//accountExists = savingsAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
@@ -285,6 +290,12 @@ int main()
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
 					cout << "WITHDRAWL: " << endl;
+
+					//check for date here
+					std::cout << "Maturity Date is: " << curUserSavAcct.getMatDate() << std::endl;
+
+					parseDate(curUserSavAcct.getMatDate());
+
 
 					tmpTransAmt = systemMenu.getUserAmount();
 
@@ -343,97 +354,6 @@ int main()
 
 			}
 
-
-
-
-
-
-
-
-
-
-			/*	while (!accountExists) {
-					tmpacctnumber = systemMenu.getDesiredAcctNum();
-
-					//check to see if account number already exists, if it does stay here till they give you a good one
-					accountExists = tmpUserAccount.doesAccountExist(in_file, tmpacctnumber);
-
-				}
-
-				if (accountExists) {
-
-					systemMenu.printViewAllMenu();
-					tmpUserAccount.printAccount();
-
-					systemMenu.printModifyBaseAccountMenu();
-					userSubselection = systemMenu.getUserSelection();
-					
-
-					switch (userSubselection)
-					{
-					case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
-						
-						cout << "CHANGE NAME: " << endl;
-						
-							tmpUserAccount.setAccountName(systemMenu.getUserName());
-
-						break;
-					case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
-
-						cout << "WITHDRAWL: " << endl;
-												
-						tmpTransAmt = systemMenu.getUserAmount();
-						
-						transactionResult=tmpUserAccount.accountWithdrawl(tmpTransAmt);
-						
-						if (!transactionResult) {
-							cout << "ERROR: Insufficient funds!- Exiting" << endl;
-						}
-						tmpUserAccount.printAccount();
-
-						break;
-
-					case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
-						cout << "DEPOSIT: " << endl;
-					
-						tmpTransAmt = systemMenu.getUserAmount();
-						
-						tmpUserAccount.accountDeposit(tmpTransAmt);
-
-						tmpUserAccount.printAccount();
-
-
-						break;
-
-					case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
-
-						tmpUserAccount.accountAddInterest();
-						tmpUserAccount.printAccount();
-						break;
-
-					case 'E':	//-------------------USER EXIT OPTION-------------------------
-						cout << "-Exit" << endl; userselection = 'H';
-						break;
-
-					default:
-						cout << "ERROR: INVALID Selection!" << endl;
-						break;
-
-					}
-					if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
-
-						bool saveok;
-						saveok= userAccount.ModifyRecordwc(tmpUserAccount, out_file);
-						if (!saveok) {cout << "the file was NOT saved ok" << endl;}
-
-
-					}
-				}
-			
-			else {
-				cout << "ERROR:Invalid Account Number Entered!" << endl << endl;
-			}
-			*/
 			break;
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
@@ -535,6 +455,37 @@ std::string getAccountType(std::ifstream &inputfile) {
 	inputfile.seekg(currentpos);  //set the file pointer back to where we were
 
 	return accountType;
+}
+//--------------------end  FUNCTION: getAccountType-------------------------------------
+
+//--------------------FUNCTION: getAccountType-------------------------------------
+void parseDate(std::string strdate) {
+
+	std::string month;
+	std::string day;
+	std::string year;
+
+	int i, j;
+	tmpstring.clear();
+
+	i = 0;
+	while (strdate.compare(i, 1, "/") != 0) { i++; }
+	month = strdate.substr(0, i);
+	std::cout << "MatMo: " << month << std::endl;
+
+	i += 1;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (strdate.compare(i, 1, "/") != 0) { i++; }
+	day = strdate.substr(j, i - j);
+	std::cout << "MatDay: " << day << std::endl;
+
+	i += 1;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (i<strdate.size()) { i++; }
+	year = strdate.substr(j, i - j);
+	std::cout << "MatYear: " << year << std::endl;
+
+	return ;
 }
 //--------------------end  FUNCTION: getAccountType-------------------------------------
 

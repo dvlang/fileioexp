@@ -509,17 +509,17 @@ public:
 		outputfile.precision(10);
 		tmpstring.precision(10);
 
-		std::cout << "modifyrecwc(checking) was called to save this data: " << std::endl;
-		record.printAccount();
+		//std::cout << "modifyrecwc(checking) was called to save this data: " << std::endl;
+		//record.printAccount();
 
 
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		std::cout << "here is the matching account: " << std::endl;
-		printAccount();
-		std::cout << "AGAIN- modifyrecwc(checking) was called to save this data: " << std::endl;
-		record.printAccount();
+		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
+	//	std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+		//std::cout << "here is the matching account: " << std::endl;
+		//printAccount();
+		//std::cout << "AGAIN- modifyrecwc(checking) was called to save this data: " << std::endl;
+		//record.printAccount();
 
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
@@ -549,7 +549,6 @@ public:
 			if (opos == recordlocator) {
 
 
-				//tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
 				tmpstring << record.getAccountType() << "; " << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << "; " << record.getDateOpened() << "; " << std::boolalpha << record.getDirectDeposit() << "; " << record.getTransFee() << ";";
 
 
@@ -575,12 +574,6 @@ public:
 		outputfile.clear();
 		outputfile.close();
 
-		/*
-		remove("old.dat");
-		rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-		remove("accounts.dat");
-		result += rename("tmp.dat", "accounts.dat");
-		*/
 		remove("old.dat");
 		rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 		remove(FILENAME);
@@ -931,13 +924,13 @@ public:
 
 		outputfile.precision(10);
 		tmpstring.precision(10);
-		std::cout << "modifyrecwc(SAV) was called to save this data: " << std::endl;
-		record.printAccount();
+		//std::cout << "modifyrecwc(SAV) was called to save this data: " << std::endl;
+	//	record.printAccount();
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		std::cout << "here is the matching account: " << std::endl;
-		record.printAccount();
+	//	std::cout << "ERETURN FROM FIND RECORD" << std::endl;
+	//	std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+	//	std::cout << "here is the matching account: " << std::endl;
+	//	record.printAccount();
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
 			std::cout << "ERROR: Can't open Input file!" << std::endl;
@@ -965,8 +958,6 @@ public:
 
 			if (opos == recordlocator) {
 
-
-				//tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
 				tmpstring << record.getAccountType() << "; " << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << "; " << record.getDateOpened() << "; " << record.getMatDate() << "; " << record.getCurInt() << "; " << record.getDefInt() << ";";
 
 
@@ -992,12 +983,7 @@ public:
 		outputfile.clear();
 		outputfile.close();
 
-		/*
-		remove("old.dat");
-		rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-		remove("accounts.dat");
-		result += rename("tmp.dat", "accounts.dat");
-		*/
+
 		remove("old.dat");
 		rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 		remove(FILENAME);

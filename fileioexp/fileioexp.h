@@ -24,7 +24,7 @@
 
 void printAllAccounts(Checking&, Savings&, std::ifstream&);
 std::string getAccountType(std::ifstream&);
-
+void parseDate(std::string );
 
 //--------------------END Function Prototype-------------------------------
 
