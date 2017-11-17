@@ -254,10 +254,10 @@ int main()
 					bool saveok;
 					//std::cout << "CHECKING: Im going to save this to the database: " << std::endl;
 					//curUserCheckingAcct.printAccount();
-					//curUserCheckingAcct.setAccountValue(curUserCheckingAcct.getAccountValue() - curUserCheckingAcct.getTransFee());
+	
 					curUserCheckingAcct.assessCheckingTransFee();
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
-					//std::cout << "I did it: " << std::endl;
+
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
 
 
@@ -386,7 +386,7 @@ void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream
 	std::string tmp = "";
 	std::string accounttype;
 
-	//std::cout << "hi, im in my new print all function" << std::endl;
+
 
 	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
@@ -400,12 +400,13 @@ void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream
 		while (inputfile.good()) {
 
 			accounttype = getAccountType(inputfile);
-		//	std::cout << "paa_ account type is: " << accounttype << std::endl;
+	
 
 			if (accounttype == "Checking") {
 				//This needs to get converted to a call to the appropriate class function based on account type
 				checkingAcct.GetRecordwc(inputfile);
 				checkingAcct.printAccount();
+				//id assess fee here, would need to add ofstream
 			}
 			else if(accounttype=="Savings"){
 				//This needs to get converted to a call to the appropriate class function based on account type
@@ -440,49 +441,15 @@ std::string getAccountType(std::ifstream &inputfile) {
 	currentpos = inputfile.tellg();  //get the current position in the file
 
 	getline(inputfile, wholeentry);
-	//std::cout << "ga_input line is: " << wholeentry << std::endl;
 
 	i = 0;
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountType = wholeentry.substr(0, i);
-
-	//std::cout << "ga_ account type is: " << accountType << std::endl;
-
+	
 	inputfile.seekg(currentpos);  //set the file pointer back to where we were
 
 	return accountType;
 }
 //--------------------end  FUNCTION: getAccountType-------------------------------------
 
-//--------------------FUNCTION: getAccountType-------------------------------------
-/*void parseDate(std::string strdate) {
-
-	std::string month;
-	std::string day;
-	std::string year;
-
-	int i, j;
-	tmpstring.clear();
-
-	i = 0;
-	while (strdate.compare(i, 1, "/") != 0) { i++; }
-	month = strdate.substr(0, i);
-	std::cout << "MatMo: " << month << std::endl;
-
-	i += 1;	//move i index off ";" and space
-	j = i;	//j is placeholder to beginning of next entry
-	while (strdate.compare(i, 1, "/") != 0) { i++; }
-	day = strdate.substr(j, i - j);
-	std::cout << "MatDay: " << day << std::endl;
-
-	i += 1;	//move i index off ";" and space
-	j = i;	//j is placeholder to beginning of next entry
-	while (i<strdate.size()) { i++; }
-	year = strdate.substr(j, i - j);
-	std::cout << "MatYear: " << year << std::endl;
-
-	return ;
-}
-*/
-//--------------------end  FUNCTION: getAccountType-------------------------------------
 

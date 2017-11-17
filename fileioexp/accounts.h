@@ -32,7 +32,7 @@ public:
 
 	//bool accountWithdrawl(double);
 	void accountDeposit(double);
-	void accountAddInterest();
+	//void accountAddInterest();
 	
 	virtual void GetRecordwc(std::ifstream&)=0;//make it abstract
 	virtual void printAccount();
@@ -41,6 +41,7 @@ public:
 	virtual bool AddRecordwc(std::ofstream&);
 	virtual bool doesAccountExist(std::ifstream &inputfile, const int);
 	virtual bool accountWithdrawl(double);
+	virtual void accountAddInterest();
 
 protected:
 	int account_Number;
@@ -214,7 +215,7 @@ public:
 	double getTransFee() { return transaction_Fee; }
 
 	void assessCheckingTransFee() {
-		
+		std::cout << "assess fee" << std::endl;
 		amount_Avail = amount_Avail - transaction_Fee;
 	}
 
@@ -1065,6 +1066,12 @@ public:
 		}
 
 	}
+
+
+	virtual void accountAddInterest() {
+		amount_Avail = amount_Avail*(1.0 + INTERESTRATE);  //was INTERSTRATE
+	}
+
 
 private:
 	std::string maturity_Date;
