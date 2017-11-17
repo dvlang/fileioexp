@@ -15,8 +15,7 @@ class Accounts {
 
 public:
 	Accounts();
-	void printAccount();
-	//void printAllAccounts(std::ifstream&);
+	//void printAccount();
 	void setAccountType(std::string);
 	void setAccountNumber(int);
 	void setAccountName(std::string);
@@ -29,20 +28,24 @@ public:
 	std::string getAccountType();
 	std::string getDateOpened();
 
-
 	bool accountWithdrawl(double);
 	void accountDeposit(double);
 	void accountAddInterest();
 	
-	virtual void GetRecordwc(std::ifstream&)=0;
-	//std::string getAccountType(std::ifstream &inputfile);
-
 	
-	bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum);
-	bool ModifyRecordwc(Accounts &record, std::ofstream&);
-	bool AddRecordwc(std::ofstream&);
-
-	bool doesAccountExist(std::ifstream &inputfile, const int);
+	//bool AddRecordwc(std::ofstream&);
+	/*
+	virtual void GetRecordwc(std::ifstream&) = 0;
+	virtual bool FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum)=0;
+	virtual bool ModifyRecordwc(Accounts &record, std::ofstream&)=0;
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int)=0;
+	*/
+	virtual void GetRecordwc() const = 0;
+	virtual bool FindRecordwClass() const = 0;
+	virtual bool ModifyRecordwc() const = 0;
+	virtual bool doesAccountExist() const = 0;
+	virtual void printAccount() const =0;
+	virtual bool AddRecordwc() const =0;
 
 protected:
 	int account_Number;
@@ -61,7 +64,7 @@ class Master :public Accounts {
 public:
 	~Master() { std::cout << "destroy MASTER" << std::endl; }
 
-	virtual void GetRecordwc(std::ifstream &inputfile) {
+	virtual void GetRecordwc(std::ifstream &inputfile) const {
 		std::istringstream tmpstring;
 		std::string wholeentry;
 		std::string accountNumber;
@@ -146,7 +149,7 @@ public:
 
 		return;
 	}
-	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) const  {
 
 		bool accountExists;
 		std::string tmp = "";
@@ -198,9 +201,16 @@ public:
 		}
 
 	}
+	virtual bool FindRecordwClass() const { return false; }
+	virtual bool ModifyRecordwc() const { return false; }
+	virtual void printAccount() const 
+	{
+
+		std::cout << account_Type << " \t" << account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << std::endl;
+	}
+
+	virtual bool AddRecordwc() const { return false; }
 };
-
-
 
 
 //------------------------------CHECKING CLASS------------------------------------------------------
@@ -216,8 +226,8 @@ public:
 	double getTransFee() { return transaction_Fee; }
 
 
-	virtual void GetRecordwc(std::ifstream& inputfile) {
-		
+	virtual void GetRecordwc(std::ifstream& inputfile)const {
+		std::cout << "func: CHECKING GET RECORD " << std::endl;
 			std::istringstream tmpstring;
 			std::string wholeentry;
 			std::string accountNumber;
@@ -340,13 +350,13 @@ public:
 			return;
 		}
 
-	virtual void printAccount()
+	virtual void printAccount()const
 	{
 			
 		std::cout << account_Type << "\t"<<  account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t\t" << direct_Deposit << "\t" <<transaction_Fee << std::endl;
 	}
 
-	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum)const {
 
 		bool accountExists;
 		std::string tmp = "";
@@ -399,7 +409,7 @@ public:
 
 	}
 	
-	virtual bool AddRecordwc(std::ofstream &outputfile) {
+	virtual bool AddRecordwc(std::ofstream &outputfile)const {
 		std::ostringstream tmpstring;
 		
 		outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
@@ -421,11 +431,9 @@ public:
 		return true;
 	}
 
-	virtual bool FindRecordwClass(Checking &accref, std::ifstream &inputfile, int tmpAccountNum)
+	virtual bool FindRecordwClass(Checking &accref, std::ifstream &inputfile, int tmpAccountNum)const
 	{
-		//std::cout << "im in my find record w class function" << std::endl;
-		//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
-
+		std::cout << "im here in CHECKING find record" << std::endl;
 		bool accountExists;
 		std::string tmp = "";
 		accountExists = false;
@@ -482,9 +490,9 @@ public:
 				recordlocator = lengthNotFound - 2;
 				recordEnd = lengthFound - 2;
 
-				std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-				std::cout << "here is the matching account: " << std::endl;
-				printAccount();
+			//	std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
+			//	std::cout << "here is the matching account: " << std::endl;
+			//	printAccount();
 			}
 			else {
 				recordlocator = 0;
@@ -501,7 +509,7 @@ public:
 		}
 	}
 		
-	virtual bool ModifyRecordwc(Checking &record, std::ofstream &outputfile) {
+	virtual bool ModifyRecordwc(Checking &record, std::ofstream &outputfile)const {
 		std::ostringstream tmpstring;
 		std::string tempstring, tempstring2, tmpfilename;
 		std::ifstream in_file;
@@ -513,9 +521,6 @@ public:
 		tmpstring.precision(10);
 
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//std::cout << "here is the matching account: " << std::endl;
 
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
@@ -529,25 +534,17 @@ public:
 			result++;
 		}
 
-
-
-
 		in_file.seekg(0, in_file.end);		//find the end of the old file
 		endpos = in_file.tellg();				//store end of old file
 
 		in_file.seekg(0, in_file.beg);		//set input file pointer back to beginning
 		opos = outputfile.tellp();
 
-
 		while (in_file.good()) {			//while ur not at the end of the input file
-
 
 			if (opos == recordlocator) {
 
-
-				//tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
 				tmpstring << record.getAccountType() << "; " << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << "; " << record.getDateOpened() << "; " << std::boolalpha << record.getDirectDeposit() << "; " << record.getTransFee() << ";";
-
 
 				outputfile << tmpstring.str();
 				in_file.seekg(recordEnd);
@@ -555,11 +552,9 @@ public:
 
 			}
 
-
 			getline(in_file, tempstring2);	//get a line from input file	
 			outputfile << tempstring2;		//store the line from input file into old 
 			opos = outputfile.tellp();		//find out where in the output file you are now
-
 
 			if (in_file.good()) {
 				outputfile << std::endl;			//  add anothe endl
@@ -571,18 +566,10 @@ public:
 		outputfile.clear();
 		outputfile.close();
 
-		/*
-		remove("old.dat");
-		rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-		remove("accounts.dat");
-		result += rename("tmp.dat", "accounts.dat");
-		*/
 		remove("old.dat");
 		rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 		remove(FILENAME);
 		result += rename("tmp.dat", &FILENAME[0]);
-
-
 
 		if (result != 0) {
 			return false;
@@ -614,10 +601,9 @@ public:
 	std::string getMatDate() { return maturity_Date; }
 	double getCurInt() { return current_Interest; }
 	double getDefInt() { return default_Interest;}
-
-
-	virtual void GetRecordwc(std::ifstream& inputfile) {
-
+	
+	virtual void GetRecordwc(std::ifstream& inputfile)const {
+		std::cout << "func: SAVINGS GET RECORD " << std::endl;
 		std::istringstream tmpstring;
 		std::string wholeentry;
 		std::string accountNumber;
@@ -756,13 +742,13 @@ public:
 
 		return;
 	}
-	virtual void printAccount()
+	virtual void printAccount()const
 	{
 
 		std::cout << account_Type << " \t" << account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
 	}
 
-	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum) {
+	virtual bool doesAccountExist(std::ifstream &inputfile, const int accnum)const {
 
 		bool accountExists;
 		std::string tmp = "";
@@ -815,7 +801,7 @@ public:
 		}
 
 	}
-	virtual bool AddRecordwc(std::ofstream &outputfile) {
+	virtual bool AddRecordwc(std::ofstream &outputfile)const {
 		std::ostringstream tmpstring;
 
 		outputfile.open(FILENAME, std::ios_base::app);	//open file in append mode
@@ -837,11 +823,9 @@ public:
 		return true;
 	}
 
-	virtual bool FindRecordwClass(Savings &accref, std::ifstream &inputfile, int tmpAccountNum)
+	virtual bool FindRecordwClass(Savings &accref, std::ifstream &inputfile, int tmpAccountNum)const
 	{
-		//std::cout << "im in my find record w class function" << std::endl;
-		//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
-
+		std::cout << "im here in savings find record" << std::endl;
 		bool accountExists;
 		std::string tmp = "";
 		accountExists = false;
@@ -905,6 +889,7 @@ public:
 			else {
 				recordlocator = 0;
 				recordEnd = lengthFound - 2;
+				std::cout << "RECORD FOUND AT 0 " << std::endl;
 
 			}
 
@@ -913,11 +898,12 @@ public:
 		}
 		else {
 			return false;
+			std::cout << "RECORD NOT FOUND " << std::endl;
 
 		}
 	}
 
-	virtual bool ModifyRecordwc(Savings &record, std::ofstream &outputfile) {
+	virtual bool ModifyRecordwc(Savings &record, std::ofstream &outputfile)const {
 		std::ostringstream tmpstring;
 		std::string tempstring, tempstring2, tmpfilename;
 		std::ifstream in_file;
@@ -929,9 +915,6 @@ public:
 		tmpstring.precision(10);
 
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//std::cout << "here is the matching account: " << std::endl;
 
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
@@ -945,9 +928,6 @@ public:
 			result++;
 		}
 
-
-
-
 		in_file.seekg(0, in_file.end);		//find the end of the old file
 		endpos = in_file.tellg();				//store end of old file
 
@@ -959,11 +939,8 @@ public:
 
 
 			if (opos == recordlocator) {
-
-
-				//tmpstring << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << ";";
+		
 				tmpstring << record.getAccountType() << "; " << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << "; " << record.getDateOpened() << "; " << record.getMatDate() << "; " << record.getCurInt() << "; " << record.getDefInt() << ";";
-
 
 				outputfile << tmpstring.str();
 				in_file.seekg(recordEnd);
@@ -987,12 +964,6 @@ public:
 		outputfile.clear();
 		outputfile.close();
 
-		/*
-		remove("old.dat");
-		rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-		remove("accounts.dat");
-		result += rename("tmp.dat", "accounts.dat");
-		*/
 		remove("old.dat");
 		rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 		remove(FILENAME);

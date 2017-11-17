@@ -327,7 +327,7 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					//std::cout << "Im going to save this to the database: " << std::endl;
+					std::cout << "Im going to save this to the database: " << std::endl;
 					//curUserCheckingAcct.printAccount();
 					//curUserSavAcct.setAccountValue(curUserSavAcct.getAccountValue() - curUserSavAcct.getTransFee());
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);

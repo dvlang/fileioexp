@@ -11,14 +11,14 @@
 
 
 
-Accounts::Accounts() { account_Number = 0; name_Owner = "null"; amount_Avail = 1010; account_Type = "null";
-}
-
+Accounts::Accounts() { account_Number = 0; name_Owner = "null"; amount_Avail = 1010; account_Type = "null";}
+/*
 void Accounts::printAccount()
 {
 	//std::cout << "Account Number: " << account_Number << " Name: " << name_Owner << " Amount Available: " << amount_Avail << std::endl;
 	std::cout << account_Number << "\t\t\t" << name_Owner << "\t" << "$" << amount_Avail << std::endl;
 }
+*/
 
 void Accounts::setAccountType(std::string acctype) { account_Type = acctype; }
 void Accounts::setAccountNumber(int accnum) { account_Number = accnum; }
@@ -26,46 +26,17 @@ void Accounts::setAccountName(std::string accname) { name_Owner = accname; }
 void Accounts::setAccountValue(double accval) { amount_Avail = accval; }
 void Accounts::setDateOpened(std::string dateop) { date_Opened = dateop; }
 
+std::string Accounts::getAccountType() { return account_Type; }
 int Accounts::getAccountNumber() { return account_Number; }
 std::string Accounts::getAccountName() { return name_Owner; }
 double Accounts::getAccountValue() { return amount_Avail; }
 std::string Accounts::getDateOpened() { return date_Opened; }
 
-std::string Accounts::getAccountType() { return account_Type; }
 
-//------------------------IM GOING TO DEPRECIATE THIS USAGE-------------------------------------
-/*
-std::string Accounts::getAccountType(std::ifstream &inputfile) {
-	std::istringstream tmpstring;
-	std::string wholeentry;
-	std::string accountType;
-	int currentpos;
 
-	int i, j;
-	tmpstring.clear();
-
-	currentpos = inputfile.tellg();  //get the current position in the file
-
-	getline(inputfile, wholeentry);
-	std::cout << "ga_input line is: " << wholeentry << std::endl;
-
-	i = 0;
-	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
-	accountType = wholeentry.substr(0, i);
-	//tmpstring.str(accountType);
-
-	//tmpstring >> accountType;
-	std::cout << "ga_ account type is: " << accountType << std::endl;
-
-	inputfile.seekg(currentpos);  //set the file pointer back to where we were
-
-	return accountType;
-}
-*/
-//------------------------------END getaccounttype---------------------------------------------
 
 //GetRecord will get the next line from a passied filestream object, and parse it to a structure passed by reference
-
+/*
 void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	std::istringstream tmpstring;
 	std::string wholeentry;
@@ -152,8 +123,8 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 
 	return;
 }
-
-
+*/
+/*
 //This function adds a record based on info in a passed 
 bool Accounts::AddRecordwc(std::ofstream &outputfile) {
 	std::ostringstream tmpstring;
@@ -178,8 +149,8 @@ bool Accounts::AddRecordwc(std::ofstream &outputfile) {
 	outputfile.close();
 	return true;
 }
-
-
+*/
+/*
 bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 
 	bool accountExists;
@@ -232,41 +203,8 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 	}
 
 }
-
-//-------------------IM GOING TO DEPRECIATE THIS FUNCTION IN ACCOUNT-------------------
-/*
-void Accounts::printAllAccounts(std::ifstream &inputfile){
-	std::string tmp = "";
-	std::string accounttype;
-
-	//std::cout << "hi, im in my new print all function" << std::endl;
-
-	inputfile.open(FILENAME);
-	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
-	getline(inputfile, tmp);	//force a getline to set .eof bit
-
-	if (!inputfile.eof()) {
-		inputfile.clear();  //clear flags
-		inputfile.close(); // close it
-
-		inputfile.open(FILENAME);
-		while (inputfile.good()) {
-
-			accounttype= getAccountType(inputfile);
-			GetRecordwc(inputfile); 
-
-			printAccount();
-		}
-	}
-	else
-	{
-		std::cout << "ERROR_paa: FILE EMPTY!" << std::endl;
-	}
-	inputfile.clear();
-	inputfile.close();
-}
 */
-//-------------------end printAllAccounts-------------------
+
 
 bool Accounts::accountWithdrawl(double transamt) {
 	if (amount_Avail >= transamt) {
@@ -288,13 +226,13 @@ void Accounts::accountAddInterest(){
 }
 
 
-//*----------------FUNCTION: FindRecordwClass  BEGIN--------------------------------
+/*
 
 bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum)
 {
 	//std::cout << "im in my find record w class function" << std::endl;
 	//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
-	
+	std::cout << "im here in BASE find record" << std::endl;
 	bool accountExists;
 	std::string tmp = "";
 	accountExists = false;
@@ -370,7 +308,6 @@ bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int 
 	}
 }
 
-//----------------FUNCTION: findRecordwClass  END----------------------------------------
 
 
 //----------------FUNCTION: ModifyRecordwc  BEGIN----------------------------------------
@@ -442,12 +379,7 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 	outputfile.clear();
 	outputfile.close();
 
-	/*
-	remove("old.dat");
-	rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-	remove("accounts.dat");
-	result += rename("tmp.dat", "accounts.dat");
-	*/
+
 	remove("old.dat");
 	rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 	remove(FILENAME);
@@ -462,3 +394,4 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 		return true;
 	}
 }
+*/
