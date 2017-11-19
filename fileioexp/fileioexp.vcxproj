@@ -141,6 +141,7 @@
     <ClInclude Include="accounts.h" />
     <ClInclude Include="Checking.h" />
     <ClInclude Include="fileioexp.h" />
+    <ClInclude Include="Master.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="Savings.h" />
     <ClInclude Include="stdafx.h" />
@@ -150,6 +151,7 @@
     <ClCompile Include="accounts.cpp" />
     <ClCompile Include="Checking.cpp" />
     <ClCompile Include="fileioexp.cpp" />
+    <ClCompile Include="Master.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="Savings.cpp" />
     <ClCompile Include="stdafx.cpp">

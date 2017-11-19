@@ -23,6 +23,7 @@ using namespace std;
 #include "accounts.h"
 #include "checking.h"
 #include "savings.h"
+#include "master.h"
 #include "menu.h"
 #include <time.h>
 

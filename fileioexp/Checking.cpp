@@ -20,7 +20,7 @@ bool Checking::getDirectDeposit() { return direct_Deposit; }
 double Checking::getTransFee() { return transaction_Fee; }
 
 void Checking::assessCheckingTransFee() {
-	std::cout << "assess fee" << std::endl;
+	//std::cout << "assess fee" << std::endl;
 	amount_Avail = amount_Avail - transaction_Fee;
 }
 
