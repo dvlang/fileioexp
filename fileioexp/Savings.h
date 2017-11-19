@@ -29,10 +29,13 @@ public:
 	virtual bool accountWithdrawl(double);
 	virtual void accountAddInterest();
 
+	bool MatDateMet();
+
 private:
 	std::string maturity_Date;
 	double current_Interest;
 	double default_Interest;
+
 };
 
 #endif

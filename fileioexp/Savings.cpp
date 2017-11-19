@@ -411,8 +411,8 @@
 	}
 
 	bool Savings::accountWithdrawl(double transamt) {
-
-
+		bool dategood;
+		/*
 		std::string date;
 		std::string day;
 		std::string month;
@@ -458,8 +458,11 @@
 		dategood = false;
 		if (paryear <= year && parmonth <= month && parday <= day) { dategood = true; }
 		else { std::cout << "Maturity Date Not met " << std::endl; }
-
+		*/
 		//process the transaction if ok
+
+		dategood=MatDateMet();
+
 		if (amount_Avail >= transamt && dategood) {
 
 			amount_Avail = amount_Avail - transamt;
@@ -478,5 +481,54 @@
 		amount_Avail = amount_Avail*(1.0 + INTERESTRATE);  //was INTERSTRATE
 	}
 
+	bool Savings::MatDateMet() {
+		std::string date;
+		std::string day;
+		std::string month;
+		std::string year;
+		std::string parmonth;
+		std::string parday;
+		std::string paryear;
+		std::string matdate;
+		matdate = maturity_Date;
+		bool dategood;
 
+		//get current date
+		//time functions
+		time_t timer;
+		time(&timer);
+		struct tm* brokentime = localtime(&timer);
+
+		date = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
+		day = std::to_string(brokentime->tm_mday);
+		month = std::to_string(brokentime->tm_mon);
+		year = std::to_string((brokentime->tm_year) + 1900);
+
+		//parse the maturity date from the data record
+		int i, j;
+		i = 0;
+		while (matdate.compare(i, 1, "/") != 0) { i++; }
+		parmonth = matdate.substr(0, i);
+		//std::cout << "MatMo: " << parmonth << std::endl;
+
+		i += 1;	//move i index off ";" and space
+		j = i;	//j is placeholder to beginning of next entry
+		while (matdate.compare(i, 1, "/") != 0) { i++; }
+		parday = matdate.substr(j, i - j);
+		//std::cout << "MatDay: " << parday << std::endl;
+
+		i += 1;	//move i index off ";" and space
+		j = i;	//j is placeholder to beginning of next entry
+		while (i<matdate.size()) { i++; }
+		paryear = matdate.substr(j, i - j);
+		//std::cout << "MatYear: " << paryear << std::endl;
+
+
+		//dategood = false;
+		if (paryear <= year && parmonth <= month && parday <= day) { return true; }
+		else { 
+			std::cout << "Maturity Date Not met " << std::endl; 
+			return false;
+		}
+	}
 
