@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
-
+#include <iomanip>
 #include <cstring>
 #include <sstream>
 
@@ -135,7 +135,7 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 void Checking::printAccount()
 	{
 
-		std::cout << account_Type << "\t" << account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t\t" << direct_Deposit << "\t" << transaction_Fee << std::endl;
+		std::cout << account_Type << "\t" << account_Number << "\t\t" << std::setw(15)<<std::left<< name_Owner << "\t" << "$" << std::setw(10) << std::left<<amount_Avail << "\t" << std::setw(10) << std::left<<date_Opened << "\t" << std::setw(10) << std::left<<std::boolalpha << direct_Deposit << "\t" << "$" << transaction_Fee << std::endl;
 	}
 
 bool Checking::doesAccountExist(std::ifstream &inputfile, const int accnum) {

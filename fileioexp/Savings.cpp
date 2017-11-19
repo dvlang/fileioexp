@@ -8,6 +8,7 @@
 #include <time.h>
 #include <cstring>
 #include <sstream>
+#include <iomanip>
 
 //------------------------------SAVINGS CLASS-----------------------------------------------------------
 
@@ -167,7 +168,7 @@
 	void Savings::printAccount()
 	{
 
-		std::cout << account_Type << " \t" << account_Number << "\t\t" << name_Owner << "\t" << "$" << amount_Avail << "\t" << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "\t" << default_Interest << std::endl;
+		std::cout << account_Type << " \t" << account_Number << "\t\t" << std::setw(15) << std::left << name_Owner << "\t" << "$" << std::setw(10) << std::left << amount_Avail << "\t" << std::setw(10) << std::left << date_Opened << "\t" << maturity_Date << "\t" << current_Interest << "%\t" << default_Interest << "%"<<std::endl;
 	}
 
 	bool Savings::doesAccountExist(std::ifstream &inputfile, const int accnum) {
@@ -335,13 +336,9 @@
 
 		outputfile.precision(10);
 		tmpstring.precision(10);
-		//std::cout << "modifyrecwc(SAV) was called to save this data: " << std::endl;
-		//	record.printAccount();
+
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//	std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//	std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//	std::cout << "here is the matching account: " << std::endl;
-		//	record.printAccount();
+
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
 			std::cout << "ERROR: Can't open Input file!" << std::endl;

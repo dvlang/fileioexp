@@ -30,28 +30,28 @@ using namespace std;
 
 char userselection = 'H';
 char userSubselection = 'E';
-string firstname;
-string lastname;
-string tmp = "";
+//string firstname;
+//string lastname;
+//string tmp = "";
 istringstream tmpstring;
 bool accountExists;
 double tmpTransAmt;
 int tmpTransAccount;
-int recordlocator;
-int recordEnd;
-bool accountnumgood;
-int tmpaccountlength;
-bool lengthgood;
-int size;
+//int recordlocator;
+//int recordEnd;
+//bool accountnumgood;
+//int tmpaccountlength;
+//bool lengthgood;
+//int size;
 int tmpacctnumber;
-double tmpacctval;
+//double tmpacctval;
 bool transactionResult;
 std::string tmpaccttype;
-
+//
 string date;
-string day;
-string month;
-string year;
+//string day;
+//string month;
+//string year;
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -62,14 +62,11 @@ int main()
 	time_t timer;
 	time(&timer);
 	struct tm* brokentime = localtime(&timer);
-
-
-
+	
 	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
-
-
+	
 	Checking checkingAccount;
 	Checking curUserCheckingAcct;
 	Savings savingsAccount;
@@ -80,11 +77,7 @@ int main()
 
 	
 	//set date string
-	date = std::to_string(brokentime->tm_mon) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
-	day = std::to_string(brokentime->tm_mday);
-	month = std::to_string(brokentime->tm_mon);
-	year = std::to_string((brokentime->tm_year) + 1900);
-
+	date = std::to_string((brokentime->tm_mon) + 1) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
 	
 
 	//print out a the welcome header
@@ -99,13 +92,12 @@ int main()
 
 		switch (userselection)
 		{
-
-
+			
 		case 'I':	//-------------------USER INSERT OPTION-------------------------
-			recordlocator = 0;
+			//recordlocator = 0;
 			accountExists = true;
-			accountnumgood = false;
-			lengthgood = false;
+			//accountnumgood = false;
+			//lengthgood = false;
 			
 
 			std::cout << "CREATE NEW ACCOUNT" << std::endl;
@@ -188,8 +180,6 @@ int main()
 				else { tmpaccttype = allAccounts.getAccountType(); }
 
 			}
-
-
 			
 			if (tmpaccttype == "Checking") {
 
@@ -204,18 +194,13 @@ int main()
 				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 
 					cout << "CHANGE NAME: " << endl;
-
 					curUserCheckingAcct.setAccountName(systemMenu.getUserName());
 
 					break;
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
 					cout << "WITHDRAWL: " << endl;
-					
-
-
 					tmpTransAmt = systemMenu.getUserAmount();
-
 					transactionResult = curUserCheckingAcct.accountWithdrawl(tmpTransAmt);
 
 					if (!transactionResult) {
@@ -229,11 +214,8 @@ int main()
 					cout << "DEPOSIT: " << endl;
 
 					tmpTransAmt = systemMenu.getUserAmount();
-
 					curUserCheckingAcct.accountDeposit(tmpTransAmt);
-
 					curUserCheckingAcct.printAccount();
-
 
 					break;
 
@@ -261,7 +243,6 @@ int main()
 
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
 
-
 				}
 				else if (userSubselection == 'P') {	//i don't penalize the user with a transaction fee when the interest is calculated
 
@@ -270,11 +251,8 @@ int main()
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
-
-
 				}
-
-							
+						
 			}//end if tmpacctype=checking
 
 			else if (tmpaccttype == "Savings") {
@@ -290,17 +268,13 @@ int main()
 				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 
 					cout << "CHANGE NAME: " << endl;
-
 					curUserSavAcct.setAccountName(systemMenu.getUserName());
 
 					break;
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
 					cout << "WITHDRAWL: " << endl;
-
-
 					tmpTransAmt = systemMenu.getUserAmount();
-
 					transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
 
 					if (!transactionResult) {
@@ -313,12 +287,8 @@ int main()
 					cout << "DEPOSIT: " << endl;
 
 					tmpTransAmt = systemMenu.getUserAmount();
-
 					curUserSavAcct.accountDeposit(tmpTransAmt);
-
 					curUserSavAcct.printAccount();
-
-
 					break;
 
 				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
@@ -340,15 +310,9 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
-
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
-
 				}
-
-
-
 			}
 
 			break;
