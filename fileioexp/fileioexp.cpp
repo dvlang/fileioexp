@@ -30,28 +30,19 @@ using namespace std;
 
 char userselection = 'H';
 char userSubselection = 'E';
-//string firstname;
-//string lastname;
-//string tmp = "";
+
 istringstream tmpstring;
 bool accountExists;
 double tmpTransAmt;
 int tmpTransAccount;
-//int recordlocator;
-//int recordEnd;
-//bool accountnumgood;
-//int tmpaccountlength;
-//bool lengthgood;
-//int size;
+
 int tmpacctnumber;
-//double tmpacctval;
+
 bool transactionResult;
 std::string tmpaccttype;
-//
+
 string date;
-//string day;
-//string month;
-//string year;
+
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -62,11 +53,11 @@ int main()
 	time_t timer;
 	time(&timer);
 	struct tm* brokentime = localtime(&timer);
-	
+
 	tmpstring.precision(10);
 	ifstream in_file;
 	ofstream out_file;
-	
+
 	Checking checkingAccount;
 	Checking curUserCheckingAcct;
 	Savings savingsAccount;
@@ -75,10 +66,10 @@ int main()
 
 	Menu systemMenu;
 
-	
+
 	//set date string
 	date = std::to_string((brokentime->tm_mon) + 1) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
-	
+
 
 	//print out a the welcome header
 	systemMenu.printHeader(date);
@@ -88,22 +79,19 @@ int main()
 		//MENU / USER INTERFACE
 		systemMenu.printMenu();
 
-		userselection= systemMenu.getUserSelection();
+		userselection = systemMenu.getUserSelection();
 
 		switch (userselection)
 		{
-			
+
 		case 'I':	//-------------------USER INSERT OPTION-------------------------
-			//recordlocator = 0;
+
 			accountExists = true;
-			//accountnumgood = false;
-			//lengthgood = false;
-			
 
 			std::cout << "CREATE NEW ACCOUNT" << std::endl;
 
 			//get user account type here
-			tmpaccttype=systemMenu.getAccountType();//user account type 
+			tmpaccttype = systemMenu.getAccountType();//user account type 
 
 			if (tmpaccttype == "Checking") {
 
@@ -122,12 +110,12 @@ int main()
 
 				std::cout << "Enable Direct Deposit? y/n: ";
 				userselection = systemMenu.getUserSelection();
-				if (userselection == 'y') { 
-					checkingAccount.setDirectdeposit(true); 
+				if (userselection == 'y') {
+					checkingAccount.setDirectdeposit(true);
 					checkingAccount.setTransFee(0.0);
 				}
-				else { 
-					checkingAccount.setDirectdeposit(false); 
+				else {
+					checkingAccount.setDirectdeposit(false);
 					checkingAccount.setTransFee(3.5);
 				}
 				checkingAccount.setDateOpened(date);
@@ -157,7 +145,7 @@ int main()
 
 				savingsAccount.AddRecordwc(out_file);
 			}
-			
+
 			else {
 				std::cout << "invalid acct type requested" << std::endl;
 			}
@@ -169,7 +157,7 @@ int main()
 
 			accountExists = false;
 			cout << "MODIFY AN ACCOUNT" << endl;
-			
+
 			while (!accountExists) {
 				tmpacctnumber = systemMenu.getDesiredAcctNum();
 
@@ -180,7 +168,7 @@ int main()
 				else { tmpaccttype = allAccounts.getAccountType(); }
 
 			}
-			
+
 			if (tmpaccttype == "Checking") {
 
 				accountExists = curUserCheckingAcct.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
@@ -234,10 +222,10 @@ int main()
 					break;
 
 				}
-				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' ) {
+				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W') {
 
 					bool saveok;
-	
+
 					curUserCheckingAcct.assessCheckingTransFee();
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
@@ -247,12 +235,12 @@ int main()
 				else if (userSubselection == 'P') {	//i don't penalize the user with a transaction fee when the interest is calculated
 
 					bool saveok;
-									
+
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
 				}
-						
+
 			}//end if tmpacctype=checking
 
 			else if (tmpaccttype == "Savings") {
@@ -274,10 +262,13 @@ int main()
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
 					cout << "WITHDRAWL: " << endl;
-					tmpTransAmt = systemMenu.getUserAmount();
-					transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
 
-					if (!transactionResult) {
+					if (curUserSavAcct.MatDateMet()) {
+
+						tmpTransAmt = systemMenu.getUserAmount();
+						transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
+					}
+					if (!transactionResult|| !(curUserSavAcct.MatDateMet())) {
 						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
 					}
 
@@ -318,9 +309,9 @@ int main()
 			break;
 
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
-			
+
 			systemMenu.printViewAllMenu();
-			
+
 			printAllAccounts(checkingAccount, savingsAccount, in_file);
 
 			break;
@@ -351,7 +342,7 @@ int main()
 void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream &inputfile) {
 	std::string tmp = "";
 	std::string accounttype;
-	
+
 
 	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
@@ -365,7 +356,7 @@ void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream
 		while (inputfile.good()) {
 
 			accounttype = getAccountType(inputfile);
-	
+
 
 			if (accounttype == "Checking") {
 				//This needs to get converted to a call to the appropriate class function based on account type
@@ -373,15 +364,15 @@ void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream
 				checkingAcct.printAccount();
 				//id assess fee here, would need to add ofstream
 			}
-			else if(accounttype=="Savings"){
+			else if (accounttype == "Savings") {
 				//This needs to get converted to a call to the appropriate class function based on account type
 				savAccount.GetRecordwc(inputfile);
 				savAccount.printAccount();
 
 			}
 			else { std::cout << "ERROR: invalid account type found!" << std::endl; }
-			
-			
+
+
 		}
 	}
 	else
@@ -410,7 +401,7 @@ std::string getAccountType(std::ifstream &inputfile) {
 	i = 0;
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountType = wholeentry.substr(0, i);
-	
+
 	inputfile.seekg(currentpos);  //set the file pointer back to where we were
 
 	return accountType;
