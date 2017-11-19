@@ -1,9 +1,9 @@
 // fileioexp.cpp : 
 //
 // Author: Dan Lang 
-// Date: 10/12/2017
+// Date: 11/18/2017
 // Class: cs475
-// Assignment: project 1
+// Assignment: project 2,2.5
 //
 //  This program simulates a simple bank database transaction program
 //
@@ -21,6 +21,8 @@ using namespace std;
 
 #include "fileioexp.h"
 #include "accounts.h"
+#include "checking.h"
+#include "savings.h"
 #include "menu.h"
 #include <time.h>
 
