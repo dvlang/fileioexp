@@ -471,22 +471,17 @@
 		i = 0;
 		while (matdate.compare(i, 1, "/") != 0) { i++; }
 		parmonth = matdate.substr(0, i);
-		//std::cout << "MatMo: " << parmonth << std::endl;
-
+		
 		i += 1;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (matdate.compare(i, 1, "/") != 0) { i++; }
 		parday = matdate.substr(j, i - j);
-		//std::cout << "MatDay: " << parday << std::endl;
 
 		i += 1;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (i<matdate.size()) { i++; }
 		paryear = matdate.substr(j, i - j);
-		//std::cout << "MatYear: " << paryear << std::endl;
-
-
-		//dategood = false;
+		
 		if (paryear <= year && parmonth <= month && parday <= day) { return true; }
 		else { 
 			std::cout << "ERROR: Maturity Date Not met! " << std::endl; 

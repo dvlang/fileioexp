@@ -52,7 +52,6 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	getline(inputfile, wholeentry);
 
 	//BEGIN LINE PARSING
-	std::cout << "input line is: " << wholeentry << std::endl;
 
 	i = 0;
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
@@ -61,22 +60,17 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 
 	tmpstring >> accountType;
 	account_Type = accountType;
-	std::cout << "gr_ account type is: " << account_Type << std::endl;
-	
 
-	//i = 0;
 	i += 2;
 	j = i;	//j is placeholder to beginning of next entry
 	
-	//accountNumber = wholeentry.substr(0, i);
+
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	accountNumber = wholeentry.substr(j, i - j);
 	tmpstring.str(accountNumber);
 	
 	tmpstring >> account_Number;
 	account_Number = std::stoi(accountNumber);
-	std::cout << "gr_ account number is: " << account_Number << std::endl;
-
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
@@ -85,9 +79,7 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	
 
 	name_Owner = accountName;
-
-	std::cout << "gr_ account name is: " << name_Owner << std::endl;
-
+	
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
 	tmpstring.clear();
@@ -103,18 +95,13 @@ void Accounts::GetRecordwc(std::ifstream &inputfile) {
 	amount_Avail = value;
 
 	std::cout.precision(15);
-	std::cout << "gr_ account value is: " << amount_Avail << std::endl;
-
 
 	i += 2;	//move i index off ";" and space
 	j = i;	//j is placeholder to beginning of next entry
 	while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 	dateOpened = wholeentry.substr(j, i - j);
-
-
-	//date_Opened = dateOpened;
-
-	std::cout << "gr_ account opened: " << dateOpened << std::endl;
+	
+	date_Opened = dateOpened;
 
 	// END LINE PARSING	
 
@@ -166,8 +153,6 @@ bool Accounts::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 		while (inputfile.good() && !accountExists) {
 			GetRecordwc(inputfile); 
 
-			//std::cout << "account number for line is: " << account_Number << std::endl;
-			//std::cout << "account passed was: " << accnum << std::endl;
 			if (account_Number != accnum) {
 
 				accountExists = false;
@@ -224,8 +209,6 @@ void Accounts::accountAddInterest(){
 
 bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int tmpAccountNum)
 {
-	//std::cout << "im in my find record w class function" << std::endl;
-	//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
 	
 	bool accountExists;
 	std::string tmp = "";
@@ -283,8 +266,6 @@ bool Accounts::FindRecordwClass(Accounts &accref, std::ifstream &inputfile, int 
 			recordlocator = lengthNotFound - 2;
 			recordEnd = lengthFound - 2;
 
-			//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-			//std::cout << "here is the matching account: " << std::endl;
 			printAccount();
 		}
 		else {
@@ -370,12 +351,6 @@ bool Accounts::ModifyRecordwc(Accounts &record, std::ofstream &outputfile) {
 	outputfile.clear();
 	outputfile.close();
 
-	/*
-	remove("old.dat");
-	rename("accounts.dat", "old.dat");	//keep a temp copy of file for safekeeping
-	remove("accounts.dat");
-	result += rename("tmp.dat", "accounts.dat");
-	*/
 	remove("old.dat");
 	rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 	remove(FILENAME);

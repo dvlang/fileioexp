@@ -31,7 +31,7 @@ Master::~Master() { std::cout << "destroy MASTER" << std::endl; }
 		getline(inputfile, wholeentry);
 
 		//BEGIN LINE PARSING
-		//std::cout << "input line is: " << wholeentry << std::endl;
+
 
 		i = 0;
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
@@ -40,9 +40,7 @@ Master::~Master() { std::cout << "destroy MASTER" << std::endl; }
 
 		tmpstring >> accountType;
 		account_Type = accountType;
-		//std::cout << "MASTERgr_ account type is: " << accountType << std::endl;
-
-		//i = 0;
+		
 		i += 2;
 		j = i;	//j is placeholder to beginning of next entry
 
@@ -53,18 +51,13 @@ Master::~Master() { std::cout << "destroy MASTER" << std::endl; }
 
 		tmpstring >> account_Number;
 		account_Number = std::stoi(accountNumber);
-		//std::cout << "MASTERgr_ account number is: " << account_Number << std::endl;
-
 
 		i += 2;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		accountName = wholeentry.substr(j, i - j);
-
-
+		
 		name_Owner = accountName;
-
-		//std::cout << "MASTERgr_ account name is: " << name_Owner << std::endl;
 
 		i += 2;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
@@ -73,27 +66,21 @@ Master::~Master() { std::cout << "destroy MASTER" << std::endl; }
 		tmpstring.fixed;
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		accountValue = wholeentry.substr(j, i - j);
-
-
+		
 		tmpstring.str(accountValue);
 		tmpstring >> value;
 
 		amount_Avail = value;
 
 		std::cout.precision(15);
-		//std::cout << "MASTERgr_ account value is: " << amount_Avail << std::endl;
-
 
 		i += 2;	//move i index off ";" and space
 		j = i;	//j is placeholder to beginning of next entry
 		while (wholeentry.compare(i, 1, ";") != 0) { i++; }
 		dateOpened = wholeentry.substr(j, i - j);
-
-
-		//date_Opened = dateOpened;
-
-		//	std::cout << "MASTERgr_ account opened: " << dateOpened << std::endl;
-
+		
+		date_Opened = dateOpened;
+		
 		// END LINE PARSING	
 
 		return;
@@ -117,8 +104,6 @@ Master::~Master() { std::cout << "destroy MASTER" << std::endl; }
 			while (inputfile.good() && !accountExists) {
 				GetRecordwc(inputfile);
 
-				//std::cout << "account number for line is: " << account_Number << std::endl;
-				//std::cout << "account passed was: " << accnum << std::endl;
 				if (account_Number != accnum) {
 
 					accountExists = false;

@@ -20,7 +20,7 @@ bool Checking::getDirectDeposit() { return direct_Deposit; }
 double Checking::getTransFee() { return transaction_Fee; }
 
 void Checking::assessCheckingTransFee() {
-	//std::cout << "assess fee" << std::endl;
+
 	amount_Avail = amount_Avail - transaction_Fee;
 }
 
@@ -45,7 +45,7 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 		getline(inputfile, wholeentry);
 
 		//BEGIN LINE PARSING
-		//std::cout << "input line is: " << wholeentry << std::endl;
+
 
 		//GET ACCOUNT TYPE
 		i = 0;
@@ -55,7 +55,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 
 		tmpstring >> accountType;
 		account_Type = accountType;
-		//std::cout << "gr_ account type is: " << accountType << std::endl;
 
 		//GET ACCOUNT NUMBER
 
@@ -68,7 +67,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 
 		tmpstring >> account_Number;
 		account_Number = std::stoi(accountNumber);
-		//std::cout << "gr_ account number is: " << account_Number << std::endl;
 
 		//GET NAME OF THE OWNER
 		i += 2;	//move i index off ";" and space
@@ -77,8 +75,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 		accountName = wholeentry.substr(j, i - j);
 
 		name_Owner = accountName;
-
-		//std::cout << "gr_ account name is: " << name_Owner << std::endl;
 
 		//GET AMOUNT AVAILABLE IN ACCOUNT
 		i += 2;	//move i index off ";" and space
@@ -95,7 +91,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 		amount_Avail = value;
 
 		std::cout.precision(15);
-		//std::cout << "gr_ account value is: " << amount_Avail << std::endl;
 
 		//GET DATE ACCOUNT OPENED
 		i += 2;	//move i index off ";" and space
@@ -104,7 +99,7 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 		dateOpened = wholeentry.substr(j, i - j);
 
 		date_Opened = dateOpened;
-		//std::cout << "gr_ account opened: " << date_Opened << std::endl;
+
 		if (account_Type == "Checking") {
 			tmpstring.clear();
 			//GET Direct deposit
@@ -115,16 +110,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 
 			tmpstring.str(dd);
 			tmpstring >> std::boolalpha >> direct_Deposit;
-
-
-			if (direct_Deposit) {
-				//direct_Deposit = true;
-				//std::cout << "gr_ account direct_Deposit: true " << std::endl;
-			}
-			else {
-				//direct_Deposit = false; 
-				//std::cout << "gr_ account direct_Deposit: false " << std::endl;
-			}
 
 			tmpstring.clear();
 
@@ -140,7 +125,6 @@ void Checking::GetRecordwc(std::ifstream& inputfile) {
 			transaction_Fee = value;
 
 			std::cout.precision(15);
-			//std::cout << "gr_ trans fee is: " << transaction_Fee << std::endl;
 
 		}
 		// END LINE PARSING	
@@ -173,8 +157,6 @@ bool Checking::doesAccountExist(std::ifstream &inputfile, const int accnum) {
 			while (inputfile.good() && !accountExists) {
 				GetRecordwc(inputfile);
 
-				//std::cout << "account number for line is: " << account_Number << std::endl;
-				//std::cout << "account passed was: " << accnum << std::endl;
 				if (account_Number != accnum) {
 
 					accountExists = false;
@@ -231,8 +213,7 @@ bool Checking::AddRecordwc(std::ofstream &outputfile) {
 
 bool Checking::FindRecordwClass(Checking &accref, std::ifstream &inputfile, int tmpAccountNum)
 	{
-		//std::cout << "im in my find record w class function" << std::endl;
-		//std::cout << "I am looking for this record: " << tmpAccountNum<< std::endl;
+
 
 		bool accountExists;
 		std::string tmp = "";
@@ -290,9 +271,6 @@ bool Checking::FindRecordwClass(Checking &accref, std::ifstream &inputfile, int 
 				recordlocator = lengthNotFound - 2;
 				recordEnd = lengthFound - 2;
 
-				//std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-				//std::cout << "here is the matching account: " << std::endl;
-				//printAccount();
 			}
 			else {
 				recordlocator = 0;
@@ -320,17 +298,7 @@ bool Checking::ModifyRecordwc(Checking &record, std::ofstream &outputfile) {
 		outputfile.precision(10);
 		tmpstring.precision(10);
 
-		//std::cout << "modifyrecwc(checking) was called to save this data: " << std::endl;
-		//record.printAccount();
-
-
 		FindRecordwClass(record, in_file, record.getAccountNumber());
-		//std::cout << "ERETURN FROM FIND RECORD" << std::endl;
-		//	std::cout << "found it! record locator is: " << recordlocator << " record End is: " << recordEnd << std::endl;
-		//std::cout << "here is the matching account: " << std::endl;
-		//printAccount();
-		//std::cout << "AGAIN- modifyrecwc(checking) was called to save this data: " << std::endl;
-		//record.printAccount();
 
 		in_file.open(FILENAME);			//open the input file
 		if (in_file.fail()) {
@@ -344,9 +312,6 @@ bool Checking::ModifyRecordwc(Checking &record, std::ofstream &outputfile) {
 			result++;
 		}
 
-
-
-
 		in_file.seekg(0, in_file.end);		//find the end of the old file
 		endpos = in_file.tellg();				//store end of old file
 
@@ -356,19 +321,15 @@ bool Checking::ModifyRecordwc(Checking &record, std::ofstream &outputfile) {
 
 		while (in_file.good()) {			//while ur not at the end of the input file
 
-
 			if (opos == recordlocator) {
 
-
 				tmpstring << record.getAccountType() << "; " << record.getAccountNumber() << "; " << record.getAccountName() << "; " << record.getAccountValue() << "; " << record.getDateOpened() << "; " << std::boolalpha << record.getDirectDeposit() << "; " << record.getTransFee() << ";";
-
 
 				outputfile << tmpstring.str();
 				in_file.seekg(recordEnd);
 				opos = outputfile.tellp();		//find out where in the output file you are now
 
 			}
-
 
 			getline(in_file, tempstring2);	//get a line from input file	
 			outputfile << tempstring2;		//store the line from input file into old 
@@ -389,8 +350,6 @@ bool Checking::ModifyRecordwc(Checking &record, std::ofstream &outputfile) {
 		rename(&FILENAME[0], "old.dat");	//keep a temp copy of file for safekeeping
 		remove(FILENAME);
 		result += rename("tmp.dat", &FILENAME[0]);
-
-
 
 		if (result != 0) {
 			return false;
