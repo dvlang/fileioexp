@@ -238,7 +238,7 @@ int main()
 					break;
 
 				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
-
+					//--my assumption is that some batch file would executre the 'P' function on all the accounts, I did not implement automatic functionality
 					curUserCheckingAcct.accountAddInterest();
 					curUserCheckingAcct.printAccount();
 					break;
@@ -252,13 +252,21 @@ int main()
 					break;
 
 				}
-				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
+				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' ) {
 
 					bool saveok;
-					//std::cout << "CHECKING: Im going to save this to the database: " << std::endl;
-					//curUserCheckingAcct.printAccount();
 	
 					curUserCheckingAcct.assessCheckingTransFee();
+					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
+
+					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+
+
+				}
+				else if (userSubselection == 'P') {	//i don't penalize the user with a transaction fee when the interest is calculated
+
+					bool saveok;
+									
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
@@ -270,12 +278,7 @@ int main()
 			}//end if tmpacctype=checking
 
 			else if (tmpaccttype == "Savings") {
-				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
-				//accountExists = savingsAccount.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
-			//	savingsAccount.printAccount();
-				
 
-				//std::cout << "good account bro! It a type: " << tmpaccttype << std::endl;
 				accountExists = curUserSavAcct.doesAccountExist(in_file, tmpacctnumber); //dont really care abut rtrn value, just using to populate the class
 				curUserSavAcct.printAccount();
 
@@ -303,7 +306,6 @@ int main()
 					if (!transactionResult) {
 						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
 					}
-					//curUserSavAcct.printAccount();
 
 					break;
 
@@ -320,7 +322,7 @@ int main()
 					break;
 
 				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
-
+							//--my assumption is that some batch file would executre the 'P' function on all the accounts, I did not implement automatic functionality
 					curUserSavAcct.accountAddInterest();
 					curUserSavAcct.printAccount();
 
@@ -338,17 +340,12 @@ int main()
 				if (userSubselection == 'C' || userSubselection == 'D' || userSubselection == 'W' || userSubselection == 'P') {
 
 					bool saveok;
-					//std::cout << "SAVINGS: Im going to save this to the database: " << std::endl;
-					//curUserSavAcct.printAccount();
-					//curUserSavAcct.setAccountValue(curUserSavAcct.getAccountValue() - curUserSavAcct.getTransFee());
+
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
-					//std::cout << "I did it: " << std::endl;
+
 					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
 
-
 				}
-
-
 
 
 
@@ -359,7 +356,6 @@ int main()
 		case 'V':	//-------------------USER VIEW ALL OPTION-------------------------
 			
 			systemMenu.printViewAllMenu();
-			//tmpUserAccount.printAllAccounts(in_file);  //does this break requirement for all users to get pulled into their own account object???????????????
 			
 			printAllAccounts(checkingAccount, savingsAccount, in_file);
 
@@ -386,11 +382,12 @@ int main()
 
 //--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
 //--THIS FUNCTION WILL DETERMINE TYPE AN CALL THE APPROPRIATE CLASS FUNCTIONS
+//These are left here because they are really independent of checking and savigns class functions.
+//could have considered adding to the "master" class to cover the printing function of all records.
 void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream &inputfile) {
 	std::string tmp = "";
 	std::string accounttype;
-
-
+	
 
 	inputfile.open(FILENAME);
 	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
