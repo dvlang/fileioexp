@@ -12,7 +12,7 @@
 
 void printAllAccounts(Checking&, Savings&, std::ifstream&);
 std::string getAccountType(std::ifstream&);
-
+bool checkDate(std::string , std::string , std::string , std::string);
 
 
 

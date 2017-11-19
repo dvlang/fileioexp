@@ -42,6 +42,11 @@ bool transactionResult;
 std::string tmpaccttype;
 
 string date;
+string mo;
+string day;
+string yr;
+
+bool needtoupdate;
 
 
 
@@ -69,6 +74,13 @@ int main()
 
 	//set date string
 	date = std::to_string((brokentime->tm_mon) + 1) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
+	mo=std::to_string((brokentime->tm_mon) + 1); 
+	day=std::to_string(brokentime->tm_mday);
+	yr=std::to_string((brokentime->tm_year) + 1900);
+	needtoupdate=checkDate(mo,day,yr,date);
+	if (needtoupdate) {
+		cout << "i need to update the file!" << endl;
+	}
 
 
 	//print out a the welcome header
@@ -336,7 +348,7 @@ int main()
 
 
 //--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
-//--THIS FUNCTION WILL DETERMINE TYPE AN CALL THE APPROPRIATE CLASS FUNCTIONS
+//--THIS FUNCTION WILL DETERMINE TYPE AND CALL THE APPROPRIATE CLASS FUNCTIONS
 //These are left here because they are really independent of checking and savigns class functions.
 //could have considered adding to the "master" class to cover the printing function of all records.
 void printAllAccounts(Checking &checkingAcct, Savings &savAccount, std::ifstream &inputfile) {
@@ -406,6 +418,69 @@ std::string getAccountType(std::ifstream &inputfile) {
 
 	return accountType;
 }
-//--------------------end  FUNCTION: getAccountType-------------------------------------
 
 
+//--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
+//--THIS FUNCTION WILL DETERMINE TYPE AND CALL THE APPROPRIATE CLASS FUNCTIONS
+//These are left here because they are really independent of checking and savigns class functions.
+//could have considered adding to the "master" class to cover the printing function of all records.
+bool checkDate(std::string month, std::string day, std::string year,std::string date) {
+	std::string tmp = "";
+	std::ostringstream tmpstring;
+	std::string accounttype;
+	std::string parmonth;
+	std::string parday;
+	std::string paryear;
+
+	ifstream in_file;
+	ofstream out_file;
+
+	cout << "todays date is: " << month << day << year << endl;
+
+
+	in_file.open("date.dat");
+
+
+	getline(in_file, tmp);
+
+
+	in_file.clear();
+	in_file.close();
+
+	out_file.open("date.dat");
+	tmpstring << date;
+
+	out_file << tmpstring.str();
+	out_file.clear();
+	out_file.close();
+
+
+	cout << "file date is: " << tmp << endl;
+	//parse the maturity date from the data record
+	int i, j;
+	i = 0;
+	while (tmp.compare(i, 1, "/") != 0) { i++; }
+	parmonth = tmp.substr(0, i);
+
+	i += 1;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (tmp.compare(i, 1, "/") != 0) { i++; }
+	parday = tmp.substr(j, i - j);
+
+	i += 1;	//move i index off ";" and space
+	j = i;	//j is placeholder to beginning of next entry
+	while (i < tmp.size()) { i++; }
+	paryear = tmp.substr(j, i - j);
+
+	if (paryear <= year && parmonth <= month && parday <= day) { return true; }
+	else {
+		return false;
+	}
+
+
+
+
+}
+	//}
+
+//--------------------end FUNCTION: PRINTALLACCOUNTS-------------------------------------
