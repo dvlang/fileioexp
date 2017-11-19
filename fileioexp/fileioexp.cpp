@@ -323,6 +323,7 @@ int main()
 
 					curUserSavAcct.accountAddInterest();
 					curUserSavAcct.printAccount();
+
 					break;
 
 				case 'E':	//-------------------USER EXIT OPTION-------------------------
