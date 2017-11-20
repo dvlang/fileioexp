@@ -117,6 +117,7 @@ std::string Menu::getUserName() {
 
 std::string Menu::getAccountType() {
 	bool lengthgood;
+	bool inputgood;
 
 	//Get user acccount name
 	std::cout << "Desired Account Type (Checking(c) or Savings(s): " << std::endl;
@@ -125,13 +126,15 @@ std::string Menu::getAccountType() {
 
 	//check to see if they field was empty, if it was, stay here till they give you a good one
 	lengthgood = CheckEmpty(tmpstring);
+	inputgood = IsAlphaString(tmp,1);
 
 	//make sure the user didnt enter an empty value
-	while (!lengthgood) {
-		std::cout << "ERROR: Account Holder Name Can't Be Empty, Re-try: " << std::endl;
+	while (!lengthgood||!inputgood) {
+		std::cout << "ERROR: Invalid entry, Re-try: " << std::endl;
 		getline(std::cin, tmp);
 		tmpstring.str(tmp);
 		lengthgood = CheckEmpty(tmpstring);
+		inputgood = IsAlphaString(tmp, 1);
 	}
 
 	if (tmp == "c") { return "Checking"; }
@@ -227,6 +230,35 @@ bool Menu::IsNumber(const std::string& tmpstring, int length) {
 	for (i = 0; i < length; i++) {
 
 		if (isdigit(tmpstring[i])) {
+			result++;
+
+		}
+
+	}
+
+
+	if (result == length) {
+		return true;
+	}
+	else {
+
+		return false;
+	}
+
+
+}
+//********FUNCTION: IsNumber  END******************************
+
+//********FUNCTION: IsAlphaString  BEGIN******************************
+//This function tests to see if the TMPSTRING is LENGTH digit alpha char
+bool Menu::IsAlphaString(const std::string& tmpstring, int length) {
+
+	int i;
+	int result = 0;
+
+	for (i = 0; i < length; i++) {
+
+		if (isalpha(tmpstring[i])) {
 			result++;
 
 		}

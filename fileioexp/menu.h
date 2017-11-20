@@ -35,7 +35,7 @@ private:
 	bool IsNumber(const std::string&, int);
 	bool CheckLength(std::istringstream&, int);
 	bool CheckEmpty(std::istringstream&);
-
+	bool IsAlphaString(const std::string&, int);
 };
 #endif
 

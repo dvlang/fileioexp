@@ -9,6 +9,7 @@
 #include <cstring>
 #include <sstream>
 #include <iomanip>
+#include <cmath> 
 
 //------------------------------SAVINGS CLASS-----------------------------------------------------------
 
@@ -431,10 +432,14 @@
 		dategood = MatDateMet();
 
 		if (dategood) {
-			amount_Avail = amount_Avail*(1.0 + (current_Interest/100));
+			amount_Avail = amount_Avail*(1.0 + (current_Interest/100)/365);
+			
+
+
 		}
 		else {
-			amount_Avail = amount_Avail*(1.0 + (default_Interest/100));  
+			amount_Avail = amount_Avail*(1.0 + (default_Interest/100)/365);  
+			
 		}
 
 		
@@ -481,7 +486,7 @@
 		
 		if (paryear <= year && parmonth <= month && parday <= day) { return true; }
 		else { 
-			std::cout << "ERROR: Maturity Date Not met! " << std::endl; 
+			//std::cout << "ERROR: Maturity Date Not met! " << std::endl; 
 			return false;
 		}
 	}

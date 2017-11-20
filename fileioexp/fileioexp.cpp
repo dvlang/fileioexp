@@ -82,6 +82,7 @@ int main()
 	
 
 	//AUTOMATICALLY ASSESS INTEREST ON FILE IF TODAY IS A NEW DAY.  ASSUME THIS IS RUN EVERY DAY.
+	//Note:  this requires a "date.dat" file in the root directory
 	needtoupdate = checkDate(mo, day, yr, date);
 	if (needtoupdate) {
 		numofaccts = countAccounts(in_file);
@@ -181,7 +182,7 @@ int main()
 
 
 			accountExists = false;
-			cout << "MODIFY AN ACCOUNT" << endl;
+			std::cout << "MODIFY AN ACCOUNT" << std::endl;
 
 			while (!accountExists) {
 				tmpacctnumber = systemMenu.getDesiredAcctNum();
@@ -206,25 +207,25 @@ int main()
 				{
 				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 
-					cout << "CHANGE NAME: " << endl;
+					std::cout << "CHANGE NAME: " << std::endl;
 					curUserCheckingAcct.setAccountName(systemMenu.getUserName());
 
 					break;
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
-					cout << "WITHDRAWL: " << endl;
+					std::cout << "WITHDRAWL: " << std::endl;
 					tmpTransAmt = systemMenu.getUserAmount();
 					transactionResult = curUserCheckingAcct.accountWithdrawl(tmpTransAmt);
 
 					if (!transactionResult) {
-						cout << "ERROR: Insufficient funds!- Exiting" << endl;
+						std::cout << "ERROR: Insufficient funds!- Exiting" << std::endl;
 					}
 					curUserCheckingAcct.printAccount();
 
 					break;
 
 				case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
-					cout << "DEPOSIT: " << endl;
+					std::cout << "DEPOSIT: " << std::endl;
 
 					tmpTransAmt = systemMenu.getUserAmount();
 					curUserCheckingAcct.accountDeposit(tmpTransAmt);
@@ -233,17 +234,18 @@ int main()
 					break;
 
 				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
-					//--my assumption is that some batch file would executre the 'P' function on all the accounts, I did not implement automatic functionality
+					//--LEAVING THIS HERE FOR LEGACY COMPATIBILITY.
+					//ACCOUNT INTEREST IS AUTOMATICALLY CALCULATED AT FILE STARTUP
 					curUserCheckingAcct.accountAddInterest();
 					curUserCheckingAcct.printAccount();
 					break;
 
 				case 'E':	//-------------------USER EXIT OPTION-------------------------
-					cout << "-Exit" << endl; userselection = 'H';
+					std::cout << "-Exit" << std::endl; userselection = 'H';
 					break;
 
 				default:
-					cout << "ERROR: INVALID Selection!" << endl;
+					std::cout << "ERROR: INVALID Selection!" << std::endl;
 					break;
 
 				}
@@ -254,7 +256,7 @@ int main()
 					curUserCheckingAcct.assessCheckingTransFee();
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
-					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+					if (!saveok) { std::cout << "the file was NOT saved ok" << std::endl; }
 
 				}
 				else if (userSubselection == 'P') {	//i don't penalize the user with a transaction fee when the interest is calculated
@@ -263,7 +265,7 @@ int main()
 
 					saveok = checkingAccount.ModifyRecordwc(curUserCheckingAcct, out_file);
 
-					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+					if (!saveok) { std::cout << "the file was NOT saved ok" << std::endl; }
 				}
 
 			}//end if tmpacctype=checking
@@ -280,13 +282,13 @@ int main()
 				{
 				case 'C':	//-------------------USER CHANGE NAME OPTION-------------------------
 
-					cout << "CHANGE NAME: " << endl;
+					std::cout << "CHANGE NAME: " << std::endl;
 					curUserSavAcct.setAccountName(systemMenu.getUserName());
 
 					break;
 				case 'W':	//-------------------USER WITHDRAWL OPTION-------------------------
 
-					cout << "WITHDRAWL: " << endl;
+					std::cout << "WITHDRAWL: " << std::endl;
 
 					if (curUserSavAcct.MatDateMet()) {
 
@@ -294,13 +296,13 @@ int main()
 						transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
 					}
 					if (!transactionResult || !(curUserSavAcct.MatDateMet())) {
-						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
+						std::cout << " ERROR: Withdrawl Denied- Exiting" << std::endl;
 					}
 
 					break;
 
 				case 'D':	//-------------------USER DEPOSIT OPTION-------------------------
-					cout << "DEPOSIT: " << endl;
+					std::cout << "DEPOSIT: " << std::endl;
 
 					tmpTransAmt = systemMenu.getUserAmount();
 					curUserSavAcct.accountDeposit(tmpTransAmt);
@@ -308,18 +310,19 @@ int main()
 					break;
 
 				case 'P':	//-------------------USER ADD INTEREST OPTION-------------------------
-							//--my assumption is that some batch file would executre the 'P' function on all the accounts, I did not implement automatic functionality
+							//--LEAVING THIS HERE FOR LEGACY COMPATIBILITY.
+							//ACCOUNT INTEREST IS AUTOMATICALLY CALCULATED AT FILE STARTUP
 					curUserSavAcct.accountAddInterest();
 					curUserSavAcct.printAccount();
 
 					break;
 
 				case 'E':	//-------------------USER EXIT OPTION-------------------------
-					cout << "-Exit" << endl; userselection = 'H';
+					std::cout << "-Exit" << std::endl; userselection = 'H';
 					break;
 
 				default:
-					cout << "ERROR: INVALID Selection!" << endl;
+					std::cout << "ERROR: INVALID Selection!" << std::endl;
 					break;
 
 				}
@@ -327,7 +330,7 @@ int main()
 
 					bool saveok;
 					saveok = savingsAccount.ModifyRecordwc(curUserSavAcct, out_file);
-					if (!saveok) { cout << "the file was NOT saved ok" << endl; }
+					if (!saveok) { std::cout << "the file was NOT saved ok" << std::endl; }
 				}
 			}
 
@@ -341,10 +344,10 @@ int main()
 
 			break;
 			//-------------------USER QUIT OPTION-------------------------
-		case 'Q':  cout << "user selected Q" << endl; break;
+		case 'Q':  std::cout << "user selected Q" << std::endl; break;
 
 			//-------------------DEFAULT OPTION-------------------------
-		default: cout << "ERROR: INVALID Selection!" << endl;
+		default: std::cout << "ERROR: INVALID Selection!" << std::endl;
 		}
 
 	}
@@ -433,10 +436,8 @@ std::string getAccountType(std::ifstream &inputfile) {
 }
 
 
-//--------------------FUNCTION: PRINTALLACCOUNTS-------------------------------------
-//--THIS FUNCTION WILL DETERMINE TYPE AND CALL THE APPROPRIATE CLASS FUNCTIONS
-//These are left here because they are really independent of checking and savigns class functions.
-//could have considered adding to the "master" class to cover the printing function of all records.
+//--------------------FUNCTION: checkDate-------------------------------------
+
 bool checkDate(std::string month, std::string day, std::string year, std::string date) {
 	std::string tmp = "";
 	std::ostringstream tmpstring;
@@ -448,19 +449,25 @@ bool checkDate(std::string month, std::string day, std::string year, std::string
 	ifstream in_file;
 	ofstream out_file;
 
-	cout << "todays date is: " << month << day << year << endl;
 
 
 	in_file.open("date.dat");
+	if (in_file.fail()) { 
+		std::cout << "ERROR: NO DATA FILE, WILL CREATE ONE" << std::endl;
+		tmp = date;
 
+	}	//check for failure when opening
+	
+	else {
 
-	getline(in_file, tmp);
-
-
-	in_file.clear();
-	in_file.close();
+		getline(in_file, tmp);
+		
+		in_file.clear();
+		in_file.close();
+	}
 
 	out_file.open("date.dat");
+	if (out_file.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
 	tmpstring << date;
 
 	out_file << tmpstring.str();
@@ -468,7 +475,7 @@ bool checkDate(std::string month, std::string day, std::string year, std::string
 	out_file.close();
 
 
-	cout << "file date is: " << tmp << endl;
+	//cout << "file date is: " << tmp << endl;
 	//parse the maturity date from the data record
 	int i, j;
 	i = 0;
@@ -485,7 +492,7 @@ bool checkDate(std::string month, std::string day, std::string year, std::string
 	while (i < tmp.size()) { i++; }
 	paryear = tmp.substr(j, i - j);
 
-	if (paryear <= year && parmonth <= month && parday <= day) { return true; }
+	if (paryear <= year && parmonth <= month && parday < day) { return true; }
 	else {
 		return false;
 	}
@@ -496,9 +503,9 @@ bool checkDate(std::string month, std::string day, std::string year, std::string
 }
 
 
-//--------------------end FUNCTION: PRINTALLACCOUNTS-------------------------------------
+//--------------------end FUNCTION: checkDate-------------------------------------
 
-
+//--------------------FUNCTION: updateInterestAllAccounts-------------------------------------
 void updateInterestAllAccounts(Master &allAccounts, Checking &curusercheckingAcct, Checking &checkingAcct, Savings &curusersavAccount, Savings &savAccount, std::ifstream &inputfile, std::ofstream &outfile, int *arryptr, int numrecords) {
 	bool accountExists;
 	std::string tmpaccttype;
@@ -526,7 +533,7 @@ void updateInterestAllAccounts(Master &allAccounts, Checking &curusercheckingAcc
 	}
 
 }
-
+//--------------------end FUNCTION: updateInterestAllAccounts-------------------------------------
 
 //--------------------FUNCTION: countAccounts-------------------------------------
 //--count the number of accounts
@@ -563,7 +570,9 @@ int countAccounts(std::ifstream &inputfile) {
 	inputfile.close();
 	return numofaccts;
 }
+//--------------------end FUNCTION: countAccounts-------------------------------------
 
+//--------------------FUNCTION: getAllAcctNums-------------------------------------
 
 void getAllAcctNums(Master &allAccounts, std::ifstream &inputfile, int *arryptr) {
 	std::string tmp = "";
@@ -598,3 +607,4 @@ void getAllAcctNums(Master &allAccounts, std::ifstream &inputfile, int *arryptr)
 	inputfile.close();
 }
 
+//--------------------end FUNCTION: getAllAcctNums-------------------------------------

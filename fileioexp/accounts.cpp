@@ -203,7 +203,7 @@ void Accounts::accountDeposit(double transamt) {
 }
 
 void Accounts::accountAddInterest(){
-	amount_Avail = amount_Avail*(1.0 + INTERESTRATE);  //was INTERSTRATE
+	amount_Avail = amount_Avail*(1.0 + INTERESTRATE/365);  //was INTERSTRATE
 }
 
 
