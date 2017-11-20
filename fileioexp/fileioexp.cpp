@@ -47,7 +47,9 @@ string day;
 string yr;
 
 bool needtoupdate;
+int numofaccts;
 
+int i;
 
 
 //--------------------BEGIN MAIN--------------------------------------
@@ -74,13 +76,24 @@ int main()
 
 	//set date string
 	date = std::to_string((brokentime->tm_mon) + 1) + "/" + std::to_string(brokentime->tm_mday) + "/" + std::to_string((brokentime->tm_year) + 1900);
-	mo=std::to_string((brokentime->tm_mon) + 1); 
-	day=std::to_string(brokentime->tm_mday);
-	yr=std::to_string((brokentime->tm_year) + 1900);
-	needtoupdate=checkDate(mo,day,yr,date);
+	mo = std::to_string((brokentime->tm_mon) + 1);
+	day = std::to_string(brokentime->tm_mday);
+	yr = std::to_string((brokentime->tm_year) + 1900);
+	
+
+	//AUTOMATICALLY ASSESS INTEREST ON FILE IF TODAY IS A NEW DAY.  ASSUME THIS IS RUN EVERY DAY.
+	needtoupdate = checkDate(mo, day, yr, date);
 	if (needtoupdate) {
-		cout << "i need to update the file!" << endl;
+		numofaccts = countAccounts(in_file);
+		int *acctarray = new int[numofaccts];
+
+
+		getAllAcctNums(allAccounts, in_file, acctarray);
+		
+		updateInterestAllAccounts(allAccounts, curUserCheckingAcct, checkingAccount, curUserSavAcct, savingsAccount, in_file, out_file, acctarray, numofaccts);
+		std::cout << "Interest Assessed." << std::endl;
 	}
+
 
 
 	//print out a the welcome header
@@ -280,7 +293,7 @@ int main()
 						tmpTransAmt = systemMenu.getUserAmount();
 						transactionResult = curUserSavAcct.accountWithdrawl(tmpTransAmt);
 					}
-					if (!transactionResult|| !(curUserSavAcct.MatDateMet())) {
+					if (!transactionResult || !(curUserSavAcct.MatDateMet())) {
 						cout << " ERROR: Withdrawl Denied- Exiting" << endl;
 					}
 
@@ -424,7 +437,7 @@ std::string getAccountType(std::ifstream &inputfile) {
 //--THIS FUNCTION WILL DETERMINE TYPE AND CALL THE APPROPRIATE CLASS FUNCTIONS
 //These are left here because they are really independent of checking and savigns class functions.
 //could have considered adding to the "master" class to cover the printing function of all records.
-bool checkDate(std::string month, std::string day, std::string year,std::string date) {
+bool checkDate(std::string month, std::string day, std::string year, std::string date) {
 	std::string tmp = "";
 	std::ostringstream tmpstring;
 	std::string accounttype;
@@ -481,6 +494,107 @@ bool checkDate(std::string month, std::string day, std::string year,std::string 
 
 
 }
-	//}
+
 
 //--------------------end FUNCTION: PRINTALLACCOUNTS-------------------------------------
+
+
+void updateInterestAllAccounts(Master &allAccounts, Checking &curusercheckingAcct, Checking &checkingAcct, Savings &curusersavAccount, Savings &savAccount, std::ifstream &inputfile, std::ofstream &outfile, int *arryptr, int numrecords) {
+	bool accountExists;
+	std::string tmpaccttype;
+
+	for (int i = 0; i < numrecords; i++) {
+		accountExists = allAccounts.doesAccountExist(inputfile, arryptr[i]);
+
+		tmpaccttype = allAccounts.getAccountType();
+
+		if (tmpaccttype == "Checking") {
+			//This needs to get converted to a call to the appropriate class function based on account type
+			accountExists = curusercheckingAcct.doesAccountExist(inputfile, arryptr[i]); //dont really care abut rtrn value, just using to populate the class
+			curusercheckingAcct.accountAddInterest();
+			checkingAcct.ModifyRecordwc(curusercheckingAcct, outfile);
+
+		}
+		else if (tmpaccttype == "Savings") {
+			//This needs to get converted to a call to the appropriate class function based on account type
+			accountExists = curusersavAccount.doesAccountExist(inputfile, arryptr[i]); //dont really care abut rtrn value, just using to populate the class
+			curusersavAccount.accountAddInterest();
+			savAccount.ModifyRecordwc(curusersavAccount, outfile);
+
+
+		}
+	}
+
+}
+
+
+//--------------------FUNCTION: countAccounts-------------------------------------
+//--count the number of accounts
+
+int countAccounts(std::ifstream &inputfile) {
+	std::string tmp = "";
+	std::string accounttype;
+	int numofaccts = 0;
+
+	inputfile.open(FILENAME);
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+
+		inputfile.open(FILENAME);
+		while (inputfile.good()) {
+
+			getline(inputfile, tmp);
+
+
+			numofaccts++;
+
+
+		}
+	}
+	else
+	{
+		std::cout << "ERROR_paa: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+	return numofaccts;
+}
+
+
+void getAllAcctNums(Master &allAccounts, std::ifstream &inputfile, int *arryptr) {
+	std::string tmp = "";
+	std::string accounttype;
+	int acctnum;
+	int i = 0;
+
+	inputfile.open(FILENAME);
+	if (inputfile.fail()) { std::cout << "ERROR: NO SUCH FILE" << std::endl; }	//check for failure when opening
+	getline(inputfile, tmp);	//force a getline to set .eof bit
+
+	if (!inputfile.eof()) {
+		inputfile.clear();  //clear flags
+		inputfile.close(); // close it
+
+		inputfile.open(FILENAME);
+		while (inputfile.good()) {
+
+			allAccounts.GetRecordwc(inputfile);
+			acctnum = allAccounts.getAccountNumber();
+
+			arryptr[i] = allAccounts.getAccountNumber();
+			i++;
+
+		}
+	}
+	else
+	{
+		std::cout << "ERROR_paa: FILE EMPTY!" << std::endl;
+	}
+	inputfile.clear();
+	inputfile.close();
+}
+
